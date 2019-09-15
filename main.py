@@ -1,10 +1,12 @@
 #! python3
 
 '''
-to add:
+to add / fix:
 - timer
 - nr. of moves
-- ?start animation should reveal everything at once, with a longer timer
+- fix box cover, it was a problem with the original program as well
+- title screen, with a different song
+- fix sound fade in
 '''
 
 import random
@@ -12,6 +14,7 @@ import random
 from constants import *
 from images import *
 from pygame.locals import *
+from music import *
 
 def generateRevealedBoxesData(val):
     revealedBoxes = []
@@ -22,8 +25,8 @@ def generateRevealedBoxesData(val):
 def getRandomizedBoard():
     # Get a list of every possible image.
     icons = []
-    for image in ALL_IMAGES:
-            icons.append(image)
+    for image in ALL_IMAGES.values():
+        icons.append(image)
 
     random.shuffle(icons) # randomize the order of the icons list
     numImagesUsed = int(BOARD_WIDTH * BOARD_HEIGHT / 2) # calculate how many icons are needed
@@ -67,7 +70,6 @@ def getBoxAtPixel(x, y):
 
 def drawImage(image, boxx, boxy):
     left, top = leftTopCoordsOfBox(boxx, boxy) # get pixel coords from board coords
-    image = pygame.transform.scale(image, (BOX_SIZE, BOX_SIZE))
     DISPLAY.blit(image, (left, top))
 
 def getImage(board, boxx, boxy):
@@ -81,8 +83,11 @@ def drawBoxCovers(board, boxes, coverage):
         pygame.draw.rect(DISPLAY, BG_COLOR, (left, top, BOX_SIZE, BOX_SIZE))
         image = getImage(board, box[0], box[1])
         drawImage(image, box[0], box[1])
-        if coverage > 0: # only draw the cover if there is an coverage
+        
+        # this is the "coverBoxAnimation" part
+        if coverage > 0: 
             pygame.draw.rect(DISPLAY, BOX_COLOR, (left, top, coverage, BOX_SIZE))
+            
     pygame.display.update()
     FPS_CLOCK.tick(FPS)
 
@@ -93,7 +98,8 @@ def revealBoxesAnimation(board, boxesToReveal):
 
 def coverBoxesAnimation(board, boxesToCover):
     # Do the "box cover" animation.
-    for coverage in range(0, BOX_SIZE + REVEAL_SPEED, REVEAL_SPEED):
+    # the end value is a "magic number", need to fix that
+    for coverage in range(0, BOX_SIZE + 6, REVEAL_SPEED):
         drawBoxCovers(board, boxesToCover, coverage)
 
 def drawBoard(board, revealed):
@@ -114,7 +120,7 @@ def drawHighlightBox(boxx, boxy):
     pygame.draw.rect(DISPLAY, HIGHLIGHT_COLOR, (left - 5, top - 5, BOX_SIZE + 10, BOX_SIZE + 10), 4)
 
 def startGameAnimation(board):
-    # Randomly reveal the boxes 8 at a time.
+    # Randomly reveal the boxes 10 at a time.
     coveredBoxes = generateRevealedBoxesData(False)
     boxes = []
     for x in range(BOARD_WIDTH):
@@ -141,35 +147,44 @@ def gameWonAnimation(board):
         pygame.display.update()
         pygame.time.wait(300)
 
-def hasWon(revealedBoxes):
-    # Returns True if all the boxes have been revealed, otherwise False
-    for i in revealedBoxes:
-        if False in i:
-            return False # return False if any boxes are covered.
-    return True
+def quitGame():
+    fadeOut()
+    pygame.quit()
+    quit()
 
-def main():
+def sanityChecks():
     assert (BOARD_WIDTH * BOARD_HEIGHT) % 2 == 0, 'Board needs to have an even number of boxes for pairs of matches.'
     assert len(ALL_IMAGES) == BOARD_HEIGHT * BOARD_WIDTH / 2, 'The number of pictures is incorrect'
+    
+    #if this happens, I need to do sth like this:
+    #image = pygame.transform.scale(image, (BOX_SIZE, BOX_SIZE))
+    #but I want to be notified if/when this happens, so I'll use assert for now
+    for img in ALL_IMAGES.values():
+        assert(img.get_size() == (BOX_SIZE, BOX_SIZE)), 'The image size is incorrect'
+
+def main():
+    sanityChecks()
     
     global FPS_CLOCK, DISPLAY
     
     pygame.init()
-    pygame.display.set_caption("Memorie ba")
+    pygame.display.set_caption(GAME_TITLE)
+    pygame.display.set_icon(SERGHEI_ICON1)
     FPS_CLOCK = pygame.time.Clock()
     DISPLAY = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
     
     mouseX = 0
     mouseY = 0
     nrMoves = 0
+    nrRevealed = 0
     
     mainBoard = getRandomizedBoard()
     revealedBoxes = generateRevealedBoxesData(False)
     
-    # stores the (x, y) of the first box clicked
     firstSelection = None
     
     DISPLAY.fill(BG_COLOR)
+    playMusic()
     startGameAnimation(mainBoard)
     
     while True:
@@ -181,24 +196,26 @@ def main():
         # event handling loop 
         for event in pygame.event.get(): 
             if event.type == QUIT or (event.type == KEYUP and event.key == K_ESCAPE):
-                pygame.quit()
-                quit()
+                quitGame()
             elif event.type == MOUSEMOTION:
-                mousex, mousey = event.pos
+                mouseX, mouseY = event.pos
             elif event.type == MOUSEBUTTONUP:
-                mousex, mousey = event.pos
+                mouseX, mouseY = event.pos
                 mouseClicked = True
         
-        boxx, boxy = getBoxAtPixel(mousex, mousey)
+        boxx, boxy = getBoxAtPixel(mouseX, mouseY)
+        
         if boxx != None and boxy != None:
             # The mouse is currently over a box.
             if not revealedBoxes[boxx][boxy]:
                 drawHighlightBox(boxx, boxy)
+                
             if not revealedBoxes[boxx][boxy] and mouseClicked:
                 revealBoxesAnimation(mainBoard, [(boxx, boxy)])
                 revealedBoxes[boxx][boxy] = True # set the box as "revealed"
                 if firstSelection == None: # the current box was the first box clicked
                     firstSelection = (boxx, boxy)
+                    
                 else: # the current box was the second box clicked
                     # Check if there is a match between the two icons.
                     image1 = getImage(mainBoard, firstSelection[0], firstSelection[1])
@@ -213,24 +230,30 @@ def main():
                         coverBoxesAnimation(mainBoard, [(firstSelection[0], firstSelection[1]), (boxx, boxy)])
                         revealedBoxes[firstSelection[0]][firstSelection[1]] = False
                         revealedBoxes[boxx][boxy] = False
-                    elif hasWon(revealedBoxes): # check if all pairs found
-                        gameWonAnimation(mainBoard)
-                        pygame.time.wait(2000)
-
-                        # Reset the board
-                        mainBoard = getRandomizedBoard()
-                        revealedBoxes = generateRevealedBoxesData(False)
-
-                        # Show the fully unrevealed board for a second.
-                        drawBoard(mainBoard, revealedBoxes)
-                        pygame.display.update()
-                        pygame.time.wait(1000)
-
-                        # Replay the start game animation.
-                        startGameAnimation(mainBoard)
+                        
+                    else:
+                        nrRevealed += 2
+                        
+                        if nrRevealed == 2:
+                            nrRevealed = 0
+                            
+                            playWinningSound()
+                            
+                            gameWonAnimation(mainBoard)
+                            pygame.time.wait(2000)
+    
+                            # Reset the board
+                            mainBoard = getRandomizedBoard()
+                            revealedBoxes = generateRevealedBoxesData(False)
+                            
+                            # Replay the start game animation.
+                            startGameAnimation(mainBoard)
+                                                
                     firstSelection = None # reset firstSelection variable
                     
-
+        if pygame.mixer.Channel(1).get_busy() == 0:
+            fadeIn()
+                    
         # Redraw the screen and wait a clock tick.
         pygame.display.update()
         FPS_CLOCK.tick(FPS)
