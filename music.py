@@ -9,17 +9,15 @@ def playMusic():
     pygame.mixer.music.load(song)
     pygame.mixer.music.play(-1, random.randint(0, 250))
     pygame.mixer.music.set_volume(LOW_VOLUME)
-    fadeIn()
-
-#serghei hahaha
-def playWinningSound():
-    cue = pygame.mixer.Sound(os.path.join(os.getcwd(), "Music//SERGHEI_RAS.ogg"))
+    
+def playSound(path, volMultiplier):
+    cue = pygame.mixer.Sound(os.path.join(os.getcwd(), path))
 
     ch = pygame.mixer.Channel(1)
     ch.play(cue)
 
     pygame.mixer.music.set_volume(LOW_VOLUME)
-    cue.set_volume(NORMAL_VOLUME)
+    cue.set_volume(NORMAL_VOLUME * volMultiplier)
 
 def fadeOut():
     vol = pygame.mixer.music.get_volume()
@@ -32,6 +30,6 @@ def fadeIn():
     vol = pygame.mixer.music.get_volume()
     while vol < NORMAL_VOLUME:
         vol += INCREMENT
-        print ("volume is " + str(vol))
+        #print ("volume is " + str(vol))
         pygame.mixer.music.set_volume(vol)
         

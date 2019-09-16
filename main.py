@@ -1,20 +1,7 @@
-#! python3
-
-'''
-to add / fix:
-- timer
-- nr. of moves
-- fix box cover, it was a problem with the original program as well
-- title screen, with a different song
-- fix sound fade in
-'''
-
-import random
-
 from constants import *
-from images import *
-from pygame.locals import *
+from images import ALL_IMAGES, BADEA, SERGHEI_ICON1
 from music import *
+from pygame.locals import MOUSEBUTTONUP, MOUSEMOTION, QUIT, K_ESCAPE, KEYUP
 
 def generateRevealedBoxesData(val):
     revealedBoxes = []
@@ -69,7 +56,8 @@ def getBoxAtPixel(x, y):
     return (None, None)
 
 def drawImage(image, boxx, boxy):
-    left, top = leftTopCoordsOfBox(boxx, boxy) # get pixel coords from board coords
+    # get pixel coords from board coords
+    left, top = leftTopCoordsOfBox(boxx, boxy) 
     DISPLAY.blit(image, (left, top))
 
 def getImage(board, boxx, boxy):
@@ -147,6 +135,20 @@ def gameWonAnimation(board):
         pygame.display.update()
         pygame.time.wait(300)
 
+def gameWon(board):
+    playSound(SERGHEI_SOUND_PATH, 1.0)
+                            
+    gameWonAnimation(board)
+    pygame.time.wait(2000)
+    
+    # Reset the board
+    board = getRandomizedBoard()
+                            
+    # Replay the start game animation.
+    startGameAnimation(board)
+    
+    return board, generateRevealedBoxesData(False), 0, 0, 0
+
 def quitGame():
     fadeOut()
     pygame.quit()
@@ -154,7 +156,7 @@ def quitGame():
 
 def sanityChecks():
     assert (BOARD_WIDTH * BOARD_HEIGHT) % 2 == 0, 'Board needs to have an even number of boxes for pairs of matches.'
-    assert len(ALL_IMAGES) == BOARD_HEIGHT * BOARD_WIDTH / 2, 'The number of pictures is incorrect'
+    assert len(ALL_IMAGES) >= BOARD_HEIGHT * BOARD_WIDTH / 2, 'Not enough pictures'
     
     #if this happens, I need to do sth like this:
     #image = pygame.transform.scale(image, (BOX_SIZE, BOX_SIZE))
@@ -162,25 +164,37 @@ def sanityChecks():
     for img in ALL_IMAGES.values():
         assert(img.get_size() == (BOX_SIZE, BOX_SIZE)), 'The image size is incorrect'
 
+def convertTime(ms):
+    minutes = ms / 60000
+    ms %= 60000
+    seconds = ms / 1000
+    ms %= 1000
+    return ("%02d:%02d:%03d" % (minutes, seconds, ms))
+
+def displayText(text, xPos, yPos):
+    DISPLAY.blit(MY_FONT.render(text, True, TEXT_COLOR, None), (xPos, yPos))
+
 def main():
     sanityChecks()
     
-    global FPS_CLOCK, DISPLAY
+    global FPS_CLOCK, DISPLAY, MY_FONT
     
     pygame.init()
     pygame.display.set_caption(GAME_TITLE)
     pygame.display.set_icon(SERGHEI_ICON1)
+    
     FPS_CLOCK = pygame.time.Clock()
     DISPLAY = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
+    MY_FONT = pygame.font.SysFont(TEXT_FONT, TEXT_FONT_SIZE, True, False)
     
     mouseX = 0
     mouseY = 0
     nrMoves = 0
     nrRevealed = 0
+    timePassed = 0
     
     mainBoard = getRandomizedBoard()
     revealedBoxes = generateRevealedBoxesData(False)
-    
     firstSelection = None
     
     DISPLAY.fill(BG_COLOR)
@@ -192,6 +206,9 @@ def main():
         
         DISPLAY.fill(BG_COLOR)
         drawBoard(mainBoard, revealedBoxes)
+        
+        displayText("Moves: " + str(nrMoves), TEXT_LEFT_MARGIN, TEXT_TOP_MARGIN)
+        displayText(convertTime(timePassed), TEXT_LEFT_MARGIN, WINDOW_HEIGHT - TEXT_TOP_MARGIN - TEXT_FONT_SIZE)
         
         # event handling loop 
         for event in pygame.event.get(): 
@@ -205,8 +222,8 @@ def main():
         
         boxx, boxy = getBoxAtPixel(mouseX, mouseY)
         
+        # The mouse is currently over a box.
         if boxx != None and boxy != None:
-            # The mouse is currently over a box.
             if not revealedBoxes[boxx][boxy]:
                 drawHighlightBox(boxx, boxy)
                 
@@ -221,11 +238,10 @@ def main():
                     image1 = getImage(mainBoard, firstSelection[0], firstSelection[1])
                     image2 = getImage(mainBoard, boxx, boxy)
                     
-                    #nrMoves += 1
-                    #print (nrMoves)
-
+                    nrMoves += 1
+                    
+                    # Icons don't match. Re-cover up both selections.
                     if image1 != image2:
-                        # Icons don't match. Re-cover up both selections.
                         pygame.time.wait(1000) # 1000 milliseconds = 1 sec
                         coverBoxesAnimation(mainBoard, [(firstSelection[0], firstSelection[1]), (boxx, boxy)])
                         revealedBoxes[firstSelection[0]][firstSelection[1]] = False
@@ -234,22 +250,14 @@ def main():
                     else:
                         nrRevealed += 2
                         
-                        if nrRevealed == 2:
-                            nrRevealed = 0
+                        if nrRevealed == BOARD_HEIGHT * BOARD_WIDTH:
+                            mainBoard, revealedBoxes, timePassed, nrRevealed, nrMoves = gameWon(mainBoard)
                             
-                            playWinningSound()
-                            
-                            gameWonAnimation(mainBoard)
-                            pygame.time.wait(2000)
-    
-                            # Reset the board
-                            mainBoard = getRandomizedBoard()
-                            revealedBoxes = generateRevealedBoxesData(False)
-                            
-                            # Replay the start game animation.
-                            startGameAnimation(mainBoard)
-                                                
-                    firstSelection = None # reset firstSelection variable
+                        elif image1 in BADEA:
+                            playSound(BADEA_SOUND_PATH, 3.0)
+                                    
+                    # reset firstSelection variable            
+                    firstSelection = None 
                     
         if pygame.mixer.Channel(1).get_busy() == 0:
             fadeIn()
@@ -257,6 +265,8 @@ def main():
         # Redraw the screen and wait a clock tick.
         pygame.display.update()
         FPS_CLOCK.tick(FPS)
+        
+        timePassed += FPS_CLOCK.get_time()
             
 if __name__ == "__main__":
     main()

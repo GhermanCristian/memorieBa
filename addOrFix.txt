@@ -1,0 +1,8 @@
+1.fix box cover, it was a problem with the original program as well
+    - the problem is still there, but it's barely noticeable
+2.add a title screen, maybe with a different song
+3.fix sound fade in
+    - i reduced the volume altogether, it's not a big issue anymore
+4.more sound cues, maybe put them in a list or sth ?
+	- ilie dumitrescu
+6.game still freezing when restarting
