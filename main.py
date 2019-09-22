@@ -1,7 +1,7 @@
 from constants import *
 from images import ALL_IMAGES, SPECIAL_IMAGES, SERGHEI_ICON1 
 from music import *
-from pygame.locals import MOUSEBUTTONUP, MOUSEMOTION, QUIT, K_ESCAPE, KEYUP
+from pygame.locals import MOUSEBUTTONUP, MOUSEMOTION, QUIT, K_ESCAPE, KEYUP, K_RIGHT, K_RETURN
 
 def generateRevealedBoxesData(val):
     revealedBoxes = []
@@ -120,6 +120,17 @@ def sanityChecks():
     for img in ALL_IMAGES.values():
         assert(img.get_size() == (BOX_SIZE, BOX_SIZE)), 'The image size is incorrect'
 
+def welcomeScreen():
+    running = True
+    while running:
+        DISPLAY.fill(ORANGE)
+        for event in pygame.event.get(): 
+            if event.type == KEYUP and event.key == K_RETURN:
+                running = False
+            elif event.type == QUIT or (event.type == KEYUP and event.key == K_ESCAPE):
+                quitGame()
+        pygame.display.update()
+
 def gameStart():
     sanityChecks()
     
@@ -131,6 +142,8 @@ def gameStart():
     FPS_CLOCK = pygame.time.Clock()
     DISPLAY = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
     MY_FONT = pygame.font.SysFont(TEXT_FONT, TEXT_FONT_SIZE, True, False)
+    
+    welcomeScreen()
     
     DISPLAY.fill(BG_COLOR)
     initMusic()
@@ -216,7 +229,7 @@ def main():
         for event in pygame.event.get(): 
             if event.type == QUIT or (event.type == KEYUP and event.key == K_ESCAPE):
                 quitGame()
-            elif event.type == pygame.USEREVENT:
+            elif event.type == pygame.USEREVENT or (event.type == KEYUP and event.key == K_RIGHT):
                 crtSong = playSong(crtSong)         
             elif event.type == MOUSEMOTION:
                 mouseX, mouseY = event.pos
@@ -265,8 +278,7 @@ def main():
                                 
                         elif image1 in SPECIAL_IMAGES.keys():
                             playSound(SPECIAL_IMAGES[image1], 3.0)
-                                    
-                    # reset firstSelection variable            
+                                                
                     firstSelection = None 
                     
         if pygame.mixer.Channel(1).get_busy() == 0:
