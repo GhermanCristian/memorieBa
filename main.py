@@ -133,9 +133,9 @@ def gameStart():
     MY_FONT = pygame.font.SysFont(TEXT_FONT, TEXT_FONT_SIZE, True, False)
     
     DISPLAY.fill(BG_COLOR)
-    playMusic()
+    initMusic()
     
-    return 1, getRandomizedImageList(), 0, 0, 0
+    return 1, getRandomizedImageList(), 0, 0, 0, 0
 
 def levelStart(level, imageList):
     mainBoard = getRandomizedBoard(imageList, level)
@@ -198,7 +198,7 @@ def displayText(text, xPos, yPos):
 def main():
     LEVEL_COUNT = int(2 * len(ALL_IMAGES) / (BOARD_HEIGHT * BOARD_WIDTH))
     
-    level, imageList, mouseX, mouseY, totalTimePassed = gameStart()
+    level, imageList, mouseX, mouseY, totalTime, crtSong = gameStart()
     nrMoves, nrRevealed, timePassed, mainBoard, revealedBoxes, firstSelection = levelStart(level, imageList)
     
     while True:
@@ -210,12 +210,14 @@ def main():
         displayText("Level: " + str(level), TEXT_LEFT_MARGIN, 5 * TEXT_TOP_MARGIN)
         displayText("Moves: " + str(nrMoves), TEXT_LEFT_MARGIN, TEXT_TOP_MARGIN)
         displayText(convertTime(timePassed), TEXT_LEFT_MARGIN, WINDOW_HEIGHT - TEXT_TOP_MARGIN - TEXT_FONT_SIZE)
-        displayText(convertTime(timePassed), TEXT_LEFT_MARGIN, WINDOW_HEIGHT - TEXT_TOP_MARGIN - 2 * TEXT_FONT_SIZE)
+        displayText(convertTime(totalTime), TEXT_LEFT_MARGIN, WINDOW_HEIGHT - TEXT_TOP_MARGIN - 2 * TEXT_FONT_SIZE)
         
         # event handling loop 
         for event in pygame.event.get(): 
             if event.type == QUIT or (event.type == KEYUP and event.key == K_ESCAPE):
                 quitGame()
+            elif event.type == pygame.USEREVENT:
+                crtSong = playSong(crtSong)         
             elif event.type == MOUSEMOTION:
                 mouseX, mouseY = event.pos
             elif event.type == MOUSEBUTTONUP:
@@ -274,8 +276,8 @@ def main():
         pygame.display.update()
         FPS_CLOCK.tick(FPS)
         
-        totalTimePassed += FPS_CLOCK.get_time()
         timePassed += FPS_CLOCK.get_time()
+        totalTime += FPS_CLOCK.get_time()
             
 if __name__ == "__main__":
     main()

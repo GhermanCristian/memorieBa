@@ -3,12 +3,34 @@ import pygame
 import random
 from constants import INCREMENT, LOW_VOLUME, NORMAL_VOLUME
 
-def playMusic():
-    song = os.path.join(os.getcwd(), "Music//BALKANI.ogg")
+path = os.path.join(os.getcwd(), "Music")
+playlist = []
+
+for song in os.listdir(path):
+    if "S_" in song:
+        playlist.append(os.path.join(os.getcwd(), "Music//" + song))
+        
+songCount = len(playlist)
+random.shuffle(playlist)
+print (playlist)
+
+def initMusic():
     pygame.mixer.init()
-    pygame.mixer.music.load(song)
-    pygame.mixer.music.play(-1, random.randint(0, 250))
+    pygame.mixer.music.load(playlist[0])
+    pygame.mixer.music.play()
+    pygame.mixer.music.set_endevent(pygame.USEREVENT)
     pygame.mixer.music.set_volume(NORMAL_VOLUME)
+
+def playSong(crtSong):
+    if crtSong == songCount - 1:
+        crtSong = 0
+    else:
+        crtSong += 1 
+    print (crtSong)  
+    pygame.mixer.music.load(playlist[crtSong])
+    pygame.mixer.music.play()
+    
+    return crtSong
     
 def playSound(path, volMultiplier):
     cue = pygame.mixer.Sound(os.path.join(os.getcwd(), path))
