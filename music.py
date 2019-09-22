@@ -8,7 +8,7 @@ def playMusic():
     pygame.mixer.init()
     pygame.mixer.music.load(song)
     pygame.mixer.music.play(-1, random.randint(0, 250))
-    pygame.mixer.music.set_volume(LOW_VOLUME)
+    pygame.mixer.music.set_volume(NORMAL_VOLUME)
     
 def playSound(path, volMultiplier):
     cue = pygame.mixer.Sound(os.path.join(os.getcwd(), path))

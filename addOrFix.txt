@@ -4,7 +4,11 @@
 3.fix sound fade in
     - i reduced the volume altogether, it's not a big issue anymore
 4.game still freezing when restarting
-5.add icon file from the auto-py-2-exe thing
+	- since i've started using levels i haven't noticed this issue
+5.more sound cues
+	- guta "pula mea"
+	- www sexy bomba com
+	- miroase a ambreiaj
 6.maybe add increased difficulty as the levels progress
 
 =============================================

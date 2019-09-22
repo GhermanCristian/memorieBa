@@ -135,7 +135,7 @@ def gameStart():
     DISPLAY.fill(BG_COLOR)
     playMusic()
     
-    return 1, getRandomizedImageList(), 0, 0
+    return 1, getRandomizedImageList(), 0, 0, 0
 
 def levelStart(level, imageList):
     mainBoard = getRandomizedBoard(imageList, level)
@@ -198,7 +198,7 @@ def displayText(text, xPos, yPos):
 def main():
     LEVEL_COUNT = int(2 * len(ALL_IMAGES) / (BOARD_HEIGHT * BOARD_WIDTH))
     
-    level, imageList, mouseX, mouseY = gameStart()
+    level, imageList, mouseX, mouseY, totalTimePassed = gameStart()
     nrMoves, nrRevealed, timePassed, mainBoard, revealedBoxes, firstSelection = levelStart(level, imageList)
     
     while True:
@@ -210,6 +210,7 @@ def main():
         displayText("Level: " + str(level), TEXT_LEFT_MARGIN, 5 * TEXT_TOP_MARGIN)
         displayText("Moves: " + str(nrMoves), TEXT_LEFT_MARGIN, TEXT_TOP_MARGIN)
         displayText(convertTime(timePassed), TEXT_LEFT_MARGIN, WINDOW_HEIGHT - TEXT_TOP_MARGIN - TEXT_FONT_SIZE)
+        displayText(convertTime(timePassed), TEXT_LEFT_MARGIN, WINDOW_HEIGHT - TEXT_TOP_MARGIN - 2 * TEXT_FONT_SIZE)
         
         # event handling loop 
         for event in pygame.event.get(): 
@@ -273,6 +274,7 @@ def main():
         pygame.display.update()
         FPS_CLOCK.tick(FPS)
         
+        totalTimePassed += FPS_CLOCK.get_time()
         timePassed += FPS_CLOCK.get_time()
             
 if __name__ == "__main__":
