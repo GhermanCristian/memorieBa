@@ -12,7 +12,6 @@ for song in os.listdir(path):
         
 songCount = len(playlist)
 random.shuffle(playlist)
-print (playlist)
 
 def initMusic():
     pygame.mixer.init()
@@ -26,7 +25,6 @@ def playSong(crtSong):
         crtSong = 0
     else:
         crtSong += 1 
-    print (crtSong)  
     pygame.mixer.music.load(playlist[crtSong])
     pygame.mixer.music.play()
     
