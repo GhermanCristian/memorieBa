@@ -162,7 +162,7 @@ def gameStart():
     pygame.time.wait(100)
     initMusic(playlist[0])
     
-    return 1, getRandomizedImageList(), 0, 0, 0, 0
+    return 1, getRandomizedImageList(), 0, 0, 0, 0, 0
 
 def levelStart(level, imageList):
     mainBoard = getRandomizedBoard(imageList, level)
@@ -225,7 +225,7 @@ def displayText(text, xPos, yPos):
 def main():
     LEVEL_COUNT = int(2 * len(ALL_IMAGES) / (BOARD_HEIGHT * BOARD_WIDTH))
     
-    level, imageList, mouseX, mouseY, totalTime, crtSong = gameStart()
+    level, imageList, mouseX, mouseY, totalTime, totalMoves, crtSong = gameStart()
     nrMoves, nrRevealed, timePassed, mainBoard, revealedBoxes, firstSelection = levelStart(level, imageList)
     
     while True:
@@ -235,7 +235,8 @@ def main():
         drawBoard(mainBoard, revealedBoxes)
         
         displayText("Moves: " + str(nrMoves), TEXT_LEFT_MARGIN, TEXT_TOP_MARGIN)
-        displayText("Level: " + str(level), TEXT_LEFT_MARGIN, 5 * TEXT_TOP_MARGIN)
+        displayText("In total: " + str(totalMoves), TEXT_LEFT_MARGIN, TEXT_TOP_MARGIN + TEXT_FONT_SIZE)
+        displayText("Level: " + str(level), TEXT_LEFT_MARGIN, TEXT_TOP_MARGIN + 2 * TEXT_FONT_SIZE)
         displayText(convertTime(timePassed), TEXT_LEFT_MARGIN, WINDOW_HEIGHT - TEXT_TOP_MARGIN - TEXT_FONT_SIZE)
         displayText(convertTime(totalTime), TEXT_LEFT_MARGIN, WINDOW_HEIGHT - TEXT_TOP_MARGIN - 2 * TEXT_FONT_SIZE)
         
@@ -276,6 +277,7 @@ def main():
                     image1 = getImage(mainBoard, firstSelection[0], firstSelection[1])
                     image2 = getImage(mainBoard, boxx, boxy)
                     
+                    totalMoves += 1
                     nrMoves += 1
                     
                     # Icons don't match. Re-cover up both selections.
@@ -288,7 +290,7 @@ def main():
                     else:
                         nrRevealed += 2
                         
-                        if nrRevealed == BOARD_HEIGHT * BOARD_WIDTH:
+                        if nrRevealed == 2:
                             levelWon(mainBoard, level)
                             level += 1
                             if level <= LEVEL_COUNT:
