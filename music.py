@@ -3,6 +3,7 @@ import pygame
 import random
 from constants import INCREMENT, LOW_VOLUME, NORMAL_VOLUME
 
+SOUND_CUE_END_EVENT = pygame.USEREVENT + 1
 path = os.path.join(os.getcwd(), "Music")
 playlist = []
 
@@ -13,9 +14,8 @@ for song in os.listdir(path):
 songCount = len(playlist)
 random.shuffle(playlist)
 
-def initMusic():
-    pygame.mixer.init()
-    pygame.mixer.music.load(playlist[0])
+def initMusic(song):
+    pygame.mixer.music.load(song)
     pygame.mixer.music.play()
     pygame.mixer.music.set_endevent(pygame.USEREVENT)
     pygame.mixer.music.set_volume(NORMAL_VOLUME)
@@ -35,6 +35,7 @@ def playSound(path, volMultiplier):
 
     ch = pygame.mixer.Channel(1)
     ch.play(cue)
+    ch.set_endevent(SOUND_CUE_END_EVENT)
 
     pygame.mixer.music.set_volume(LOW_VOLUME)
     cue.set_volume(NORMAL_VOLUME * volMultiplier)

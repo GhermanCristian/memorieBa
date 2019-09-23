@@ -1,5 +1,5 @@
 from constants import *
-from images import ALL_IMAGES, SPECIAL_IMAGES, SERGHEI_ICON1 
+from images import ALL_IMAGES, SPECIAL_IMAGES, SERGHEI_ICON1, WELCOME_SCREEN 
 from music import *
 from pygame.locals import MOUSEBUTTONUP, MOUSEMOTION, QUIT, K_ESCAPE, KEYUP, K_RIGHT, K_RETURN
 
@@ -120,13 +120,26 @@ def sanityChecks():
     for img in ALL_IMAGES.values():
         assert(img.get_size() == (BOX_SIZE, BOX_SIZE)), 'The image size is incorrect'
 
+def screenTransition():
+    xPos = 0
+    STEPS = 20
+    PIXELS_MOVED = WINDOW_WIDTH / STEPS
+    while xPos <= WINDOW_WIDTH:
+        DISPLAY.fill(BG_COLOR)
+        DISPLAY.blit(WELCOME_SCREEN, (xPos, 0))
+        xPos += PIXELS_MOVED
+        pygame.time.wait(3)
+        pygame.display.update()
+
 def welcomeScreen():
     running = True
+    initMusic(os.path.join(os.getcwd(), WELCOME_SONG_PATH))
     while running:
-        DISPLAY.fill(ORANGE)
+        DISPLAY.blit(WELCOME_SCREEN, (0, 0))
         for event in pygame.event.get(): 
             if event.type == KEYUP and event.key == K_RETURN:
                 running = False
+                screenTransition()
             elif event.type == QUIT or (event.type == KEYUP and event.key == K_ESCAPE):
                 quitGame()
         pygame.display.update()
@@ -146,7 +159,8 @@ def gameStart():
     welcomeScreen()
     
     DISPLAY.fill(BG_COLOR)
-    initMusic()
+    pygame.time.wait(100)
+    initMusic(playlist[0])
     
     return 1, getRandomizedImageList(), 0, 0, 0, 0
 
@@ -220,10 +234,15 @@ def main():
         DISPLAY.fill(BG_COLOR)
         drawBoard(mainBoard, revealedBoxes)
         
-        displayText("Level: " + str(level), TEXT_LEFT_MARGIN, 5 * TEXT_TOP_MARGIN)
         displayText("Moves: " + str(nrMoves), TEXT_LEFT_MARGIN, TEXT_TOP_MARGIN)
+        displayText("Level: " + str(level), TEXT_LEFT_MARGIN, 5 * TEXT_TOP_MARGIN)
         displayText(convertTime(timePassed), TEXT_LEFT_MARGIN, WINDOW_HEIGHT - TEXT_TOP_MARGIN - TEXT_FONT_SIZE)
         displayText(convertTime(totalTime), TEXT_LEFT_MARGIN, WINDOW_HEIGHT - TEXT_TOP_MARGIN - 2 * TEXT_FONT_SIZE)
+        
+        if "AMERICANDRIM" in playlist[crtSong]:
+            displayText("e prea buna", TEXT_LEFT_MARGIN, 40 * TEXT_TOP_MARGIN)
+            displayText("piesa ca sa", TEXT_LEFT_MARGIN, 40 * TEXT_TOP_MARGIN + TEXT_FONT_SIZE)
+            displayText("tai ceva din ea", TEXT_LEFT_MARGIN, 40 * TEXT_TOP_MARGIN + 2 * TEXT_FONT_SIZE)
         
         # event handling loop 
         for event in pygame.event.get(): 
@@ -236,6 +255,8 @@ def main():
             elif event.type == MOUSEBUTTONUP:
                 mouseX, mouseY = event.pos
                 mouseClicked = True
+            elif event.type == SOUND_CUE_END_EVENT:
+                fadeIn()
         
         boxx, boxy = getBoxAtPixel(mouseX, mouseY)
         
@@ -280,9 +301,6 @@ def main():
                             playSound(SPECIAL_IMAGES[image1], 3.0)
                                                 
                     firstSelection = None 
-                    
-        if pygame.mixer.Channel(1).get_busy() == 0:
-            fadeIn()
                     
         # Redraw the screen and wait a clock tick.
         pygame.display.update()

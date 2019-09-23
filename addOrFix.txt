@@ -1,8 +1,5 @@
 1.fix box cover, it was a problem with the original program as well
     - the problem is still there, but it's barely noticeable
-2.add something to the title screen
-3.fix sound fade in
-    - i reduced the volume altogether, it's not a big issue anymore
 4.game still freezing when restarting
 6.maybe add increased difficulty as the levels progress
 7.sound cues:
@@ -10,6 +7,5 @@
     * miroase a ambreiaj - tried it but it doesn't sound right, it's still in the game files if i need it
     * maybe censor ilie dumitrescu ? or add a censored version of the game
 9.playlist
-	- 
-10.fix issue with exiting from the welcome screen and fadeOut (maybe using the volume ?) 
+	- money for nothing
 =============================================
