@@ -1,7 +1,8 @@
 from constants import *
 from images import ALL_IMAGES, SPECIAL_IMAGES, SERGHEI_ICON1, WELCOME_SCREEN 
 from music import *
-from pygame.locals import MOUSEBUTTONUP, MOUSEMOTION, QUIT, K_ESCAPE, KEYUP, K_RIGHT, K_RETURN
+from pygame.locals import MOUSEBUTTONUP, MOUSEMOTION, QUIT, K_ESCAPE, KEYUP, K_RIGHT, K_RETURN, KEYDOWN, K_BACKSPACE
+from leaderboard import *
 
 def generateRevealedBoxesData(val):
     revealedBoxes = []
@@ -151,16 +152,18 @@ def gameStart():
     pygame.display.set_caption(GAME_TITLE)
     pygame.display.set_icon(SERGHEI_ICON1)
     
-    global FPS_CLOCK, DISPLAY, MY_FONT
+    global FPS_CLOCK, DISPLAY, MY_GAME_FONT, MY_TABLE_FONT
     FPS_CLOCK = pygame.time.Clock()
     DISPLAY = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
-    MY_FONT = pygame.font.SysFont(TEXT_FONT, TEXT_FONT_SIZE, True, False)
+    MY_GAME_FONT = pygame.font.SysFont(TEXT_FONT, TEXT_FONT_SIZE, True, False)
+    MY_TABLE_FONT = pygame.font.SysFont(TABLE_FONT, TABLE_FONT_SIZE, False, False)
     
     welcomeScreen()
     
     DISPLAY.fill(BG_COLOR)
     pygame.time.wait(100)
     initMusic(playlist[0])
+    tableInit()
     
     return 1, getRandomizedImageList(), 0, 0, 0, 0, 0
 
@@ -207,6 +210,58 @@ def levelWon(board, level):
     levelWonAnimation(board)
     pygame.time.wait(2000)
 
+def userInput():
+    name = ""
+    while True:
+        for event in pygame.event.get():
+            if event.type == KEYDOWN:
+                if event.unicode.isalnum() or event.unicode in "!@#$%^&*()_+-=<>,.?/:{}\|`~ ":
+                    name += event.unicode
+                elif event.key == K_BACKSPACE:
+                    name = name[:-1]
+                elif event.key == K_RETURN:
+                    return name[:TABLE_MAX_LENGTH]
+        DISPLAY.fill(BG_COLOR)
+        displayText("baga un nume", 100, 100, MY_TABLE_FONT, TABLE_FONT_COLOR)
+        block = MY_TABLE_FONT.render(name, True, (255, 255, 255))
+        rect = block.get_rect()
+        rect.center = DISPLAY.get_rect().center
+        DISPLAY.blit(block, rect)
+        pygame.display.update()
+
+def displayResults():
+    tables = shelve.open("Leaderboards//tables", writeback = True)
+    
+    displayText("rapidu", TABLE_LEFT_MARGIN, TABLE_TOP_MARGIN, MY_TABLE_FONT, TABLE_FONT_COLOR)
+    displayText("desteptu", TABLE_LEFT_MARGIN + HALF_WIDTH, TABLE_TOP_MARGIN, MY_TABLE_FONT, TABLE_FONT_COLOR)
+    
+    table = tables["fast"]
+    for i in range(TABLE_ENTRIES):
+        displayText("%02d. %s" % (i + 1, table[i][0]), TABLE_LEFT_MARGIN, TABLE_TOP_MARGIN + (i + 2) * TABLE_FONT_SIZE, MY_TABLE_FONT, TABLE_FONT_COLOR)
+        displayText(convertTime(table[i][1]), HALF_WIDTH - TABLE_RIGHT_MARGIN, TABLE_TOP_MARGIN + (i + 2) * TABLE_FONT_SIZE, MY_TABLE_FONT, TABLE_FONT_COLOR)
+    
+    table = tables["smart"]
+    for i in range(TABLE_ENTRIES):
+        displayText("%02d. %s" % (i + 1, table[i][0]), HALF_WIDTH + TABLE_LEFT_MARGIN, TABLE_TOP_MARGIN + (i + 2) * TABLE_FONT_SIZE, MY_TABLE_FONT, TABLE_FONT_COLOR)
+        displayText("%d moves" % (table[i][1]), WINDOW_WIDTH - TABLE_RIGHT_MARGIN, TABLE_TOP_MARGIN + (i + 2) * TABLE_FONT_SIZE, MY_TABLE_FONT, TABLE_FONT_COLOR)
+        
+    pygame.display.update()
+    tables.close()
+
+def endGame(crtSong, ms, moves):
+    if checkResult(ms, moves):
+        addResult(userInput(), ms, moves)
+    
+    DISPLAY.fill(BG_COLOR)
+    displayResults()
+    
+    while True:
+        for event in pygame.event.get(): 
+            if event.type == QUIT or (event.type == KEYUP and event.key == K_ESCAPE):
+                quitGame()
+            elif event.type == pygame.USEREVENT or (event.type == KEYUP and event.key == K_RIGHT):
+                crtSong = playSong(crtSong) 
+
 def quitGame():
     fadeOut()
     pygame.quit()
@@ -219,8 +274,8 @@ def convertTime(ms):
     ms %= 1000
     return ("%02d:%02d:%03d" % (minutes, seconds, ms))
 
-def displayText(text, xPos, yPos):
-    DISPLAY.blit(MY_FONT.render(text, True, TEXT_COLOR, None), (xPos, yPos))
+def displayText(text, xPos, yPos, font, color):
+    DISPLAY.blit(font.render(text, True, color, None), (xPos, yPos))
 
 def main():
     LEVEL_COUNT = int(2 * len(ALL_IMAGES) / (BOARD_HEIGHT * BOARD_WIDTH))
@@ -234,16 +289,16 @@ def main():
         DISPLAY.fill(BG_COLOR)
         drawBoard(mainBoard, revealedBoxes)
         
-        displayText("Moves: " + str(nrMoves), TEXT_LEFT_MARGIN, TEXT_TOP_MARGIN)
-        displayText("In total: " + str(totalMoves), TEXT_LEFT_MARGIN, TEXT_TOP_MARGIN + TEXT_FONT_SIZE)
-        displayText("Level: " + str(level), TEXT_LEFT_MARGIN, TEXT_TOP_MARGIN + 2 * TEXT_FONT_SIZE)
-        displayText(convertTime(timePassed), TEXT_LEFT_MARGIN, WINDOW_HEIGHT - TEXT_TOP_MARGIN - TEXT_FONT_SIZE)
-        displayText(convertTime(totalTime), TEXT_LEFT_MARGIN, WINDOW_HEIGHT - TEXT_TOP_MARGIN - 2 * TEXT_FONT_SIZE)
+        displayText("Moves: " + str(nrMoves), TEXT_LEFT_MARGIN, TEXT_TOP_MARGIN, MY_GAME_FONT, GAME_TEXT_COLOR)
+        displayText("In total: " + str(totalMoves), TEXT_LEFT_MARGIN, TEXT_TOP_MARGIN + TEXT_FONT_SIZE, MY_GAME_FONT, GAME_TEXT_COLOR)
+        displayText("Level: " + str(level), TEXT_LEFT_MARGIN, TEXT_TOP_MARGIN + 2 * TEXT_FONT_SIZE, MY_GAME_FONT, GAME_TEXT_COLOR)
+        displayText(convertTime(timePassed), TEXT_LEFT_MARGIN, WINDOW_HEIGHT - TEXT_TOP_MARGIN - TEXT_FONT_SIZE, MY_GAME_FONT, GAME_TEXT_COLOR)
+        displayText(convertTime(totalTime), TEXT_LEFT_MARGIN, WINDOW_HEIGHT - TEXT_TOP_MARGIN - 2 * TEXT_FONT_SIZE, MY_GAME_FONT, GAME_TEXT_COLOR)
         
         if "AMERICANDRIM" in playlist[crtSong]:
-            displayText("e prea buna", TEXT_LEFT_MARGIN, 40 * TEXT_TOP_MARGIN)
-            displayText("piesa ca sa", TEXT_LEFT_MARGIN, 40 * TEXT_TOP_MARGIN + TEXT_FONT_SIZE)
-            displayText("tai ceva din ea", TEXT_LEFT_MARGIN, 40 * TEXT_TOP_MARGIN + 2 * TEXT_FONT_SIZE)
+            displayText("e prea buna", TEXT_LEFT_MARGIN, 40 * TEXT_TOP_MARGIN, MY_GAME_FONT, GAME_TEXT_COLOR)
+            displayText("piesa ca sa", TEXT_LEFT_MARGIN, 40 * TEXT_TOP_MARGIN + TEXT_FONT_SIZE, MY_GAME_FONT, GAME_TEXT_COLOR)
+            displayText("tai ceva din ea", TEXT_LEFT_MARGIN, 40 * TEXT_TOP_MARGIN + 2 * TEXT_FONT_SIZE, MY_GAME_FONT, GAME_TEXT_COLOR)
         
         # event handling loop 
         for event in pygame.event.get(): 
@@ -290,14 +345,14 @@ def main():
                     else:
                         nrRevealed += 2
                         
-                        if nrRevealed == 2:
+                        if nrRevealed == BOARD_HEIGHT * BOARD_WIDTH:
                             levelWon(mainBoard, level)
                             level += 1
                             if level <= LEVEL_COUNT:
                                 nrMoves, nrRevealed, timePassed, mainBoard, revealedBoxes, firstSelection = \
                                 levelStart(level, imageList)
                             else:
-                                quitGame()
+                                endGame(crtSong, totalTime, totalMoves)
                                 
                         elif image1 in SPECIAL_IMAGES.keys():
                             playSound(SPECIAL_IMAGES[image1], 3.0)
