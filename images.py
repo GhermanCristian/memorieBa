@@ -29,6 +29,8 @@ for file in os.listdir(path):
         #SPECIAL_IMAGES[ ALL_IMAGES[imageName] ] = JEREMY_SOUND_PATH
     elif imageName == "GUTA_3":
         SPECIAL_IMAGES[ ALL_IMAGES[imageName] ] = GUTA_SOUND_PATH
+    elif imageName == "DINU_1":
+        SPECIAL_IMAGES[ ALL_IMAGES[imageName] ] = DINU_SOUND_PATH
 
 SERGHEI_ICON1 = pygame.image.load(os.path.join(path, "SERGHEI_ICON1.ICO"))
 WELCOME_SCREEN = pygame.image.load(os.path.join(path, "WELCOME_SCREEN1.jpg"))

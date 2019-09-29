@@ -53,3 +53,11 @@ def addResult(name, ms, moves):
     insertResult(table["smart"], name, moves)
     
     table.close()
+    
+def resetTable():
+    table = shelve.open("Leaderboards//tables")
+    
+    del table["fast"]
+    del table["smart"]
+    
+    table.close()

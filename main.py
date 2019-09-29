@@ -165,6 +165,9 @@ def gameStart():
     initMusic(playlist[0])
     tableInit()
     
+    #only to be used in testing, so that the results don't influence gameplay in the future
+    resetTable()
+    
     return 1, getRandomizedImageList(), 0, 0, 0, 0, 0
 
 def levelStart(level, imageList):

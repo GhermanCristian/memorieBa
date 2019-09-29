@@ -1,15 +1,11 @@
 1.fix box cover, it was a problem with the original program as well
     - the problem is still there, but it's barely noticeable
 2.add more things to the welcome screen
-3.add a "gameWon" screen
 4.game still freezing when restarting
-5.add a leaderboard thing
 6.maybe add increased difficulty as the levels progress
 7.sound cues:
 	- mircea badea mi le bag in ...
     * miroase a ambreiaj - tried it but it doesn't sound right, it's still in the game files if i need it
-    * maybe censor ilie dumitrescu ? or add a censored version of the game
-8.add a "totalMoves" counter
 9.playlist
 	- money for nothing
 =============================================
