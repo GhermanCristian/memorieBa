@@ -1,6 +1,7 @@
 1.fix box cover, it was a problem with the original program as well
     - the problem is still there, but it's barely noticeable
 2.add more things to the welcome screen
+3.fix tableReset
 4.game still freezing when restarting
 6.maybe add increased difficulty as the levels progress
 7.sound cues:

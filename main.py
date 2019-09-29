@@ -3,12 +3,7 @@ from images import ALL_IMAGES, SPECIAL_IMAGES, SERGHEI_ICON1, WELCOME_SCREEN
 from music import *
 from pygame.locals import MOUSEBUTTONUP, MOUSEMOTION, QUIT, K_ESCAPE, KEYUP, K_RIGHT, K_RETURN, KEYDOWN, K_BACKSPACE
 from leaderboard import *
-
-def generateRevealedBoxesData(val):
-    revealedBoxes = []
-    for i in range(BOARD_WIDTH):
-        revealedBoxes.append([val] * BOARD_HEIGHT)
-    return revealedBoxes
+from util import *
 
 def getRandomizedImageList():
     icons = []
@@ -35,20 +30,6 @@ def getRandomizedBoard(imageList, level):
         
     return board
 
-def splitIntoGroupsOf(groupSize, theList):
-    # splits a list into a list of lists, where the inner lists have at
-    # most groupSize number of items.
-    result = []
-    for i in range(0, len(theList), groupSize):
-        result.append(theList[i:i + groupSize])
-    return result
-
-def leftTopCoordsOfBox(boxx, boxy):
-    # Convert board coordinates to pixel coordinates
-    left = boxx * (BOX_SIZE + GAP_SIZE) + X_MARGIN
-    top = boxy * (BOX_SIZE + GAP_SIZE) + Y_MARGIN
-    return (left, top)
-
 def getBoxAtPixel(x, y):
     for boxx in range(BOARD_WIDTH):
         for boxy in range(BOARD_HEIGHT):
@@ -63,9 +44,6 @@ def drawImage(image, boxx, boxy):
     # get pixel coords from board coords
     left, top = leftTopCoordsOfBox(boxx, boxy) 
     DISPLAY.blit(image, (left, top))
-
-def getImage(board, boxx, boxy):
-    return board[boxx][boxy]
 
 def drawBoxCovers(board, boxes, coverage):
     # Draws boxes being covered/revealed. "boxes" is a list
@@ -111,16 +89,6 @@ def drawHighlightBox(boxx, boxy):
     left, top = leftTopCoordsOfBox(boxx, boxy)
     pygame.draw.rect(DISPLAY, HIGHLIGHT_COLOR, (left - 5, top - 5, BOX_SIZE + 10, BOX_SIZE + 10), 4)
 
-def sanityChecks():
-    assert (BOARD_WIDTH * BOARD_HEIGHT) % 2 == 0, 'Board needs to have an even number of boxes for pairs of matches.'
-    assert len(ALL_IMAGES) >= BOARD_HEIGHT * BOARD_WIDTH / 2, 'Not enough pictures'
-    
-    #if this happens, I need to do sth like this:
-    #image = pygame.transform.scale(image, (BOX_SIZE, BOX_SIZE))
-    #but I want to be notified if/when this happens, so I'll use assert for now
-    for img in ALL_IMAGES.values():
-        assert(img.get_size() == (BOX_SIZE, BOX_SIZE)), 'The image size is incorrect'
-
 def screenTransition():
     xPos = 0
     STEPS = 20
@@ -163,22 +131,23 @@ def gameStart():
     DISPLAY.fill(BG_COLOR)
     pygame.time.wait(100)
     initMusic(playlist[0])
+    
+    #NOT WORKING
+    #only to be used in testing, so that my results don't end up in the game
+    #resetTable()
+    
     tableInit()
-    
-    #only to be used in testing, so that the results don't influence gameplay in the future
-    resetTable()
-    
     return 1, getRandomizedImageList(), 0, 0, 0, 0, 0
 
 def levelStart(level, imageList):
     mainBoard = getRandomizedBoard(imageList, level)
     startLevelAnimation(mainBoard)
     #nrMoves, nrRevealed, timePassed, mainBoard, revealedBoxes, firstSelection
-    return 0, 0, 0, mainBoard, generateRevealedBoxesData(False), None
+    return 0, 0, 0, mainBoard, generateBoxesState(False), None
 
 def startLevelAnimation(board):
     # Randomly reveal the boxes 10 at a time.
-    coveredBoxes = generateRevealedBoxesData(False)
+    coveredBoxes = generateBoxesState(False)
     boxes = []
     for x in range(BOARD_WIDTH):
         for y in range(BOARD_HEIGHT):
@@ -193,7 +162,7 @@ def startLevelAnimation(board):
         
 def levelWonAnimation(board):
     # flash the background color when the player has won
-    coveredBoxes = generateRevealedBoxesData(True)
+    coveredBoxes = generateBoxesState(True)
     color1 = LIGHT_BG_COLOR
     color2 = BG_COLOR
 
@@ -269,13 +238,6 @@ def quitGame():
     fadeOut()
     pygame.quit()
     quit()
-
-def convertTime(ms):
-    minutes = ms / 60000
-    ms %= 60000
-    seconds = ms / 1000
-    ms %= 1000
-    return ("%02d:%02d:%03d" % (minutes, seconds, ms))
 
 def displayText(text, xPos, yPos, font, color):
     DISPLAY.blit(font.render(text, True, color, None), (xPos, yPos))
