@@ -239,8 +239,8 @@ def quitGame():
     pygame.quit()
     quit()
 
-def displayText(text, xPos, yPos, font, color):
-    DISPLAY.blit(font.render(text, True, color, None), (xPos, yPos))
+def displayText(text, xPos, yPos, fonts, color):
+    DISPLAY.blit(fonts.render(text, True, color, None), (xPos, yPos))
 
 def main():
     LEVEL_COUNT = int(2 * len(ALL_IMAGES) / (BOARD_HEIGHT * BOARD_WIDTH))

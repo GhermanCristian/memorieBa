@@ -4,7 +4,7 @@ from constants import TABLE_ENTRIES
 def tableInit():
     table = shelve.open("Leaderboards//tables", writeback = True)
     if not ("fast" in table.keys() or "smart" in table.keys()):
-        print ("created new table")
+        #print ("created new table")
         table["fast"] = [    
             ("Emil Boc", 400000), 
             ("e un tampit", 400010), 
