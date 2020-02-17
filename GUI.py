@@ -8,8 +8,8 @@ from audioRepo import AudioRepo
 
 class GUI:
     def __init__(self):
-        self.__imageRepo = ImageRepo()
         self.__board = Board()
+        self.__imageRepo = self.__board.imageRepo
         self.__audioRepo = AudioRepo()
         
         pygame.init()
@@ -28,7 +28,7 @@ class GUI:
         self.__totalTime = 0
         
     def __quitGame(self):
-        #fadeOut()
+        self.__audioRepo.fadeOut()
         pygame.quit()
         quit()    
         
@@ -53,9 +53,6 @@ class GUI:
                 elif event.type == QUIT or (event.type == KEYUP and event.key == K_ESCAPE):
                     self.__quitGame()
             pygame.display.update()
-        #######
-        self.__gameDisplay.fill(BG_COLOR)
-        #######
     
     def __getTopLeftCoords(self, i, j):
         top = TOP_MARGIN + i * (BOX_SIZE + GAP_SIZE)
@@ -180,6 +177,8 @@ class GUI:
                     self.__mouseClicked = True
                 elif event.type == pygame.USEREVENT or (event.type == KEYUP and event.key == K_RIGHT):
                     self.__audioRepo.playSong()
+                elif event.type == self.__audioRepo.soundCueEndEvent:
+                    self.__audioRepo.fadeIn() 
                     
             (xBox, yBox) = self.__getBoxAtCoords(self.__mouseX, self.__mouseY)
             if xBox != None and yBox != None:
@@ -207,8 +206,13 @@ class GUI:
                                 
                             else:
                                 nrRevealed += 2
-                                if nrRevealed == self.__board.height * self.__board.width:
+                                
+                                #if nrRevealed == self.__board.height * self.__board.width:
+                                if nrRevealed == 2:
                                     return
+
+                                if image1 in self.__imageRepo.imageSoundCues.keys():
+                                    self.__audioRepo.playSoundCue(self.__imageRepo.imageSoundCues[image1], 3.0)
                                 
                             firstBox = None
 
@@ -223,7 +227,14 @@ class GUI:
         # level indexing starts at 1
         for level in range(1, NR_OF_LEVELS + 1):
             self.__playLevel(level)
-            self.__endLevelAnimation()   
+            
+            if level == NR_OF_LEVELS:
+                self.__audioRepo.playSoundCue(INTELIGENT_SOUND_PATH, 3.0) 
+            else:
+                self.__audioRepo.playSoundCue(SERGHEI_SOUND_PATH, 1.0)
+            
+            self.__endLevelAnimation()
+            pygame.time.wait(2500) 
         
     def start(self):
         self.__welcomeScreen()

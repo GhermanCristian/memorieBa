@@ -1,7 +1,7 @@
 import os
 import pygame
 import random
-from constants import NORMAL_VOLUME, WELCOME_SONG_PATH
+from constants import NORMAL_VOLUME, WELCOME_SONG_PATH, LOW_VOLUME, VOLUME_INCREMENT
 
 class AudioRepo:
     def __init__(self):
@@ -13,6 +13,7 @@ class AudioRepo:
         pygame.mixer.music.set_endevent(pygame.USEREVENT)
         
         self.__introSong = os.path.join(os.getcwd(), WELCOME_SONG_PATH)
+        self.__soundCueEndEvent = pygame.USEREVENT + 1
         
     def __loadPlaylist(self):
         path = os.path.join(os.getcwd(), "Music")
@@ -37,7 +38,37 @@ class AudioRepo:
         
     def playIntroSong(self):
         pygame.mixer.music.load(self.__introSong)
-        pygame.mixer.music.play(-1)   # repeat the song indefinetely
+        pygame.mixer.music.play(-1)   # repeat the song indefinitely
         pygame.mixer.music.set_volume(NORMAL_VOLUME)
+        
+    def playSoundCue(self, soundPath, volMultiplier):
+        cue = pygame.mixer.Sound(os.path.join(os.getcwd(), soundPath))
+        ch = pygame.mixer.Channel(1)
+        ch.play(cue)
+        ch.set_endevent(self.__soundCueEndEvent)
+        
+        pygame.mixer.music.set_volume(LOW_VOLUME)
+        cue.set_volume(NORMAL_VOLUME * volMultiplier)
+        
+    def fadeIn(self):
+        vol = pygame.mixer.music.get_volume()
+        while vol < NORMAL_VOLUME:
+            vol += VOLUME_INCREMENT
+            pygame.mixer.music.set_volume(vol)
+        pygame.mixer.music.set_volume(NORMAL_VOLUME)
+        
+    def fadeOut(self):
+        vol = pygame.mixer.music.get_volume()
+        while vol > 0.0:
+            vol -= 3 * VOLUME_INCREMENT
+            pygame.mixer.music.set_volume(vol)
+        pygame.mixer.music.set_volume(0)
+        
+    @property
+    def soundCueEndEvent(self):
+        return self.__soundCueEndEvent
+        
+        
+        
         
         

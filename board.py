@@ -10,7 +10,7 @@ class Board:
         self.__revealed = []
         self.__images = []
         
-        self.__imageRepo = ImageRepo()
+        self.imageRepo = ImageRepo()
         
         for i in range(self.__height):
             aux = []
@@ -25,7 +25,7 @@ class Board:
             self.__images.append(aux)
         
         self.__imageList = []
-        for image in self.__imageRepo.imageList.values():
+        for image in self.imageRepo.imageList.values():
             self.__imageList.append(image)
         random.shuffle(self.__imageList)
         

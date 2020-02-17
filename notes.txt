@@ -1,7 +1,10 @@
-1. after the welcome screen transition, a part of the "image" remains on the screen
 2. ensure nrBoxes is divisible with nr_revealed_boxes
 3. some entities keep flashing
 4. when covering/ revealing a box, the space is not completely covered bc BOX_SIZE is not divisible by REVEAL_SPEED 
 5. imageRepo object is used twice (once in board, then in GUI)
 6. resize the title screen image
 7. song playing + intro song playing code is kinda repetitive (use just one playing function or sth)
+
+==============
+
+1. add a "currently playing" thing

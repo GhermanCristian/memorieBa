@@ -5,13 +5,13 @@ from constants import *
 class ImageRepo:
     def __init__(self):
         self.imageList = {}
-        self.specialImageList = {}
+        self.imageSoundCues = {}
         
         self.__path = os.path.join(os.getcwd(), "Images")
         self.__loadImages()
         
         self.SERGHEI_ICON1 = pygame.image.load(os.path.join(self.__path, "SERGHEI_ICON1.ICO"))
-        self.WELCOME_SCREEN = pygame.image.load(os.path.join(self.__path, "WELCOME_SCREEN1.jpg"))
+        self.WELCOME_SCREEN = pygame.image.load(os.path.join(self.__path, "WELCOME_SCREEN2.jpg"))
         
     def __loadImages(self):
         auxDict = {
@@ -33,4 +33,5 @@ class ImageRepo:
             self.imageList[imageName] = pygame.image.load(os.path.join(self.__path, file))
             for name in auxDict.keys():
                 if name in imageName:
-                    self.specialImageList[ self.imageList[imageName] ] = auxDict[name]
+                    self.imageSoundCues[ self.imageList[imageName] ] = auxDict[name]
+                    break
