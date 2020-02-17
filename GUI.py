@@ -10,9 +10,10 @@ class GUI:
         self.__imageRepo = ImageRepo()
         
         pygame.init()
-        self.__gameDisplay = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT), pygame.FULLSCREEN)
         pygame.display.set_caption(APP_TITLE)
         pygame.display.set_icon(self.__imageRepo.SERGHEI_ICON1)
+        
+        self.__gameDisplay = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT), pygame.FULLSCREEN)
         self.__clock = pygame.time.Clock()
         self.__font = pygame.font.SysFont(TEXT_FONT, TEXT_FONT_SIZE, True, False)
         
@@ -101,7 +102,23 @@ class GUI:
     def __coverBoxesAnimation(self, boxList):
         for coverage in range(0, BOX_SIZE + 1, BOX_REVEAL_SPEED):
             self.__displayBoxCoverage(boxList, coverage)
-        self.__displayBoxCoverage(boxList, BOX_SIZE)    
+        self.__displayBoxCoverage(boxList, BOX_SIZE)
+        
+    def __displayText(self, text, xPos, yPos, font, color):
+        self.__gameDisplay.blit(font.render(text, True, color, None), (xPos, yPos))   
+        
+    def __convertTime(self, ms):
+        minutes = ms / 60000
+        ms %= 60000
+        seconds = ms / 1000
+        ms %= 1000
+        return ("%02d:%02d:%03d" % (minutes, seconds, ms))    
+        
+    def __displayInfo(self, timePassed, nrMoves):
+        self.__displayText(("Current moves = %d" % nrMoves), TEXT_LEFT_MARGIN, TEXT_TOP_MARGIN, self.__font, TEXT_COLOR)
+        self.__displayText(("Total moves = %d" % self.__totalMoves), TEXT_LEFT_MARGIN, TEXT_TOP_MARGIN + TEXT_ROW_HEIGHT, self.__font, TEXT_COLOR) 
+        self.__displayText(self.__convertTime(timePassed), TEXT_LEFT_MARGIN, WINDOW_HEIGHT - 2 * TEXT_ROW_HEIGHT - TEXT_TOP_MARGIN, self.__font, TEXT_COLOR)
+        self.__displayText(self.__convertTime(self.__totalTime), TEXT_LEFT_MARGIN, WINDOW_HEIGHT - TEXT_ROW_HEIGHT - TEXT_TOP_MARGIN, self.__font, TEXT_COLOR)
     
     def __introBoardAnimation(self):
         nrBoxes = BOARD_HEIGHT * BOARD_WIDTH
@@ -148,6 +165,8 @@ class GUI:
             self.__mouseClicked = False
             self.__gameDisplay.fill(BG_COLOR)
             self.__displayBoard()
+            
+            self.__displayInfo(timePassed, nrMoves)
             
             for event in pygame.event.get():
                 if event.type == QUIT or (event.type == KEYUP and event.key == K_ESCAPE):
