@@ -3,4 +3,4 @@
 3. in displayBoxCoverage, don't calculate the position of the box each time, but rather do it when shuffling the list
 4. when covering/ revealing a box, the space is not completely covered bc BOX_SIZE is not divisible by REVEAL_SPEED 
 5. imageRepo object is used twice (once in board, then in GUI)
-
+6. resize the title screen image

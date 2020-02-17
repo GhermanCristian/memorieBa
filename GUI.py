@@ -20,6 +20,9 @@ class GUI:
         self.__mouseY = 0
         self.__mouseClicked = False
         
+        self.__totalMoves = 0
+        self.__totalTime = 0
+        
         self.__board = Board()
         
     def __quitGame(self):
@@ -93,10 +96,12 @@ class GUI:
     def __revealBoxesAnimation(self, boxList):
         for coverage in range(BOX_SIZE, -1, -BOX_REVEAL_SPEED):
             self.__displayBoxCoverage(boxList, coverage)
+        self.__displayBoxCoverage(boxList, 0)
             
     def __coverBoxesAnimation(self, boxList):
         for coverage in range(0, BOX_SIZE + 1, BOX_REVEAL_SPEED):
-            self.__displayBoxCoverage(boxList, coverage)    
+            self.__displayBoxCoverage(boxList, coverage)
+        self.__displayBoxCoverage(boxList, BOX_SIZE)    
     
     def __introBoardAnimation(self):
         nrBoxes = BOARD_HEIGHT * BOARD_WIDTH
@@ -115,6 +120,16 @@ class GUI:
         for i in range(nrBoxes // NR_REVEALED_BOXES):
             self.__revealBoxesAnimation(boxList[i * NR_REVEALED_BOXES : (i + 1) * NR_REVEALED_BOXES])
             self.__coverBoxesAnimation(boxList[i * NR_REVEALED_BOXES : (i + 1) * NR_REVEALED_BOXES])
+            
+    def __endLevelAnimation(self):
+        for i in range(END_LEVEL_FLASHES):
+            if i % 2 == 0:
+                self.__gameDisplay.fill(LIGHT_BG_COLOR)
+            else:
+                self.__gameDisplay.fill(BG_COLOR)
+            self.__displayBoard()
+            pygame.display.update()
+            pygame.time.wait(300)
         
     def __playLevel(self, level):
         self.__board.newLevel(level)
@@ -124,6 +139,10 @@ class GUI:
         pygame.time.wait(100)
         
         self.__introBoardAnimation()
+        firstBox = None
+        nrRevealed = 0
+        nrMoves = 0
+        timePassed = 0
         
         while True:
             self.__mouseClicked = False
@@ -139,7 +158,6 @@ class GUI:
                     self.__mouseX, self.__mouseY = event.pos
                     self.__mouseClicked = True
                     
-            firstBox = None
             (xBox, yBox) = self.__getBoxAtCoords(self.__mouseX, self.__mouseY)
             if xBox != None and yBox != None:
                 if self.__board.isRevealed(xBox, yBox) == False:
@@ -155,29 +173,37 @@ class GUI:
                             image1 = self.__board.getImage(firstBox[0], firstBox[1])
                             image2 = self.__board.getImage(xBox, yBox)
                             
+                            nrMoves += 1
+                            self.__totalMoves += 1
+                            
                             if image1 != image2:
                                 pygame.time.wait(1000)
                                 self.__coverBoxesAnimation([(firstBox[0], firstBox[1]), (xBox, yBox)])
                                 self.__board.coverBox(firstBox[0], firstBox[1])
                                 self.__board.coverBox(xBox, yBox)
-                                #different images
                                 
                             else:
-                                pass
-                                #same image
+                                nrRevealed += 2
+                                if nrRevealed == self.__board.height * self.__board.width:
+                                    return
+                                
+                            firstBox = None
 
             pygame.display.update()
             self.__clock.tick(FPS)
+            
+            timePassed += self.__clock.get_time()
+            self.__totalTime += self.__clock.get_time()
         
     def __playGame(self):
         # level indexing starts at 1
         for level in range(1, NR_OF_LEVELS + 1):
-            self.__playLevel(level)    
+            self.__playLevel(level)
+            self.__endLevelAnimation()   
         
     def start(self):
         self.__welcomeScreen()
         self.__playGame()
-        #actual game
         #outro screen
         
         

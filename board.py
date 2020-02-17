@@ -30,7 +30,7 @@ class Board:
         random.shuffle(self.__imageList)
         
     def newLevel(self, level):
-        totalImages = self.__height * self.__width # total images in 1 level
+        totalImages = (self.__height * self.__width) // 2 # total images in 1 level
         icons = self.__imageList[(level - 1) * totalImages : level * totalImages] * 2
         random.shuffle(icons)
         
