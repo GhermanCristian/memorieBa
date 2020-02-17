@@ -4,10 +4,13 @@ from constants import *
 from board import Board
 import random
 from imageRepo import ImageRepo
+from audioRepo import AudioRepo
 
 class GUI:
     def __init__(self):
         self.__imageRepo = ImageRepo()
+        self.__board = Board()
+        self.__audioRepo = AudioRepo()
         
         pygame.init()
         pygame.display.set_caption(APP_TITLE)
@@ -23,8 +26,6 @@ class GUI:
         
         self.__totalMoves = 0
         self.__totalTime = 0
-        
-        self.__board = Board()
         
     def __quitGame(self):
         #fadeOut()
@@ -42,6 +43,7 @@ class GUI:
         
     def __welcomeScreen(self):
         running = True
+        self.__audioRepo.playIntroSong()
         while running:
             self.__gameDisplay.blit(self.__imageRepo.WELCOME_SCREEN, (0, 0))
             for event in pygame.event.get(): 
@@ -176,6 +178,8 @@ class GUI:
                 elif event.type == MOUSEBUTTONUP:
                     self.__mouseX, self.__mouseY = event.pos
                     self.__mouseClicked = True
+                elif event.type == pygame.USEREVENT or (event.type == KEYUP and event.key == K_RIGHT):
+                    self.__audioRepo.playSong()
                     
             (xBox, yBox) = self.__getBoxAtCoords(self.__mouseX, self.__mouseY)
             if xBox != None and yBox != None:
@@ -215,6 +219,7 @@ class GUI:
             self.__totalTime += self.__clock.get_time()
         
     def __playGame(self):
+        self.__audioRepo.playSong()
         # level indexing starts at 1
         for level in range(1, NR_OF_LEVELS + 1):
             self.__playLevel(level)

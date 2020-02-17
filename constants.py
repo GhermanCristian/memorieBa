@@ -58,3 +58,7 @@ GUTA_SOUND_PATH = "Music//GUTA_1.ogg"
 #JEREMY_SOUND_PATH = "Music//JEREMY_1.ogg"
 ROMEO_SOUND_PATH = "Music//ROMEO_1.ogg"
 DINU_SOUND_PATH = "Music//DINU_1.ogg"
+WELCOME_SONG_PATH = "Music//W_FRESH.ogg"
+
+### VOLUME ###
+NORMAL_VOLUME = 0.35
