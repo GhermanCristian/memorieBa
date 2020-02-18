@@ -3,14 +3,16 @@ from pygame.constants import *
 from constants import *
 from board import Board
 import random
-from imageRepo import ImageRepo
 from audioRepo import AudioRepo
+from leaderboard import Leaderboard
 
 class GUI:
     def __init__(self):
         self.__board = Board()
         self.__imageRepo = self.__board.imageRepo
         self.__audioRepo = AudioRepo()
+        self.__fastLeader = Leaderboard("fast.pickle")
+        self.__smartLeader = Leaderboard("smart.pickle")
         
         pygame.init()
         pygame.display.set_caption(APP_TITLE)
@@ -150,10 +152,57 @@ class GUI:
     
     def __mouseCursor(self):
         self.__gameDisplay.blit(self.__imageRepo.MOUSE_CURSOR, (self.__mouseX, self.__mouseY))
+    
+    def __userInput(self):
+        userInput = ""
+        while True:
+            for event in pygame.event.get():
+                if event.type == QUIT or (event.type == KEYUP and event.key == K_ESCAPE):
+                    self.__quitGame()
+                if event.type == KEYDOWN:
+                    if len(userInput) < MAX_NAME_LENGTH and (event.unicode.isalnum() or event.unicode in "!@#$%^&*()_+-=<>,.?/:{}\|`~ '"):
+                        userInput += event.unicode
+                    elif event.key == K_BACKSPACE:
+                        userInput = userInput[:-1]
+                    elif event.key == K_RETURN:
+                        return userInput
+                    if event.type == pygame.USEREVENT or event.key == K_RIGHT:
+                        self.__audioRepo.playSong()
+                    
+            self.__gameDisplay.fill(BG_COLOR)
+            self.__displayText("baga un nume", WINDOW_WIDTH / 2 - 12 * 7, WINDOW_HEIGHT / 2 - TEXT_ROW_HEIGHT, self.__font, LIGHT_ORANGE)
+            pygame.draw.rect(self.__gameDisplay, LIGHT_BG_COLOR, (WINDOW_WIDTH / 2 - 250, WINDOW_HEIGHT / 2, 500, TEXT_ROW_HEIGHT))
+            self.__displayText(userInput, WINDOW_WIDTH / 2 - 250 + 10, WINDOW_HEIGHT / 2, self.__font, LIGHT_ORANGE)
+            pygame.display.update()
+    
+    def __displayResults(self):
+        self.__displayText("rapidu", WINDOW_WIDTH / 4 - 6 * 7, WINDOW_HEIGHT / 4, self.__font, LIGHT_ORANGE)
+        self.__displayText("desteptu", 3 * WINDOW_WIDTH / 4 - 6 * 7, WINDOW_HEIGHT / 4, self.__font, LIGHT_ORANGE)
+        
+        for i in range(TABLE_ENTRIES):
+            self.__displayText("%02d. %s" % (i + 1, self.__fastLeader.scoreList[i][0]), 2 * TEXT_LEFT_MARGIN, (i + 2) * TEXT_ROW_HEIGHT + WINDOW_HEIGHT / 4, self.__font, LIGHT_ORANGE)
+            self.__displayText(self.__convertTime(self.__fastLeader.scoreList[i][1]), WINDOW_WIDTH / 2 - 6 * TEXT_LEFT_MARGIN, (i + 2) * TEXT_ROW_HEIGHT + WINDOW_HEIGHT / 4, self.__font, LIGHT_ORANGE)
+            
+            self.__displayText("%02d. %s" % (i + 1, self.__smartLeader.scoreList[i][0]), WINDOW_WIDTH / 2 + 2 * TEXT_LEFT_MARGIN, (i + 2) * TEXT_ROW_HEIGHT + WINDOW_HEIGHT / 4, self.__font, LIGHT_ORANGE)
+            self.__displayText("%d moves" % (self.__smartLeader.scoreList[i][1]), WINDOW_WIDTH - 6 * TEXT_LEFT_MARGIN, (i + 2) * TEXT_ROW_HEIGHT + WINDOW_HEIGHT / 4, self.__font, LIGHT_ORANGE)
+        
+        pygame.display.update()
+    
+    def __endGame(self):
+        self.__gameDisplay.fill(BG_COLOR)
+        self.__displayResults()
+        
+        while True:
+            for event in pygame.event.get(): 
+                if event.type == QUIT or (event.type == KEYUP and event.key == K_ESCAPE):
+                    self.__quitGame()
+                elif event.type == pygame.USEREVENT or (event.type == KEYUP and event.key == K_RIGHT):
+                    self.__audioRepo.playSong()
         
     def __playLevel(self, level):
         self.__board.newLevel(level)
         #new level screen ? (sth like "level 1") - for now we'll use just a background
+        
         self.__gameDisplay.fill(BG_COLOR)
         pygame.display.update()
         pygame.time.wait(100)
@@ -211,7 +260,7 @@ class GUI:
                             else:
                                 nrRevealed += 2
                                 
-                                if nrRevealed == self.__board.height * self.__board.width:
+                                if nrRevealed == self.__board.height * self.__board.width:  
                                     return
 
                                 if image1 in self.__imageRepo.imageSoundCues.keys():
@@ -228,6 +277,7 @@ class GUI:
         
     def __playGame(self):
         self.__audioRepo.playSong()
+        playerName = self.__userInput()
         for level in range(1, NR_OF_LEVELS + 1):        # level indexing starts at 1
             self.__playLevel(level)
             
@@ -237,11 +287,19 @@ class GUI:
                 self.__audioRepo.playSoundCue(SERGHEI_SOUND_PATH, 1.0)
             
             self.__endLevelAnimation()
-            pygame.time.wait(2500) 
+            pygame.time.wait(2500)
+            
+        newFast = self.__fastLeader.checkResult(self.__totalTime)
+        if newFast == True:
+            self.__fastLeader.addResult(self.__totalTime, playerName)
+        newSmart = self.__smartLeader.checkResult(self.__totalMoves)
+        if newSmart == True:
+            self.__smartLeader.addResult(self.__totalMoves, playerName)
         
     def start(self):
         self.__welcomeScreen()
         self.__playGame()
-        #outro screen
+        self.__endGame()
+        #sth like an outro
         
         
