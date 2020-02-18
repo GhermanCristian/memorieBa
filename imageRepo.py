@@ -12,6 +12,7 @@ class ImageRepo:
         
         self.SERGHEI_ICON1 = pygame.image.load(os.path.join(self.__path, "SERGHEI_ICON1.ICO"))
         self.WELCOME_SCREEN = pygame.image.load(os.path.join(self.__path, "WELCOME_SCREEN2.jpg"))
+        self.MOUSE_CURSOR = pygame.image.load(os.path.join(self.__path, "MOUSE_CURSOR1.jpg"))
         
     def __loadImages(self):
         auxDict = {
@@ -27,7 +28,7 @@ class ImageRepo:
         
         for file in os.listdir(self.__path):
             imageName = file[:-5].upper() + "_" + file[-5]
-            if "ICON" in imageName or "SCREEN" in imageName:
+            if "ICON" in imageName or "SCREEN" in imageName or "CURSOR" in imageName:
                 continue
             
             self.imageList[imageName] = pygame.image.load(os.path.join(self.__path, file))

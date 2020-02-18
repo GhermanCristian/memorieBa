@@ -27,6 +27,8 @@ class GUI:
         self.__totalMoves = 0
         self.__totalTime = 0
         
+        pygame.mouse.set_visible(False)
+        
     def __quitGame(self):
         self.__audioRepo.fadeOut()
         pygame.quit()
@@ -72,7 +74,6 @@ class GUI:
     def __drawHighlightBox(self, i, j):
         (top, left) = self.__getTopLeftCoords(i, j)
         pygame.draw.rect(self.__gameDisplay, HIGHLIGHT_COLOR, (left - HIGHLIGHT_BORDER_SIZE, top - HIGHLIGHT_BORDER_SIZE, BOX_SIZE + 2 * HIGHLIGHT_BORDER_SIZE, BOX_SIZE + 2 * HIGHLIGHT_BORDER_SIZE), HIGHLIGHT_BORDER_SIZE)
-        pygame.display.update() 
     
     def __displayBoard(self):
         for i in range(self.__board.height):
@@ -146,6 +147,9 @@ class GUI:
             self.__displayBoard()
             pygame.display.update()
             pygame.time.wait(300)
+    
+    def __mouseCursor(self):
+        self.__gameDisplay.blit(self.__imageRepo.MOUSE_CURSOR, (self.__mouseX, self.__mouseY))
         
     def __playLevel(self, level):
         self.__board.newLevel(level)
@@ -163,9 +167,8 @@ class GUI:
         while True:
             self.__mouseClicked = False
             self.__gameDisplay.fill(BG_COLOR)
-            self.__displayBoard()
-            
             self.__displayInfo(timePassed, nrMoves)
+            self.__displayBoard()
             
             for event in pygame.event.get():
                 if event.type == QUIT or (event.type == KEYUP and event.key == K_ESCAPE):
@@ -179,6 +182,7 @@ class GUI:
                     self.__audioRepo.playSong()
                 elif event.type == self.__audioRepo.soundCueEndEvent:
                     self.__audioRepo.fadeIn() 
+            
                     
             (xBox, yBox) = self.__getBoxAtCoords(self.__mouseX, self.__mouseY)
             if xBox != None and yBox != None:
@@ -207,15 +211,15 @@ class GUI:
                             else:
                                 nrRevealed += 2
                                 
-                                #if nrRevealed == self.__board.height * self.__board.width:
-                                if nrRevealed == 2:
+                                if nrRevealed == self.__board.height * self.__board.width:
                                     return
 
                                 if image1 in self.__imageRepo.imageSoundCues.keys():
                                     self.__audioRepo.playSoundCue(self.__imageRepo.imageSoundCues[image1], 3.0)
                                 
                             firstBox = None
-
+                            
+            self.__mouseCursor()
             pygame.display.update()
             self.__clock.tick(FPS)
             
@@ -224,8 +228,7 @@ class GUI:
         
     def __playGame(self):
         self.__audioRepo.playSong()
-        # level indexing starts at 1
-        for level in range(1, NR_OF_LEVELS + 1):
+        for level in range(1, NR_OF_LEVELS + 1):        # level indexing starts at 1
             self.__playLevel(level)
             
             if level == NR_OF_LEVELS:
