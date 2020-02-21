@@ -116,9 +116,10 @@ class GUI:
         ms %= 1000
         return ("%02d:%02d:%03d" % (minutes, seconds, ms))    
         
-    def __displayInfo(self, timePassed, nrMoves):
+    def __displayInfo(self, timePassed, nrMoves, level):
         self.__displayText(("Current moves = %d" % nrMoves), TEXT_LEFT_MARGIN, TEXT_TOP_MARGIN, self.__font, TEXT_COLOR)
         self.__displayText(("Total moves = %d" % self.__totalMoves), TEXT_LEFT_MARGIN, TEXT_TOP_MARGIN + TEXT_ROW_HEIGHT, self.__font, TEXT_COLOR) 
+        self.__displayText(("Level = %d" % level), TEXT_LEFT_MARGIN, TEXT_TOP_MARGIN + 2 * TEXT_ROW_HEIGHT, self.__font, TEXT_COLOR)
         self.__displayText(self.__convertTime(timePassed), TEXT_LEFT_MARGIN, WINDOW_HEIGHT - 2 * TEXT_ROW_HEIGHT - TEXT_TOP_MARGIN, self.__font, TEXT_COLOR)
         self.__displayText(self.__convertTime(self.__totalTime), TEXT_LEFT_MARGIN, WINDOW_HEIGHT - TEXT_ROW_HEIGHT - TEXT_TOP_MARGIN, self.__font, TEXT_COLOR)
     
@@ -159,6 +160,8 @@ class GUI:
             for event in pygame.event.get():
                 if event.type == QUIT or (event.type == KEYUP and event.key == K_ESCAPE):
                     self.__quitGame()
+                if event.type == pygame.USEREVENT or (event.type == KEYUP and event.key == K_RIGHT):
+                    self.__audioRepo.playSong()
                 if event.type == KEYDOWN:
                     if len(userInput) < MAX_NAME_LENGTH and (event.unicode.isalnum() or event.unicode in "!@#$%^&*()_+-=<>,.?/:{}\|`~ '"):
                         userInput += event.unicode
@@ -166,8 +169,6 @@ class GUI:
                         userInput = userInput[:-1]
                     elif event.key == K_RETURN:
                         return userInput
-                    if event.type == pygame.USEREVENT or event.key == K_RIGHT:
-                        self.__audioRepo.playSong()
                     
             self.__gameDisplay.fill(BG_COLOR)
             self.__displayText("baga un nume", WINDOW_WIDTH / 2 - 12 * 7, WINDOW_HEIGHT / 2 - TEXT_ROW_HEIGHT, self.__font, LIGHT_ORANGE)
@@ -216,7 +217,7 @@ class GUI:
         while True:
             self.__mouseClicked = False
             self.__gameDisplay.fill(BG_COLOR)
-            self.__displayInfo(timePassed, nrMoves)
+            self.__displayInfo(timePassed, nrMoves, level)
             self.__displayBoard()
             
             for event in pygame.event.get():
@@ -300,6 +301,5 @@ class GUI:
         self.__welcomeScreen()
         self.__playGame()
         self.__endGame()
-        #sth like an outro
         
         

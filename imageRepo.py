@@ -16,14 +16,23 @@ class ImageRepo:
         
     def __loadImages(self):
         auxDict = {
-            "DUMITRESCU": DUMITRESCU_SOUND_PATH, 
+            "DUMITRESCU_1": DUMITRESCU_SOUND_PATH, 
             "MARLANU": MARLANU_SOUND_PATH, 
             "SILVIU": SILVIU_SOUND_PATH, 
             "PROSTAMOL": PROSTAMOL_SOUND_PATH, 
             "BADEA_2": BADEA_SOUND_PATH, 
             "ROMEO_2": ROMEO_SOUND_PATH, 
             "GUTA_3": GUTA_SOUND_PATH, 
-            "DINU_1": DINU_SOUND_PATH
+            "DINU_1": DINU_SOUND_PATH,
+            "ZMAILI_1": ZMAILI_SOUND_PATH,
+            "VELEA_1": VELEA_SOUND_PATH,
+            "PITT_1": PITT_SOUND_PATH,
+            "POPA": POPA_SOUND_PATH,
+            "AUSTIN": AUSTIN_SOUND_PATH,
+            "MARGINEANU": MARGINEANU_SOUND_PATH,
+            "GEOANA": GEOANA_SOUND_PATH, 
+            "DESPOT": DESPOT_SOUND_PATH,
+            "BORCEA": BORCEA_SOUND_PATH
         }
         
         for file in os.listdir(self.__path):

@@ -1,9 +1,0 @@
-1. adjust constants
-2. ensure nrBoxes is divisible with nr_revealed_boxes
-3. entities keep flickering
-4. when covering/ revealing a box, the space is not completely covered bc BOX_SIZE is not divisible by REVEAL_SPEED 
-7. song playing + intro song playing code is kinda repetitive (use just one playing function or sth)
-
-==============
-
-1. add a "currently playing" thing
