@@ -5,6 +5,7 @@ from board import Board
 import random
 from audioRepo import AudioRepo
 from leaderboard import Leaderboard
+from doubleMoney import DoubleMoney
 
 class GUI:
     def __init__(self):
@@ -22,12 +23,15 @@ class GUI:
         self.__clock = pygame.time.Clock()
         self.__font = pygame.font.SysFont(TEXT_FONT, TEXT_FONT_SIZE, True, False)
         
+        self.__doubleMoney = DoubleMoney(self.__gameDisplay, self.__font, self.__audioRepo, self.__imageRepo.ACE_HEARTS, self.__imageRepo.ACE_SPADES)
+        
         self.__mouseX = 0
         self.__mouseY = 0
         self.__mouseClicked = False
         
         self.__totalMoves = 0
         self.__totalTime = 0
+        self.__money = 0.0
         
         pygame.mouse.set_visible(False)
         
@@ -119,7 +123,8 @@ class GUI:
     def __displayInfo(self, timePassed, nrMoves, level):
         self.__displayText(("Current moves = %d" % nrMoves), TEXT_LEFT_MARGIN, TEXT_TOP_MARGIN, self.__font, TEXT_COLOR)
         self.__displayText(("Total moves = %d" % self.__totalMoves), TEXT_LEFT_MARGIN, TEXT_TOP_MARGIN + TEXT_ROW_HEIGHT, self.__font, TEXT_COLOR) 
-        self.__displayText(("Level = %d" % level), TEXT_LEFT_MARGIN, TEXT_TOP_MARGIN + 2 * TEXT_ROW_HEIGHT, self.__font, TEXT_COLOR)
+        self.__displayText(("%.2f lei" % self.__money), TEXT_LEFT_MARGIN, TEXT_TOP_MARGIN + 2 * TEXT_ROW_HEIGHT, self.__font, TEXT_COLOR)
+        self.__displayText(("Level = %d" % level), TEXT_LEFT_MARGIN, TEXT_TOP_MARGIN + 3 * TEXT_ROW_HEIGHT, self.__font, TEXT_COLOR)
         self.__displayText(self.__convertTime(timePassed), TEXT_LEFT_MARGIN, WINDOW_HEIGHT - 2 * TEXT_ROW_HEIGHT - TEXT_TOP_MARGIN, self.__font, TEXT_COLOR)
         self.__displayText(self.__convertTime(self.__totalTime), TEXT_LEFT_MARGIN, WINDOW_HEIGHT - TEXT_ROW_HEIGHT - TEXT_TOP_MARGIN, self.__font, TEXT_COLOR)
     
@@ -216,9 +221,6 @@ class GUI:
         
         while True:
             self.__mouseClicked = False
-            self.__gameDisplay.fill(BG_COLOR)
-            self.__displayInfo(timePassed, nrMoves, level)
-            self.__displayBoard()
             
             for event in pygame.event.get():
                 if event.type == QUIT or (event.type == KEYUP and event.key == K_ESCAPE):
@@ -232,8 +234,12 @@ class GUI:
                     self.__audioRepo.playSong()
                 elif event.type == self.__audioRepo.soundCueEndEvent:
                     self.__audioRepo.fadeIn() 
-            
                     
+            self.__gameDisplay.fill(BG_COLOR)
+            self.__displayInfo(timePassed, nrMoves, level)
+            self.__doubleMoney.doubleMoney(self.__mouseX, self.__mouseY, self.__mouseClicked, self.__money)
+            self.__displayBoard()
+            
             (xBox, yBox) = self.__getBoxAtCoords(self.__mouseX, self.__mouseY)
             if xBox != None and yBox != None:
                 if self.__board.isRevealed(xBox, yBox) == False:
@@ -260,6 +266,7 @@ class GUI:
                                 
                             else:
                                 nrRevealed += 2
+                                self.__money += INCREASE_MONEY_AMOUNT
                                 
                                 if nrRevealed == self.__board.height * self.__board.width:  
                                     return

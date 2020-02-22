@@ -25,9 +25,9 @@ class AudioRepo:
         self.__songCount = len(self.__playlist)
         random.shuffle(self.__playlist)
         
-    def playSong(self):
+    def playSong(self, startTime = 0):
         pygame.mixer.music.load(self.__playlist[self.__crtSong])
-        pygame.mixer.music.play()
+        pygame.mixer.music.play(0, startTime // 1000)
         pygame.mixer.music.set_volume(NORMAL_VOLUME)
         
         self.__crtSong += 1
@@ -49,6 +49,20 @@ class AudioRepo:
         
         pygame.mixer.music.set_volume(LOW_VOLUME)
         cue.set_volume(NORMAL_VOLUME * volMultiplier)
+        
+    def playPacaneleSong(self):
+        prevSongTime = pygame.mixer.music.get_pos() + 100
+        pygame.mixer.music.load(self.__introSong)
+        pygame.mixer.music.play(-1)
+        pygame.mixer.music.set_volume(NORMAL_VOLUME)
+        
+        return prevSongTime
+        
+    def endPacaneleSong(self, prevSongTime):
+        self.__crtSong -= 1
+        if self.__crtSong < 0:
+            self.__crtSong = self.__songCount - 1
+        self.playSong(prevSongTime)
         
     def fadeIn(self):
         vol = pygame.mixer.music.get_volume()
