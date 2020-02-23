@@ -13,8 +13,9 @@ class ImageRepo:
         self.SERGHEI_ICON1 = pygame.image.load(os.path.join(self.__path, "SERGHEI_ICON1.ICO"))
         self.WELCOME_SCREEN = pygame.image.load(os.path.join(self.__path, "WELCOME_SCREEN2.jpg"))
         self.MOUSE_CURSOR = pygame.image.load(os.path.join(self.__path, "MOUSE_CURSOR1.jpg"))
-        self.ACE_HEARTS = pygame.image.load(os.path.join(self.__path, "ACE_HEARTS.jpg"))
-        self.ACE_SPADES = pygame.image.load(os.path.join(self.__path, "ACE_SPADES.jpg"))
+        self.ACE_HEARTS = pygame.image.load(os.path.join(self.__path, "ACE_HEARTS1.jpg"))
+        self.ACE_SPADES = pygame.image.load(os.path.join(self.__path, "ACE_SPADES1.jpg"))
+        self.SAVE_ICON = pygame.image.load(os.path.join(self.__path, "SAVE_ICON1.jpg"))
         
     def __loadImages(self):
         auxDict = {

@@ -23,7 +23,7 @@ class GUI:
         self.__clock = pygame.time.Clock()
         self.__font = pygame.font.SysFont(TEXT_FONT, TEXT_FONT_SIZE, True, False)
         
-        self.__doubleMoney = DoubleMoney(self.__gameDisplay, self.__font, self.__audioRepo, self.__imageRepo.ACE_HEARTS, self.__imageRepo.ACE_SPADES)
+        self.__doubleMoney = DoubleMoney(self.__gameDisplay, self.__font, self.__audioRepo, self.__imageRepo.ACE_HEARTS, self.__imageRepo.ACE_SPADES, self.__imageRepo.SAVE_ICON)
         
         self.__mouseX = 0
         self.__mouseY = 0
@@ -31,7 +31,7 @@ class GUI:
         
         self.__totalMoves = 0
         self.__totalTime = 0
-        self.__money = 0.0
+        self.__money = 0.1
         
         pygame.mouse.set_visible(False)
         
@@ -166,7 +166,7 @@ class GUI:
                 if event.type == QUIT or (event.type == KEYUP and event.key == K_ESCAPE):
                     self.__quitGame()
                 if event.type == pygame.USEREVENT or (event.type == KEYUP and event.key == K_RIGHT):
-                    self.__audioRepo.playSong()
+                    self.__audioRepo.nextSong()
                 if event.type == KEYDOWN:
                     if len(userInput) < MAX_NAME_LENGTH and (event.unicode.isalnum() or event.unicode in "!@#$%^&*()_+-=<>,.?/:{}\|`~ '"):
                         userInput += event.unicode
@@ -203,7 +203,7 @@ class GUI:
                 if event.type == QUIT or (event.type == KEYUP and event.key == K_ESCAPE):
                     self.__quitGame()
                 elif event.type == pygame.USEREVENT or (event.type == KEYUP and event.key == K_RIGHT):
-                    self.__audioRepo.playSong()
+                    self.__audioRepo.nextSong()
         
     def __playLevel(self, level):
         self.__board.newLevel(level)
@@ -231,13 +231,13 @@ class GUI:
                     self.__mouseX, self.__mouseY = event.pos
                     self.__mouseClicked = True
                 elif event.type == pygame.USEREVENT or (event.type == KEYUP and event.key == K_RIGHT):
-                    self.__audioRepo.playSong()
+                    self.__audioRepo.nextSong()
                 elif event.type == self.__audioRepo.soundCueEndEvent:
                     self.__audioRepo.fadeIn() 
                     
             self.__gameDisplay.fill(BG_COLOR)
             self.__displayInfo(timePassed, nrMoves, level)
-            self.__doubleMoney.doubleMoney(self.__mouseX, self.__mouseY, self.__mouseClicked, self.__money)
+            self.__money = self.__doubleMoney.double(self.__mouseX, self.__mouseY, self.__mouseClicked, self.__money)
             self.__displayBoard()
             
             (xBox, yBox) = self.__getBoxAtCoords(self.__mouseX, self.__mouseY)
@@ -284,7 +284,7 @@ class GUI:
             self.__totalTime += self.__clock.get_time()
         
     def __playGame(self):
-        self.__audioRepo.playSong()
+        self.__audioRepo.nextSong()
         playerName = self.__userInput()
         for level in range(1, NR_OF_LEVELS + 1):        # level indexing starts at 1
             self.__playLevel(level)
