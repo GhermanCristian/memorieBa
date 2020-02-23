@@ -50,7 +50,7 @@ class DoubleMoney:
         while True:
             mouseClicked = False
             
-            self.__gameDisplay.fill(BG_COLOR)
+            self.__gameDisplay.fill(PACANELE_BG_COLOR)
             self.__displayLastColors()
             self.__displayContent(money)
             pygame.display.update()
@@ -74,6 +74,8 @@ class DoubleMoney:
                     choice = 1
                 elif saveBox.collidepoint(mouseX, mouseY):
                     return money
+                else:
+                    continue
                 
                 if self.__checkResult(choice):
                     money *= 2.0

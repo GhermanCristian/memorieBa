@@ -31,7 +31,7 @@ class GUI:
         
         self.__totalMoves = 0
         self.__totalTime = 0
-        self.__money = 0.1
+        self.__money = 0.0
         
         pygame.mouse.set_visible(False)
         

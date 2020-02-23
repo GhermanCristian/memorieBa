@@ -35,7 +35,8 @@ class ImageRepo:
             "MARGINEANU": MARGINEANU_SOUND_PATH,
             "GEOANA": GEOANA_SOUND_PATH, 
             "DESPOT": DESPOT_SOUND_PATH,
-            "BORCEA": BORCEA_SOUND_PATH
+            "BORCEA": BORCEA_SOUND_PATH,
+            "DRAGONU": PRA_SOUND_PATH
         }
         
         for file in os.listdir(self.__path):
