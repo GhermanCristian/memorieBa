@@ -51,7 +51,12 @@ class AudioRepo:
         
     def playSoundCue(self, soundPath, volMultiplier):
         cue = pygame.mixer.Sound(os.path.join(os.getcwd(), soundPath))
-        ch = pygame.mixer.Channel(1)
+        
+        channel = 1
+        while pygame.mixer.Channel(channel).get_busy():
+            channel += 1
+        
+        ch = pygame.mixer.Channel(channel)
         ch.play(cue)
         ch.set_endevent(self.__soundCueEndEvent)
         

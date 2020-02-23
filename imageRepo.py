@@ -36,7 +36,17 @@ class ImageRepo:
             "GEOANA": GEOANA_SOUND_PATH, 
             "DESPOT": DESPOT_SOUND_PATH,
             "BORCEA": BORCEA_SOUND_PATH,
-            "DRAGONU": PRA_SOUND_PATH
+            "DRAGONU": PRA_SOUND_PATH,
+            "JACKSON": JACKSON_SOUND_PATH,
+            "ROBY": ROBY_SOUND_PATH,
+            "BIJU": BIJU_SOUND_PATH,
+            "BRET": BRET_SOUND_PATH,
+            "STEINER": STEINER_SOUND_PATH,
+            "HAGI_1": HAGI_SOUND_PATH,
+            "IOHANNIS": IOHANNIS_SOUND_PATH,
+            "GARCEA": GARCEA_SOUND_PATH,
+            "BECALI_3": BECALI_SOUND_PATH,
+            "HOGAN_2": HOGAN_SOUND_PATH
         }
         
         for file in os.listdir(self.__path):

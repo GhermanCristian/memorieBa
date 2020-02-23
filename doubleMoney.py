@@ -67,6 +67,7 @@ class DoubleMoney:
             redBox = pygame.Rect((WINDOW_WIDTH - self.__LEFT_MARGIN) // 2, 3 * WINDOW_HEIGHT // 4, BOX_SIZE, BOX_SIZE)
             blackBox = pygame.Rect((WINDOW_WIDTH - self.__LEFT_MARGIN) // 2 + 3 * (BOX_SIZE + GAP_SIZE), 3 * WINDOW_HEIGHT // 4, BOX_SIZE, BOX_SIZE)
             saveBox = pygame.Rect((WINDOW_WIDTH - self.__LEFT_MARGIN) // 2 + 6 * (BOX_SIZE + GAP_SIZE), 3 * WINDOW_HEIGHT // 4, BOX_SIZE, BOX_SIZE)
+            
             if mouseClicked == True:
                 if redBox.collidepoint(mouseX, mouseY):
                     choice = 0
