@@ -16,6 +16,8 @@ class ImageRepo:
         self.ACE_HEARTS = pygame.image.load(os.path.join(self.__path, "ACE_HEARTS1.jpg"))
         self.ACE_SPADES = pygame.image.load(os.path.join(self.__path, "ACE_SPADES1.jpg"))
         self.SAVE_ICON = pygame.image.load(os.path.join(self.__path, "SAVE_ICON1.jpg"))
+        self.EXIT_SCREEN_1 = pygame.image.load(os.path.join(self.__path, "EXIT_SCREEN1.jpg"))
+        self.EXIT_SCREEN_2 = pygame.image.load(os.path.join(self.__path, "EXIT_SCREEN2.jpg"))
         
     def __loadImages(self):
         auxDict = {
@@ -46,7 +48,8 @@ class ImageRepo:
             "IOHANNIS": IOHANNIS_SOUND_PATH,
             "GARCEA": GARCEA_SOUND_PATH,
             "BECALI_3": BECALI_SOUND_PATH,
-            "HOGAN_2": HOGAN_SOUND_PATH
+            "HOGAN_2": HOGAN_SOUND_PATH,
+            "METICUZOLITATE": METICUZOLITATE_SOUND_PATH
         }
         
         for file in os.listdir(self.__path):

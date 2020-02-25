@@ -14,12 +14,15 @@ class DoubleMoney:
         
         #0 = red, 1 = black; the most recent element is the first one
         self.__lastColors = [-1] * NR_PREV_COLORS
-        
+        self.__pacaneleFont = pygame.font.SysFont(PACANELE_FONT, PACANELE_FONT_SIZE, True)
         self.__LEFT_MARGIN = NR_PREV_COLORS * BOX_SIZE + (NR_PREV_COLORS - 1) * GAP_SIZE
     
     def __displayBox(self):
         pygame.draw.rect(self.__gameDisplay, LIGHT_BG_COLOR, (DOUBLE_MONEY_BOX_LEFT, DOUBLE_MONEY_BOX_TOP, DOUBLE_MONEY_BOX_WIDTH, TEXT_ROW_HEIGHT))
-        self.__gameDisplay.blit(self.__font.render("Dubleaza", True, LIGHT_ORANGE, None), (DOUBLE_MONEY_BOX_LEFT + 13, DOUBLE_MONEY_BOX_TOP + 10))
+        textBlock = self.__font.render("Dubleaza", True, LIGHT_ORANGE)
+        textRect = textBlock.get_rect()
+        textRect.center = (DOUBLE_MONEY_BOX_LEFT + DOUBLE_MONEY_BOX_WIDTH / 2, DOUBLE_MONEY_BOX_TOP + TEXT_ROW_HEIGHT / 2)
+        self.__gameDisplay.blit(textBlock, textRect)
     
     def __displayLastColors(self):
         for i in range(NR_PREV_COLORS):
@@ -31,7 +34,11 @@ class DoubleMoney:
                 pygame.draw.rect(self.__gameDisplay, LIGHT_BG_COLOR, ((WINDOW_WIDTH - self.__LEFT_MARGIN) // 2 + i * (BOX_SIZE + GAP_SIZE), WINDOW_HEIGHT // 4, BOX_SIZE, BOX_SIZE))
     
     def __displayContent(self, money):
-        self.__gameDisplay.blit(self.__font.render("%.2f lei" % money, True, LIGHT_ORANGE, None), (WINDOW_WIDTH // 2 - 8 * 7, WINDOW_HEIGHT // 2))
+        textBlock = self.__font.render("%.2f lei" % money, True, LIGHT_ORANGE)
+        textRect = textBlock.get_rect()
+        textRect.center = (WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2)
+        self.__gameDisplay.blit(textBlock, textRect)
+        
         self.__gameDisplay.blit(self.__aceHearts, ((WINDOW_WIDTH - self.__LEFT_MARGIN) // 2, 3 * WINDOW_HEIGHT // 4))
         self.__gameDisplay.blit(self.__aceSpades, ((WINDOW_WIDTH - self.__LEFT_MARGIN) // 2 + 3 * (BOX_SIZE + GAP_SIZE), 3 * WINDOW_HEIGHT // 4))
         self.__gameDisplay.blit(self.__saveIcon, ((WINDOW_WIDTH - self.__LEFT_MARGIN) // 2 + 6 * (BOX_SIZE + GAP_SIZE), 3 * WINDOW_HEIGHT // 4))
@@ -42,6 +49,18 @@ class DoubleMoney:
         self.__lastColors.pop()
         
         return actualResult == choice
+    
+    def __resultScreen(self, result):
+        if result == True:
+            textBlock = self.__pacaneleFont.render("WIN", True, PACANELE_FONT_COLOR)
+        else:
+            textBlock = self.__pacaneleFont.render("LOSS", True, PACANELE_FONT_COLOR)
+        textRect = textBlock.get_rect()
+        textRect.center = (WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2)
+        self.__gameDisplay.blit(textBlock, textRect)
+        
+        pygame.display.update()
+        pygame.time.wait(1000)
     
     def __redOrBlack(self, money):
         mouseX = mouseY = 0
@@ -80,7 +99,9 @@ class DoubleMoney:
                 
                 if self.__checkResult(choice):
                     money *= 2.0
+                    self.__resultScreen(True)
                 else:
+                    self.__resultScreen(False)
                     return 0.0
     
     def double(self, mouseX, mouseY, mouseClicked, money):

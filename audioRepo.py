@@ -23,7 +23,7 @@ class AudioRepo:
         path = os.path.join(os.getcwd(), "Music")
         
         for file in os.listdir(path):
-            if "S_" in file:
+            if file[0] == "S" and file[1] == "_":
                 self.__playlist.append(os.path.join(path, file))
                 
         self.__songCount = len(self.__playlist)
@@ -88,6 +88,7 @@ class AudioRepo:
         while vol > 0.0:
             vol -= 3 * VOLUME_INCREMENT
             pygame.mixer.music.set_volume(vol)
+            pygame.time.wait(5)
         pygame.mixer.music.set_volume(0)
         
     @property

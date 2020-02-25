@@ -36,6 +36,12 @@ class GUI:
         pygame.mouse.set_visible(False)
         
     def __quitGame(self):
+        self.__gameDisplay.blit(self.__imageRepo.EXIT_SCREEN_1, (0, 0))
+        pygame.display.update()
+        pygame.time.wait(2000)
+        self.__gameDisplay.blit(self.__imageRepo.EXIT_SCREEN_2, (0, 0))
+        pygame.display.update()
+        pygame.time.wait(2000)
         self.__audioRepo.fadeOut()
         pygame.quit()
         quit()    
@@ -176,9 +182,15 @@ class GUI:
                         return userInput
                     
             self.__gameDisplay.fill(BG_COLOR)
-            self.__displayText("baga un nume", WINDOW_WIDTH / 2 - 12 * 7, WINDOW_HEIGHT / 2 - TEXT_ROW_HEIGHT, self.__font, LIGHT_ORANGE)
-            pygame.draw.rect(self.__gameDisplay, LIGHT_BG_COLOR, (WINDOW_WIDTH / 2 - 250, WINDOW_HEIGHT / 2, 500, TEXT_ROW_HEIGHT))
-            self.__displayText(userInput, WINDOW_WIDTH / 2 - 250 + 10, WINDOW_HEIGHT / 2, self.__font, LIGHT_ORANGE)
+            self.__displayText("baga un nume", WINDOW_WIDTH / 2 - 12 * 7, WINDOW_HEIGHT / 2 - 2 * TEXT_ROW_HEIGHT, self.__font, LIGHT_ORANGE)
+            
+            pygame.draw.rect(self.__gameDisplay, LIGHT_BG_COLOR, (WINDOW_WIDTH / 2 - 250, WINDOW_HEIGHT / 2 - TEXT_ROW_HEIGHT / 2, 500, TEXT_ROW_HEIGHT))
+            
+            textBlock = self.__font.render(userInput, True, LIGHT_ORANGE)
+            textRect = textBlock.get_rect()
+            textRect.center = (WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2)
+            self.__gameDisplay.blit(textBlock, textRect)
+            
             pygame.display.update()
     
     def __displayResults(self):
