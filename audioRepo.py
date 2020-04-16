@@ -41,7 +41,7 @@ class AudioRepo:
         if self.__crtSong >= self.__songCount:
             self.__crtSong = 0
             
-        # this happens when the song changes
+        # this happens when the song changes (the delay becomes 0 again, because the song has just started)
         if self.__delayFlag == False:
             self.__delay = 0
         self.__delayFlag = False

@@ -77,8 +77,7 @@ class GUI:
         for i in range(self.__board.height):
             for j in range(self.__board.width):
                 (top, left) = self.__getTopLeftCoords(i, j)
-                auxRect = pygame.Rect(left, top, BOX_SIZE, BOX_SIZE)
-                if auxRect.collidepoint(x, y):
+                if (left <= x <= left + BOX_SIZE and top <= y <= top + BOX_SIZE):
                     return (i, j)
                 
         return (None, None)
