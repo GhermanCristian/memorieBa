@@ -1,7 +1,9 @@
 from abc import ABC, abstractmethod
 
+QUIT_PROGRAM = "quit"
+CONTINUE_PROGRAM = "continue"
+
 class Screen(ABC):
-    
     def __init__(self):
         pass
     

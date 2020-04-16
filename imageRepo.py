@@ -8,16 +8,17 @@ class ImageRepo:
         self.imageSoundCues = {}
         
         self.__path = os.path.join(os.getcwd(), "Images")
+        self.__specialPath = os.path.join(self.__path, "Special images")
         self.__loadImages()
         
-        self.SERGHEI_ICON1 = pygame.image.load(os.path.join(self.__path, "SERGHEI_ICON1.ICO"))
-        self.WELCOME_SCREEN = pygame.image.load(os.path.join(self.__path, "WELCOME_SCREEN2.jpg"))
-        self.MOUSE_CURSOR = pygame.image.load(os.path.join(self.__path, "MOUSE_CURSOR1.jpg"))
-        self.ACE_HEARTS = pygame.image.load(os.path.join(self.__path, "ACE_HEARTS1.jpg"))
-        self.ACE_SPADES = pygame.image.load(os.path.join(self.__path, "ACE_SPADES1.jpg"))
-        self.SAVE_ICON = pygame.image.load(os.path.join(self.__path, "SAVE_ICON1.jpg"))
-        self.EXIT_SCREEN_1 = pygame.image.load(os.path.join(self.__path, "EXIT_SCREEN1.jpg"))
-        self.EXIT_SCREEN_2 = pygame.image.load(os.path.join(self.__path, "EXIT_SCREEN2.jpg"))
+        self.SERGHEI_ICON = pygame.image.load(os.path.join(self.__specialPath, "SERGHEI_ICON.ICO"))
+        self.WELCOME_SCREEN = pygame.image.load(os.path.join(self.__specialPath, "WELCOME_SCREEN.jpg"))
+        self.MOUSE_CURSOR = pygame.image.load(os.path.join(self.__specialPath, "MOUSE_CURSOR1.jpg"))
+        self.ACE_HEARTS = pygame.image.load(os.path.join(self.__specialPath, "ACE_HEARTS.jpg"))
+        self.ACE_SPADES = pygame.image.load(os.path.join(self.__specialPath, "ACE_SPADES.jpg"))
+        self.SAVE_ICON = pygame.image.load(os.path.join(self.__specialPath, "SAVE_ICON.jpg"))
+        self.EXIT_SCREEN_1 = pygame.image.load(os.path.join(self.__specialPath, "EXIT_SCREEN1.jpg"))
+        self.EXIT_SCREEN_2 = pygame.image.load(os.path.join(self.__specialPath, "EXIT_SCREEN2.jpg"))
         
     def __loadImages(self):
         auxDict = {
@@ -53,12 +54,15 @@ class ImageRepo:
         }
         
         for file in os.listdir(self.__path):
-            imageName = file[:-5].upper() + "_" + file[-5]
-            if "ICON" in imageName or "SCREEN" in imageName or "CURSOR" in imageName or "ACE_" in imageName:
+            if os.path.isdir(os.path.join(self.__path, file)):
                 continue
+            
+            imageName = file[:-5].upper() + "_" + file[-5]
             
             self.imageList[imageName] = pygame.image.load(os.path.join(self.__path, file))
             for name in auxDict.keys():
                 if name in imageName:
                     self.imageSoundCues[ self.imageList[imageName] ] = auxDict[name]
                     break
+
+

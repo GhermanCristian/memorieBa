@@ -6,6 +6,9 @@ import random
 from audioRepo import AudioRepo
 from leaderboard import Leaderboard
 from doubleMoney import DoubleMoney
+from Screens.screen import QUIT_PROGRAM, CONTINUE_PROGRAM
+from Screens.welcomeScreen import WelcomeScreen
+from Screens.exitScreen import ExitScreen, EXIT_SCREEN1, EXIT_SCREEN2
 
 class GUI:
     def __init__(self):
@@ -17,7 +20,7 @@ class GUI:
         
         pygame.init()
         pygame.display.set_caption(APP_TITLE)
-        pygame.display.set_icon(self.__imageRepo.SERGHEI_ICON1)
+        pygame.display.set_icon(self.__imageRepo.SERGHEI_ICON)
         
         self.__gameDisplay = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT), pygame.FULLSCREEN)
         self.__clock = pygame.time.Clock()
@@ -36,37 +39,11 @@ class GUI:
         pygame.mouse.set_visible(False)
         
     def __quitGame(self):
-        self.__gameDisplay.blit(self.__imageRepo.EXIT_SCREEN_1, (0, 0))
-        pygame.display.update()
-        pygame.time.wait(2000)
-        self.__gameDisplay.blit(self.__imageRepo.EXIT_SCREEN_2, (0, 0))
-        pygame.display.update()
-        pygame.time.wait(2000)
+        ExitScreen(self.__gameDisplay, EXIT_SCREEN1).displayContent()
+        ExitScreen(self.__gameDisplay, EXIT_SCREEN2).displayContent()
         self.__audioRepo.fadeOut()
         pygame.quit()
-        quit()    
-        
-    def __introScreenTransition(self):
-        leftMargin = 0
-        while leftMargin <= WINDOW_WIDTH:
-            self.__gameDisplay.fill(BG_COLOR)
-            self.__gameDisplay.blit(self.__imageRepo.WELCOME_SCREEN, (leftMargin, 0))
-            pygame.display.update()
-            pygame.time.wait(TRANSITION_TIME // TRANSITION_STEPS)
-            leftMargin += WINDOW_WIDTH // TRANSITION_STEPS
-        
-    def __welcomeScreen(self):
-        running = True
-        self.__audioRepo.playIntroSong()
-        while running:
-            self.__gameDisplay.blit(self.__imageRepo.WELCOME_SCREEN, (0, 0))
-            for event in pygame.event.get(): 
-                if event.type == KEYUP and event.key == K_RETURN:
-                    running = False
-                    self.__introScreenTransition()
-                elif event.type == QUIT or (event.type == KEYUP and event.key == K_ESCAPE):
-                    self.__quitGame()
-            pygame.display.update()
+        quit()
     
     def __getTopLeftCoords(self, i, j):
         top = TOP_MARGIN + i * (BOX_SIZE + GAP_SIZE)
@@ -316,7 +293,10 @@ class GUI:
             self.__smartLeader.addResult(self.__totalMoves, playerName)
         
     def start(self):
-        self.__welcomeScreen()
+        programState = WelcomeScreen(self.__gameDisplay).displayContent()
+        if programState == QUIT_PROGRAM:
+            self.__quitGame()
+        
         self.__playGame()
         self.__endGame()
         
