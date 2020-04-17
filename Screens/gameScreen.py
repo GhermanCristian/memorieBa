@@ -158,7 +158,7 @@ class GameScreen(Screen):
                     self.__mouseClicked = True
                 elif event.type == pygame.USEREVENT or (event.type == KEYUP and event.key == K_RIGHT):
                     self.__playlist.nextSong()
-                elif event.type == self.__playlist.soundCueEndEvent:
+                elif event.type == SoundCue.SOUND_CUE_END_EVENT:
                     self.__playlist.fadeIn() 
                     
             self.setBackgroundImage()
@@ -200,6 +200,7 @@ class GameScreen(Screen):
                                 self.__money += INCREASE_MONEY_AMOUNT
                                 
                                 if nrRevealed == self.__board.height * self.__board.width:  
+                                #if nrRevealed == 2: 
                                     return
 
                                 if image1 in self.__imageRepo.imageSoundCues.keys():
@@ -221,9 +222,9 @@ class GameScreen(Screen):
                 return (QUIT_PROGRAM, QUIT_PROGRAM)
             
             if level == NR_OF_LEVELS:
-                self.__audioRepo.playSoundCue(INTELIGENT_SOUND_PATH, 3.0) 
+                SoundCue(INTELIGENT_SOUND_PATH).play(3.0)
             else:
-                self.__audioRepo.playSoundCue(SERGHEI_SOUND_PATH, 1.0)
+                SoundCue(SERGHEI_SOUND_PATH).play(1.0)
             
             self.__endLevelAnimation()
             pygame.time.wait(2500)

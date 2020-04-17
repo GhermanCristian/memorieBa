@@ -17,7 +17,6 @@ class Playlist():
         self.__delay = 0
         self.__delayFlag = False #when this is True, the delay won't be reset
         
-        self.__soundCueEndEvent = pygame.USEREVENT + 1
         pygame.mixer.music.set_endevent(pygame.USEREVENT)
         
         self.__loadPlaylist()
@@ -65,7 +64,4 @@ class Playlist():
             pygame.time.wait(5)
         pygame.mixer.music.set_volume(0)
 
-    @property
-    def soundCueEndEvent(self):
-        return self.__soundCueEndEvent
 
