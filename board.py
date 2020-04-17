@@ -1,5 +1,5 @@
 from constants import *
-from imageRepo import ImageRepo
+from imageList import ImageList
 import random
 
 class Board:
@@ -7,10 +7,10 @@ class Board:
         self.__width = BOARD_WIDTH
         self.__height = BOARD_HEIGHT
         
-        self.__revealed = []
-        self.__images = []
+        self.__revealed = [] # matrix form
+        self.__images = [] # matrix form
         
-        self.imageRepo = ImageRepo()
+        self.__imageList = ImageList().images
         
         for i in range(self.__height):
             aux = []
@@ -23,10 +23,7 @@ class Board:
             for j in range(self.__width):
                 aux.append(False)
             self.__images.append(aux)
-        
-        self.__imageList = []
-        for image in self.imageRepo.imageList.values():
-            self.__imageList.append(image)
+
         random.shuffle(self.__imageList)
         
     def newLevel(self, level):

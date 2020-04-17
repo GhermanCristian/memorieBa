@@ -16,14 +16,17 @@ class GUI:
         pygame.init()
         pygame.display.set_caption(APP_TITLE)
         
-        self.__iconImage = os.path.join(os.getcwd(), "Images")
-        self.__iconImage = os.path.join(self.__iconImage, "Special images")
-        self.__iconImage = pygame.image.load(os.path.join(self.__iconImage, SERGHEI_ICON))
+        self.__iconImage = self.__loadSpecialImage(SERGHEI_ICON)
         
         pygame.display.set_icon(self.__iconImage)
         self.__gameDisplay = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT), pygame.FULLSCREEN)
         
         pygame.mouse.set_visible(False)
+    
+    def __loadSpecialImage(self, imageTitle):
+        currentImage = os.path.join(os.getcwd(), "Images")
+        currentImage = os.path.join(currentImage, "Special images")
+        return pygame.image.load(os.path.join(currentImage, imageTitle))
         
     def __quitGame(self):
         ExitScreen(self.__gameDisplay, EXIT_SCREEN1).displayContent()

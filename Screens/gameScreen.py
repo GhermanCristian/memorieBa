@@ -8,6 +8,9 @@ from constants import NR_OF_LEVELS, INTELIGENT_SOUND_PATH, SERGHEI_SOUND_PATH, B
 from board import Board, random
 from Screens.pacaneleScreen import PacaneleScreen
 from soundCue import SoundCue
+import os
+
+MOUSE_CURSOR_1 = "MOUSE_CURSOR1.jpg"
 
 class GameScreen(Screen):
     def __init__(self, gameDisplay, playlist):
@@ -15,7 +18,6 @@ class GameScreen(Screen):
         self.__playlist = playlist
         
         self.__board = Board()
-        self.__imageRepo = self.__board.imageRepo
         
         self.__clock = pygame.time.Clock()
         self.__font = pygame.font.SysFont(TEXT_FONT, TEXT_FONT_SIZE, True, False)
@@ -25,6 +27,7 @@ class GameScreen(Screen):
         self.__mouseX = 0
         self.__mouseY = 0
         self.__mouseClicked = False
+        self.__mouseCursor = self.__loadSpecialImage(MOUSE_CURSOR_1)
         
         self.__totalMoves = 0
         self.__totalTime = 0
@@ -35,6 +38,11 @@ class GameScreen(Screen):
     
     def setBackgroundMusic(self):
         pass
+    
+    def __loadSpecialImage(self, imageTitle):
+        currentImage = os.path.join(os.getcwd(), "Images")
+        currentImage = os.path.join(currentImage, "Special images")
+        return pygame.image.load(os.path.join(currentImage, imageTitle))
     
     def __getTopLeftCoords(self, i, j):
         top = TOP_MARGIN + i * (BOX_SIZE + GAP_SIZE)
@@ -59,7 +67,7 @@ class GameScreen(Screen):
             for j in range(self.__board.width):
                 (top, left) = self.__getTopLeftCoords(i, j)
                 if self.__board.isRevealed(i, j):
-                    self.__gameDisplay.blit(self.__board.getImage(i, j), (left, top))
+                    self.__gameDisplay.blit(self.__board.getImage(i, j).imageObject, (left, top))
                 else:
                     pygame.draw.rect(self.__gameDisplay, BOX_COLOR, (left, top, BOX_SIZE, BOX_SIZE)) 
         pygame.display.update()
@@ -67,7 +75,7 @@ class GameScreen(Screen):
     def __displayBoxCoverage(self, boxList, coverage):
         for box in boxList:
             (top, left) = self.__getTopLeftCoords(box[0], box[1])
-            self.__gameDisplay.blit(self.__board.getImage(box[0], box[1]), (left, top))
+            self.__gameDisplay.blit(self.__board.getImage(box[0], box[1]).imageObject, (left, top))
             if coverage > 0:
                 pygame.draw.rect(self.__gameDisplay, BOX_COLOR, (left, top, coverage, BOX_SIZE)) 
         pygame.display.update() 
@@ -102,7 +110,7 @@ class GameScreen(Screen):
             self.__coverBoxesAnimation(boxList[i * NR_REVEALED_BOXES : (i + 1) * NR_REVEALED_BOXES])
     
     def __showMouseCursor(self):
-        self.__gameDisplay.blit(self.__imageRepo.MOUSE_CURSOR, (self.__mouseX, self.__mouseY))
+        self.__gameDisplay.blit(self.__mouseCursor, (self.__mouseX, self.__mouseY))
     
     def __convertTime(self, ms):
         minutes = ms / 60000
@@ -189,7 +197,7 @@ class GameScreen(Screen):
                             nrMoves += 1
                             self.__totalMoves += 1
                             
-                            if image1 != image2:
+                            if image1.title != image2.title:
                                 pygame.time.wait(1000)
                                 self.__coverBoxesAnimation([(firstBox[0], firstBox[1]), (xBox, yBox)])
                                 self.__board.coverBox(firstBox[0], firstBox[1])
@@ -203,8 +211,8 @@ class GameScreen(Screen):
                                 #if nrRevealed == 2: 
                                     return
 
-                                if image1 in self.__imageRepo.imageSoundCues.keys():
-                                    SoundCue(self.__imageRepo.imageSoundCues[image1]).play(3.0)
+                                if image1.soundCue != None:
+                                    SoundCue(image1.soundCue).play(3.0)
                                 
                             firstBox = None
                             
