@@ -9,6 +9,8 @@ from doubleMoney import DoubleMoney
 from Screens.screen import QUIT_PROGRAM, CONTINUE_PROGRAM
 from Screens.welcomeScreen import WelcomeScreen
 from Screens.exitScreen import ExitScreen, EXIT_SCREEN1, EXIT_SCREEN2
+from playlist import Playlist
+from Screens.nameScreen import NameScreen
 
 class GUI:
     def __init__(self):
@@ -141,34 +143,6 @@ class GUI:
     def __mouseCursor(self):
         self.__gameDisplay.blit(self.__imageRepo.MOUSE_CURSOR, (self.__mouseX, self.__mouseY))
     
-    def __userInput(self):
-        userInput = ""
-        while True:
-            for event in pygame.event.get():
-                if event.type == QUIT or (event.type == KEYUP and event.key == K_ESCAPE):
-                    self.__quitGame()
-                if event.type == pygame.USEREVENT or (event.type == KEYUP and event.key == K_RIGHT):
-                    self.__audioRepo.nextSong()
-                if event.type == KEYDOWN:
-                    if len(userInput) < MAX_NAME_LENGTH and (event.unicode.isalnum() or event.unicode in "!@#$%^&*()_+-=<>,.?/:{}\|`~ '"):
-                        userInput += event.unicode
-                    elif event.key == K_BACKSPACE:
-                        userInput = userInput[:-1]
-                    elif event.key == K_RETURN:
-                        return userInput
-                    
-            self.__gameDisplay.fill(BG_COLOR)
-            self.__displayText("baga un nume", WINDOW_WIDTH / 2 - 12 * 7, WINDOW_HEIGHT / 2 - 2 * TEXT_ROW_HEIGHT, self.__font, LIGHT_ORANGE)
-            
-            pygame.draw.rect(self.__gameDisplay, LIGHT_BG_COLOR, (WINDOW_WIDTH / 2 - 250, WINDOW_HEIGHT / 2 - TEXT_ROW_HEIGHT / 2, 500, TEXT_ROW_HEIGHT))
-            
-            textBlock = self.__font.render(userInput, True, LIGHT_ORANGE)
-            textRect = textBlock.get_rect()
-            textRect.center = (WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2)
-            self.__gameDisplay.blit(textBlock, textRect)
-            
-            pygame.display.update()
-    
     def __displayResults(self):
         self.__displayText("rapidu", WINDOW_WIDTH / 4 - 6 * 7, WINDOW_HEIGHT / 4, self.__font, LIGHT_ORANGE)
         self.__displayText("desteptu", 3 * WINDOW_WIDTH / 4 - 6 * 7, WINDOW_HEIGHT / 4, self.__font, LIGHT_ORANGE)
@@ -271,9 +245,7 @@ class GUI:
             timePassed += self.__clock.get_time()
             self.__totalTime += self.__clock.get_time()
         
-    def __playGame(self):
-        self.__audioRepo.nextSong()
-        playerName = self.__userInput()
+    def __playGame(self, playerName):
         for level in range(1, NR_OF_LEVELS + 1):        # level indexing starts at 1
             self.__playLevel(level)
             
@@ -293,11 +265,22 @@ class GUI:
             self.__smartLeader.addResult(self.__totalMoves, playerName)
         
     def start(self):
-        programState = WelcomeScreen(self.__gameDisplay).displayContent()
-        if programState == QUIT_PROGRAM:
+        programResult = WelcomeScreen(self.__gameDisplay).displayContent()
+        if programResult == QUIT_PROGRAM:
             self.__quitGame()
         
-        self.__playGame()
+        # I will use the same playlist for all the screens (where it applies ofc)
+        # bc I don't want to reshuffle the songs each time I create the playlist
+        currentPlaylist = Playlist() 
+        
+        playerName = ""
+        programResult = NameScreen(self.__gameDisplay, currentPlaylist).displayContent()
+        if programResult == QUIT_PROGRAM:
+            self.__quitGame()
+        else:
+            playerName = programResult
+        
+        self.__playGame(playerName)
         self.__endGame()
         
         

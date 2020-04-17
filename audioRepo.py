@@ -19,9 +19,6 @@ class AudioRepo:
     def nextSong(self, startTime = 0):
         self.__playlist.nextSong(startTime)
         
-    def playIntroSong(self):
-        self.__introSong.play(-1, 0)
-        
     def playSoundCue(self, soundPath, volMultiplier):
         currentSoundCue = SoundCue(soundPath)
         currentSoundCue.play(volMultiplier)
