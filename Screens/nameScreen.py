@@ -2,7 +2,6 @@ from Screens.screen import Screen, QUIT_PROGRAM, CONTINUE_PROGRAM
 from constants import BG_COLOR, MAX_NAME_LENGTH, WINDOW_HEIGHT, WINDOW_WIDTH, TEXT_ROW_HEIGHT, LIGHT_BG_COLOR, LIGHT_ORANGE, TEXT_FONT, TEXT_FONT_SIZE
 import pygame
 from pygame.constants import K_RETURN, QUIT, KEYUP, K_ESCAPE, KEYDOWN, K_BACKSPACE, K_RIGHT
-from playlist import Playlist
 
 class NameScreen(Screen):
     def __init__(self, gameDisplay, playlist):

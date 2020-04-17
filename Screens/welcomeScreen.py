@@ -6,14 +6,12 @@ import pygame
 from pygame.constants import K_RETURN, QUIT, KEYUP, K_ESCAPE
 
 BACKGROUND_IMAGE_TITLE = "WELCOME_SCREEN.jpg"
+WELCOME_SONG_PATH = "Music//W_FRESH.ogg"
 
 class WelcomeScreen(Screen):
-    def __init__(self, gameDisplay, backgroundSong = WELCOME_SONG_PATH):
-        self.__backgroundSong = backgroundSong
-        
-        self.__backgroundImage = os.path.join(os.getcwd(), "Images")
-        self.__backgroundImage = os.path.join(self.__backgroundImage, "Special images")
-        self.__backgroundImage = pygame.image.load(os.path.join(self.__backgroundImage, BACKGROUND_IMAGE_TITLE))
+    def __init__(self, gameDisplay):
+        self.__backgroundSong = WELCOME_SONG_PATH
+        self.__backgroundImage = self.__loadSpecialImage(BACKGROUND_IMAGE_TITLE)
         
         self.__gameDisplay = gameDisplay
         
@@ -22,6 +20,11 @@ class WelcomeScreen(Screen):
     
     def setBackgroundMusic(self):
         Song(WELCOME_SONG_PATH).play(-1, 0)
+        
+    def __loadSpecialImage(self, imageTitle):
+        currentImage = os.path.join(os.getcwd(), "Images")
+        currentImage = os.path.join(currentImage, "Special images")
+        return pygame.image.load(os.path.join(currentImage, imageTitle))
     
     def __outroTransition(self):            
         for leftMargin in range(0, WINDOW_WIDTH + 1, WINDOW_WIDTH // TRANSITION_STEPS):
