@@ -4,7 +4,11 @@ class Label():
     def __init__(self, top, left, width, height, backgroundColor, text):
         self._topCoord = top
         self._leftCoord = left
-        self._width = width 
+        
+        self._width = width
+        if width == -1:
+            self._width = len(text.content) * text.fontSize
+         
         self._height = height
         self._backgroundColor = backgroundColor
         self._text = text.content

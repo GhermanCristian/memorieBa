@@ -2,6 +2,8 @@ from Screens.screen import Screen
 from constants import BG_COLOR, WINDOW_HEIGHT, WINDOW_WIDTH, TEXT_ROW_HEIGHT, LIGHT_BG_COLOR, LIGHT_ORANGE, TEXT_FONT, TEXT_FONT_SIZE
 import pygame
 from pygame.constants import K_RETURN, QUIT, KEYUP, K_ESCAPE, KEYDOWN, K_BACKSPACE, K_RIGHT
+from text import Text
+from label import Label
 
 class NameScreen(Screen):
     MAX_NAME_LENGTH = 24
@@ -9,19 +11,16 @@ class NameScreen(Screen):
     def __init__(self, gameDisplay, playlist):
         self.__gameDisplay = gameDisplay
         self.__playlist = playlist
-        self.__font = pygame.font.SysFont(TEXT_FONT, TEXT_FONT_SIZE, True, False)
         
     def setBackgroundImage(self):
         self.__gameDisplay.fill(BG_COLOR)
     
     def setBackgroundMusic(self):
         self.__playlist.nextSong()
-    
-    def __displayText(self, text, xPos, yPos, font, color):
-        self.__gameDisplay.blit(font.render(text, True, color, None), (xPos, yPos))  
-    
+
     def __getPlayerName(self):
         userInput = ""
+        promptText = Text("baga un nume", TEXT_FONT, TEXT_FONT_SIZE, LIGHT_ORANGE)
         while True:
             for event in pygame.event.get():
                 if event.type == QUIT or (event.type == KEYUP and event.key == K_ESCAPE):
@@ -37,14 +36,9 @@ class NameScreen(Screen):
                         return userInput
                     
             self.setBackgroundImage()
-            self.__displayText("baga un nume", WINDOW_WIDTH / 2 - 12 * 7, WINDOW_HEIGHT / 2 - 2 * TEXT_ROW_HEIGHT, self.__font, LIGHT_ORANGE)
-            
-            pygame.draw.rect(self.__gameDisplay, LIGHT_BG_COLOR, (WINDOW_WIDTH / 2 - 250, WINDOW_HEIGHT / 2 - TEXT_ROW_HEIGHT / 2, 500, TEXT_ROW_HEIGHT))
-            
-            textBlock = self.__font.render(userInput, True, LIGHT_ORANGE)
-            textRect = textBlock.get_rect()
-            textRect.center = (WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2)
-            self.__gameDisplay.blit(textBlock, textRect)
+            promptText.display(self.__gameDisplay, WINDOW_HEIGHT / 2 - 2 * TEXT_ROW_HEIGHT, WINDOW_WIDTH / 2 - 12 * 7)
+            userInputText = Text(userInput, TEXT_FONT, TEXT_FONT_SIZE, LIGHT_ORANGE)
+            Label(WINDOW_HEIGHT / 2 - TEXT_ROW_HEIGHT / 2, WINDOW_WIDTH / 2 - 250, 500, TEXT_ROW_HEIGHT, LIGHT_BG_COLOR, userInputText).display(self.__gameDisplay)
             
             pygame.display.update()
     

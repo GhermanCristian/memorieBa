@@ -2,8 +2,7 @@ from Screens.screen import Screen
 import pygame
 import os
 import random
-from constants import TEXT_FONT, TEXT_FONT_SIZE, BOX_SIZE, GAP_SIZE, PACANELE_BG_COLOR, HIGHLIGHT_COLOR, HIGHLIGHT_BORDER_SIZE,\
-    TEXT_ROW_HEIGHT, WINDOW_WIDTH, LIGHT_BG_COLOR, LIGHT_ORANGE, WINDOW_HEIGHT, GOLD
+from constants import TEXT_FONT, TEXT_FONT_SIZE, BOX_SIZE, GAP_SIZE, RED, TEXT_ROW_HEIGHT, WINDOW_WIDTH, LIGHT_BG_COLOR, LIGHT_ORANGE, WINDOW_HEIGHT, GOLD
 from song import Song
 from text import Text
 from label import Label
@@ -26,6 +25,8 @@ class PacaneleScreen(Screen):
     TEXT_FONT_SIZE = 256
     TEXT_FONT_COLOR = GOLD
     
+    BG_COLOR = RED
+    
     def __init__(self, gameDisplay, playlist):
         self.__gameDisplay = gameDisplay
         self.__playlist = playlist
@@ -42,7 +43,7 @@ class PacaneleScreen(Screen):
         self.__previousSongTime = 0
         
     def setBackgroundImage(self):
-        self.__gameDisplay.fill(PACANELE_BG_COLOR)
+        self.__gameDisplay.fill(PacaneleScreen.BG_COLOR)
     
     def setBackgroundMusic(self):
         self.__previousSongTime = Song(PacaneleScreen.SONG_PATH).play(-1, 0)
@@ -51,13 +52,6 @@ class PacaneleScreen(Screen):
         currentImage = os.path.join(os.getcwd(), "Images")
         currentImage = os.path.join(currentImage, "Special images")
         return pygame.image.load(os.path.join(currentImage, imageTitle))
-    
-    def __displayBox(self):
-        pygame.draw.rect(self.__gameDisplay, LIGHT_BG_COLOR, (PacaneleScreen.DOUBLE_MONEY_BOX_LEFT, PacaneleScreen.DOUBLE_MONEY_BOX_TOP, PacaneleScreen.DOUBLE_MONEY_BOX_WIDTH, TEXT_ROW_HEIGHT))
-        textBlock = self.__font.render("Dubleaza", True, LIGHT_ORANGE)
-        textRect = textBlock.get_rect()
-        textRect.center = (PacaneleScreen.DOUBLE_MONEY_BOX_LEFT + PacaneleScreen.DOUBLE_MONEY_BOX_WIDTH // 2, PacaneleScreen.DOUBLE_MONEY_BOX_TOP + TEXT_ROW_HEIGHT // 2)
-        self.__gameDisplay.blit(textBlock, textRect)
     
     def __displayLastColors(self):
         for i in range(PacaneleScreen.NR_PREV_COLORS):
@@ -68,11 +62,9 @@ class PacaneleScreen(Screen):
             else:
                 pygame.draw.rect(self.__gameDisplay, LIGHT_BG_COLOR, ((WINDOW_WIDTH - self.__LEFT_MARGIN) // 2 + i * (BOX_SIZE + GAP_SIZE), WINDOW_HEIGHT // 4, BOX_SIZE, BOX_SIZE))
     
-    def __displayContent(self, money):
-        textBlock = self.__font.render("%.2f lei" % money, True, LIGHT_ORANGE)
-        textRect = textBlock.get_rect()
-        textRect.center = (WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2)
-        self.__gameDisplay.blit(textBlock, textRect)
+    def __displayContent(self, money):        
+        moneyText = Text("%.2f lei" % money, TEXT_FONT, TEXT_FONT_SIZE, LIGHT_ORANGE)
+        Label(WINDOW_HEIGHT / 2 - TEXT_ROW_HEIGHT, WINDOW_WIDTH / 2 - len(moneyText.content) * TEXT_FONT_SIZE / 2, -1, TEXT_ROW_HEIGHT, PacaneleScreen.BG_COLOR, moneyText).display(self.__gameDisplay)
         
         self.__gameDisplay.blit(self.__aceOfHearts, ((WINDOW_WIDTH - self.__LEFT_MARGIN) // 2, 3 * WINDOW_HEIGHT // 4))
         self.__gameDisplay.blit(self.__aceOfSpades, ((WINDOW_WIDTH - self.__LEFT_MARGIN) // 2 + 3 * (BOX_SIZE + GAP_SIZE), 3 * WINDOW_HEIGHT // 4))
