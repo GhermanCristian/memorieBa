@@ -1,7 +1,9 @@
+import pygame
+
 class GameImage():
-    def __init__(self, title, imageObject, soundCue = None):
+    def __init__(self, title, fullImagePath, soundCue = None):
         self.__title = title
-        self.__imageObject = imageObject
+        self.__fullImagePath = fullImagePath
         self.__soundCue = soundCue
         
     @property
@@ -10,7 +12,7 @@ class GameImage():
     
     @property
     def imageObject(self):
-        return self.__imageObject
+        return pygame.image.load(self.__fullImagePath)
     
     @property
     def soundCue(self):

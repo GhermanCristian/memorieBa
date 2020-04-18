@@ -15,13 +15,18 @@ class GameScreen(Screen):
     MOUSE_CURSOR_1 = "MOUSE_CURSOR1.jpg"
     INTELIGENT_SOUND_PATH = "Music//INTELIGENT_1.ogg"
     SERGHEI_SOUND_PATH = "Music//SERGHEI_RAS.ogg"
-    BOX_REVEAL_SPEED = 6
+    BOX_REVEAL_SPEED = 360 // FPS
     NR_REVEALED_BOXES = 10
-    NR_OF_LEVELS = 2
-    END_LEVEL_FLASHES = 10
+    NR_OF_LEVELS = 3
+    END_LEVEL_FLASH_COUNT = 10
     INCREASE_MONEY_AMOUNT = 0.1
     LEFT_MARGIN = int((WINDOW_WIDTH - (BOARD_WIDTH * (BOX_SIZE + GAP_SIZE))) / 2)
     TOP_MARGIN = int((WINDOW_HEIGHT - (BOARD_HEIGHT * (BOX_SIZE + GAP_SIZE))) / 2)
+    
+    MUSIC_PLAYER_BUTTON_TOP = TOP_MARGIN + 5 * TEXT_ROW_HEIGHT
+    MUSIC_PLAYER_BUTTON_LEFT = TEXT_LEFT_MARGIN
+    MUSIC_PLAYER_BUTTON_SIZE = TEXT_FONT_SIZE
+    MUSIC_PLAYER_BUTTON_GAP_SIZE = 5
     
     def __init__(self, gameDisplay, playlist):
         self.__gameDisplay = gameDisplay
@@ -74,15 +79,16 @@ class GameScreen(Screen):
             for j in range(self.__board.width):
                 (top, left) = self.__getTopLeftCoords(i, j)
                 if self.__board.isRevealed(i, j):
-                    self.__gameDisplay.blit(self.__board.getImage(i, j).imageObject, (left, top))
+                    currentObject = self.__gameDisplay.blit(self.__board.getImage(i, j).imageObject, (left, top))
                 else:
-                    pygame.draw.rect(self.__gameDisplay, BOX_COLOR, (left, top, BOX_SIZE, BOX_SIZE)) 
-        pygame.display.update()
+                    currentObject = pygame.draw.rect(self.__gameDisplay, BOX_COLOR, (left, top, BOX_SIZE, BOX_SIZE)) 
+                pygame.display.update(currentObject)
     
-    def __displayBoxCoverage(self, boxList, coverage):
+    def __displayBoxCoverage(self, boxList, coverage, fullyCovered = False):
         for box in boxList:
             (top, left) = self.__getTopLeftCoords(box[0], box[1])
-            self.__gameDisplay.blit(self.__board.getImage(box[0], box[1]).imageObject, (left, top))
+            if fullyCovered == False:
+                self.__gameDisplay.blit(self.__board.getImage(box[0], box[1]).imageObject, (left, top))
             if coverage > 0:
                 pygame.draw.rect(self.__gameDisplay, BOX_COLOR, (left, top, coverage, BOX_SIZE)) 
         pygame.display.update() 
@@ -96,7 +102,7 @@ class GameScreen(Screen):
     def __coverBoxesAnimation(self, boxList):
         for coverage in range(0, BOX_SIZE + 1, GameScreen.BOX_REVEAL_SPEED):
             self.__displayBoxCoverage(boxList, coverage)
-        self.__displayBoxCoverage(boxList, BOX_SIZE)
+        self.__displayBoxCoverage(boxList, BOX_SIZE, True)
     
     def __introBoardAnimation(self):
         nrBoxes = BOARD_HEIGHT * BOARD_WIDTH
@@ -135,7 +141,7 @@ class GameScreen(Screen):
         Text(self.__convertTime(self.__totalTime), TEXT_FONT, TEXT_FONT_SIZE, TEXT_COLOR).display(self.__gameDisplay, WINDOW_HEIGHT - TEXT_ROW_HEIGHT - TEXT_TOP_MARGIN, TEXT_LEFT_MARGIN)
             
     def __endLevelAnimation(self):
-        for i in range(GameScreen.END_LEVEL_FLASHES):
+        for i in range(GameScreen.END_LEVEL_FLASH_COUNT):
             if i % 2 == 0:
                 self.__gameDisplay.fill(LIGHT_BG_COLOR)
             else:
@@ -156,12 +162,33 @@ class GameScreen(Screen):
                 if functionResult == Screen.QUIT_PROGRAM:
                     return Screen.QUIT_PROGRAM
                 self.__money = functionResult
+                
+    def __displayMusicPlayer(self):
+        previousSongButtonText = Text("<", TEXT_FONT, TEXT_FONT_SIZE, LIGHT_ORANGE)
+        previousSongButton = Button(GameScreen.MUSIC_PLAYER_BUTTON_TOP, GameScreen.MUSIC_PLAYER_BUTTON_LEFT, GameScreen.MUSIC_PLAYER_BUTTON_SIZE, GameScreen.MUSIC_PLAYER_BUTTON_SIZE, LIGHT_BG_COLOR, previousSongButtonText)
+        previousSongButton.display(self.__gameDisplay)
+        
+        if previousSongButton.collides(self.__mouseX, self.__mouseY) and self.__mouseClicked:
+            self.__playlist.previousSong()
+            
+        pauseSongButtonText = Text("||", TEXT_FONT, TEXT_FONT_SIZE, LIGHT_ORANGE)
+        pauseSongButton = Button(GameScreen.MUSIC_PLAYER_BUTTON_TOP, GameScreen.MUSIC_PLAYER_BUTTON_LEFT + GameScreen.MUSIC_PLAYER_BUTTON_GAP_SIZE + GameScreen.MUSIC_PLAYER_BUTTON_SIZE, GameScreen.MUSIC_PLAYER_BUTTON_SIZE, GameScreen.MUSIC_PLAYER_BUTTON_SIZE, LIGHT_BG_COLOR, pauseSongButtonText)
+        pauseSongButton.display(self.__gameDisplay)
+        
+        if pauseSongButton.collides(self.__mouseX, self.__mouseY) and self.__mouseClicked:
+            self.__playlist.pauseButtonAction()
+            
+        nextSongButtonText = Text(">", TEXT_FONT, TEXT_FONT_SIZE, LIGHT_ORANGE)
+        nextSongButton = Button(GameScreen.MUSIC_PLAYER_BUTTON_TOP, GameScreen.MUSIC_PLAYER_BUTTON_LEFT + 2 * GameScreen.MUSIC_PLAYER_BUTTON_GAP_SIZE + 2 * GameScreen.MUSIC_PLAYER_BUTTON_SIZE, GameScreen.MUSIC_PLAYER_BUTTON_SIZE, GameScreen.MUSIC_PLAYER_BUTTON_SIZE, LIGHT_BG_COLOR, nextSongButtonText)
+        nextSongButton.display(self.__gameDisplay)
+        
+        if nextSongButton.collides(self.__mouseX, self.__mouseY) and self.__mouseClicked:
+            self.__playlist.nextSong()
         
     def __playLevel(self, level):
         self.__board.newLevel(level)
         
         self.setBackgroundImage()
-        pygame.display.update()
         pygame.time.wait(100)
         
         self.__introBoardAnimation()
@@ -188,8 +215,9 @@ class GameScreen(Screen):
                     
             self.setBackgroundImage()
             self.__displayGameInfo(timePassed, nrMoves, level)
-            
-            if self.__displayPacaneleButton() == Screen.QUIT_PROGRAM:
+            self.__displayMusicPlayer()
+            pacaneleResult = self.__displayPacaneleButton()
+            if pacaneleResult == Screen.QUIT_PROGRAM:
                 return Screen.QUIT_PROGRAM
             
             self.__displayBoard()

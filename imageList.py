@@ -1,4 +1,3 @@
-import pygame
 import os
 from gameImage import GameImage
 
@@ -14,7 +13,7 @@ class ImageList:
                 continue
             
             currentImageTitle = file[:-5].upper() + "_" + file[-5] #POZA_1
-            currentImageImageObject = pygame.image.load(os.path.join(self.__path, file))
+            currentImageFullPath = os.path.join(self.__path, file)
             currentImageSoundCue = None
             soundCuesFolder = os.path.join(os.getcwd(), "Music")
             for soundCue in os.listdir(soundCuesFolder):
@@ -22,7 +21,7 @@ class ImageList:
                     currentImageSoundCue = os.path.join("Music", soundCue)
                     break
 
-            self.__images.append(GameImage(currentImageTitle, currentImageImageObject, currentImageSoundCue))
+            self.__images.append(GameImage(currentImageTitle, currentImageFullPath, currentImageSoundCue))
             
     @property
     def images(self):

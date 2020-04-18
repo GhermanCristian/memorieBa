@@ -11,12 +11,14 @@ class Label():
          
         self._height = height
         self._backgroundColor = backgroundColor
-        self._text = text.content
-        self._textColor = text.color
-        self._textFontName = text.fontName
-        self._textFontSize = text.fontSize
         
-        self._font = pygame.font.SysFont(self._textFontName, self._textFontSize, True, False)
+        if (text != None):
+            self._text = text.content
+            self._textColor = text.color
+            self._textFontName = text.fontName
+            self._textFontSize = text.fontSize
+            
+            self._font = pygame.font.SysFont(self._textFontName, self._textFontSize, True, False)
         
     def display(self, gameDisplay):
         pygame.draw.rect(gameDisplay, self._backgroundColor, (self._leftCoord, self._topCoord, self._width, self._height))
