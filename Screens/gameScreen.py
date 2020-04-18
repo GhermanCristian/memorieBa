@@ -1,12 +1,15 @@
 from Screens.screen import Screen
 import pygame
 from pygame.constants import QUIT, KEYUP, K_ESCAPE, MOUSEMOTION, MOUSEBUTTONUP, K_RIGHT
-from constants import BG_COLOR, FPS, BOX_COLOR, HIGHLIGHT_BORDER_SIZE, HIGHLIGHT_COLOR,\
+from constants import BG_COLOR, FPS, BOX_COLOR, HIGHLIGHT_BORDER_SIZE, HIGHLIGHT_COLOR, LIGHT_ORANGE,\
     TEXT_LEFT_MARGIN, TEXT_TOP_MARGIN, WINDOW_HEIGHT, WINDOW_WIDTH, TEXT_COLOR, TEXT_ROW_HEIGHT,\
     TEXT_FONT, TEXT_FONT_SIZE, LIGHT_BG_COLOR, BOX_SIZE, GAP_SIZE
 from board import Board, random, BOARD_HEIGHT, BOARD_WIDTH
 from Screens.pacaneleScreen import PacaneleScreen
 from soundCue import SoundCue
+from text import Text
+from label import Label
+from button import Button
 import os
 
 class GameScreen(Screen):
@@ -125,19 +128,16 @@ class GameScreen(Screen):
         ms %= 60000
         seconds = ms / 1000
         ms %= 1000
-        return ("%02d:%02d:%03d" % (minutes, seconds, ms)) 
-    
-    def __displayText(self, text, xPos, yPos, font, color):
-        self.__gameDisplay.blit(font.render(text, True, color, None), (xPos, yPos))      
+        return ("%02d:%02d:%03d" % (minutes, seconds, ms))   
         
     def __displayInfo(self, timePassed, nrMoves, level):
-        self.__displayText(("Current moves = %d" % nrMoves), TEXT_LEFT_MARGIN, TEXT_TOP_MARGIN, self.__font, TEXT_COLOR)
-        self.__displayText(("Total moves = %d" % self.__totalMoves), TEXT_LEFT_MARGIN, TEXT_TOP_MARGIN + TEXT_ROW_HEIGHT, self.__font, TEXT_COLOR) 
-        self.__displayText(("%.2f lei" % self.__money), TEXT_LEFT_MARGIN, TEXT_TOP_MARGIN + 2 * TEXT_ROW_HEIGHT, self.__font, TEXT_COLOR)
-        self.__displayText(("Level = %d / %d" % (level, GameScreen.NR_OF_LEVELS)), TEXT_LEFT_MARGIN, TEXT_TOP_MARGIN + 3 * TEXT_ROW_HEIGHT, self.__font, TEXT_COLOR)
-        self.__displayText(self.__convertTime(timePassed), TEXT_LEFT_MARGIN, WINDOW_HEIGHT - 2 * TEXT_ROW_HEIGHT - TEXT_TOP_MARGIN, self.__font, TEXT_COLOR)
-        self.__displayText(self.__convertTime(self.__totalTime), TEXT_LEFT_MARGIN, WINDOW_HEIGHT - TEXT_ROW_HEIGHT - TEXT_TOP_MARGIN, self.__font, TEXT_COLOR)
-    
+        Text(("Current moves = %d" % nrMoves), TEXT_FONT, TEXT_FONT_SIZE, TEXT_COLOR).display(self.__gameDisplay, TEXT_TOP_MARGIN, TEXT_LEFT_MARGIN)
+        Text(("Total moves = %d" % self.__totalMoves), TEXT_FONT, TEXT_FONT_SIZE, TEXT_COLOR).display(self.__gameDisplay, TEXT_TOP_MARGIN + TEXT_ROW_HEIGHT, TEXT_LEFT_MARGIN)
+        Text(("%.2f lei" % self.__money), TEXT_FONT, TEXT_FONT_SIZE, TEXT_COLOR).display(self.__gameDisplay, TEXT_TOP_MARGIN + 2 * TEXT_ROW_HEIGHT, TEXT_LEFT_MARGIN)
+        Text(("Level = %d / %d" % (level, GameScreen.NR_OF_LEVELS)), TEXT_FONT, TEXT_FONT_SIZE, TEXT_COLOR).display(self.__gameDisplay, TEXT_TOP_MARGIN + 3 * TEXT_ROW_HEIGHT, TEXT_LEFT_MARGIN)
+        Text(self.__convertTime(timePassed), TEXT_FONT, TEXT_FONT_SIZE, TEXT_COLOR).display(self.__gameDisplay, WINDOW_HEIGHT - 2 * TEXT_ROW_HEIGHT - TEXT_TOP_MARGIN, TEXT_LEFT_MARGIN)
+        Text(self.__convertTime(self.__totalTime), TEXT_FONT, TEXT_FONT_SIZE, TEXT_COLOR).display(self.__gameDisplay, WINDOW_HEIGHT - TEXT_ROW_HEIGHT - TEXT_TOP_MARGIN, TEXT_LEFT_MARGIN)
+        
     def __endLevelAnimation(self):
         for i in range(GameScreen.END_LEVEL_FLASHES):
             if i % 2 == 0:
@@ -180,10 +180,16 @@ class GameScreen(Screen):
             self.setBackgroundImage()
             self.__displayInfo(timePassed, nrMoves, level)
             
-            functionResult = self.__pacaneleScreen.displayContent(self.__mouseX, self.__mouseY, self.__mouseClicked, self.__money)
-            if functionResult == Screen.QUIT_PROGRAM:
-                return Screen.QUIT_PROGRAM
-            self.__money = functionResult
+            pacaneleButtonText = Text("Dubleaza", TEXT_FONT, TEXT_FONT_SIZE, LIGHT_ORANGE)
+            pacaneleButton = Button(PacaneleScreen.DOUBLE_MONEY_BOX_TOP, PacaneleScreen.DOUBLE_MONEY_BOX_LEFT, PacaneleScreen.DOUBLE_MONEY_BOX_WIDTH, TEXT_ROW_HEIGHT, LIGHT_BG_COLOR, pacaneleButtonText)
+            pacaneleButton.display(self.__gameDisplay)
+            if pacaneleButton.collides(self.__mouseX, self.__mouseY):
+                pacaneleButton.drawHighlight(self.__gameDisplay, HIGHLIGHT_COLOR, HIGHLIGHT_BORDER_SIZE)
+                if self.__mouseClicked and self.__money > 0.0:
+                    functionResult = self.__pacaneleScreen.displayContent(self.__money)
+                    if functionResult == Screen.QUIT_PROGRAM:
+                        return Screen.QUIT_PROGRAM
+                    self.__money = functionResult
             
             self.__displayBoard()
             

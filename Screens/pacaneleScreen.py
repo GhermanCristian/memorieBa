@@ -5,6 +5,9 @@ import random
 from constants import TEXT_FONT, TEXT_FONT_SIZE, BOX_SIZE, GAP_SIZE, PACANELE_BG_COLOR, HIGHLIGHT_COLOR, HIGHLIGHT_BORDER_SIZE,\
     TEXT_ROW_HEIGHT, WINDOW_WIDTH, LIGHT_BG_COLOR, LIGHT_ORANGE, WINDOW_HEIGHT, GOLD
 from song import Song
+from text import Text
+from label import Label
+from button import Button
 from pygame.constants import QUIT, MOUSEMOTION, K_ESCAPE, KEYUP, MOUSEBUTTONUP
 
 class PacaneleScreen(Screen):
@@ -136,24 +139,17 @@ class PacaneleScreen(Screen):
                     self.__resultScreen(False)
                     return 0.0
     
-    def displayContent(self, mouseX, mouseY, mouseClicked, money):
-        #pacaneleButton = Button(DOUBLE_MONEY_BOX_LEFT, DOUBLE_MONEY_BOX_TOP, DOUBLE_MONEY_BOX_WIDTH, TEXT_ROW_HEIGHT, LIGHT_BG_COLOR, "Dubleaza", LIGHT_ORANGE, TEXT_FONT, TEXT_FONT_SIZE)
-        self.__displayBox()
+    def displayContent(self, money):
+        self.setBackgroundMusic()
+        pygame.mouse.set_visible(True)
         
-        box = pygame.Rect(PacaneleScreen.DOUBLE_MONEY_BOX_LEFT, PacaneleScreen.DOUBLE_MONEY_BOX_TOP, PacaneleScreen.DOUBLE_MONEY_BOX_WIDTH, TEXT_ROW_HEIGHT)
-        if box.collidepoint(mouseX, mouseY):
-            pygame.draw.rect(self.__gameDisplay, HIGHLIGHT_COLOR, (PacaneleScreen.DOUBLE_MONEY_BOX_LEFT - HIGHLIGHT_BORDER_SIZE, PacaneleScreen.DOUBLE_MONEY_BOX_TOP - HIGHLIGHT_BORDER_SIZE, PacaneleScreen.DOUBLE_MONEY_BOX_WIDTH + 2 * HIGHLIGHT_BORDER_SIZE, TEXT_ROW_HEIGHT + 2 * HIGHLIGHT_BORDER_SIZE), HIGHLIGHT_BORDER_SIZE)
-            if mouseClicked and money > 0.0:
-                self.setBackgroundMusic()
-                pygame.mouse.set_visible(True)
-                
-                functionResult = self.__redOrBlack(money)
-                if functionResult == Screen.QUIT_PROGRAM:
-                    return Screen.QUIT_PROGRAM
-                money = functionResult
-                
-                self.__playlist.restorePreviousSong(self.__previousSongTime)
-                pygame.mouse.set_visible(False)
+        functionResult = self.__redOrBlack(money)
+        if functionResult == Screen.QUIT_PROGRAM:
+            return Screen.QUIT_PROGRAM
+        money = functionResult
+        
+        self.__playlist.restorePreviousSong(self.__previousSongTime)
+        pygame.mouse.set_visible(False)
              
         return money
     

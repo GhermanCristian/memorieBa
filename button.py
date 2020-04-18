@@ -2,11 +2,11 @@ from label import Label
 import pygame
 
 class Button(Label):
-    def __init__(self, top, left, width, height, backgroundColor, text, textColor, textFont, textFontSize):
-        Label.__init__(self, top, left, width, height, backgroundColor, text, textColor, textFont, textFontSize)
+    def __init__(self, top, left, width, height, backgroundColor, text):
+        Label.__init__(self, top, left, width, height, backgroundColor, text)
         
     def collides(self, x, y):
-        return (self.__leftCoord <= x <= self.__leftCoord + self.__width and self.__topCoord <= y <= self.__topCoord + self.__height)
+        return (self._leftCoord <= x <= self._leftCoord + self._width and self._topCoord <= y <= self._topCoord + self._height)
     
-    def drawHighlight(self, highlightColor, highlightBorderSize):
-        pygame.draw.rect(self.__gameDisplay, highlightColor, (self.__leftCoord - highlightBorderSize, self.__topCoord - highlightBorderSize, self.__width + 2 * highlightBorderSize, self.__height + 2 * highlightBorderSize), highlightBorderSize)
+    def drawHighlight(self, gameDisplay, highlightColor, highlightBorderSize):
+        pygame.draw.rect(gameDisplay, highlightColor, (self._leftCoord - highlightBorderSize, self._topCoord - highlightBorderSize, self._width + 2 * highlightBorderSize, self._height + 2 * highlightBorderSize), highlightBorderSize)
