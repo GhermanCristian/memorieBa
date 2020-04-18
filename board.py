@@ -2,6 +2,9 @@ from constants import *
 from imageList import ImageList
 import random
 
+BOARD_WIDTH = 6
+BOARD_HEIGHT = 5
+
 class Board:
     def __init__(self):
         self.__width = BOARD_WIDTH

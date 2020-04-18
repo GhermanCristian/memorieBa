@@ -1,5 +1,3 @@
-
-
 class GameImage():
     def __init__(self, title, imageObject, soundCue = None):
         self.__title = title

@@ -1,18 +1,26 @@
-from Screens.screen import Screen, QUIT_PROGRAM, CONTINUE_PROGRAM
+from Screens.screen import Screen
 import pygame
 from pygame.constants import QUIT, KEYUP, K_ESCAPE, MOUSEMOTION, MOUSEBUTTONUP, K_RIGHT
-from constants import NR_OF_LEVELS, INTELIGENT_SOUND_PATH, SERGHEI_SOUND_PATH, BG_COLOR, INCREASE_MONEY_AMOUNT, FPS, BOARD_HEIGHT,\
-    BOARD_WIDTH, NR_REVEALED_BOXES, BOX_SIZE, BOX_REVEAL_SPEED, BOX_COLOR, HIGHLIGHT_BORDER_SIZE, HIGHLIGHT_COLOR, TOP_MARGIN,\
-    GAP_SIZE, LEFT_MARGIN, TEXT_LEFT_MARGIN, TEXT_TOP_MARGIN, WINDOW_HEIGHT, WINDOW_WIDTH, TEXT_COLOR, TEXT_ROW_HEIGHT,\
-    TEXT_FONT, TEXT_FONT_SIZE, END_LEVEL_FLASHES, LIGHT_BG_COLOR
-from board import Board, random
+from constants import BG_COLOR, FPS, BOX_COLOR, HIGHLIGHT_BORDER_SIZE, HIGHLIGHT_COLOR,\
+    TEXT_LEFT_MARGIN, TEXT_TOP_MARGIN, WINDOW_HEIGHT, WINDOW_WIDTH, TEXT_COLOR, TEXT_ROW_HEIGHT,\
+    TEXT_FONT, TEXT_FONT_SIZE, LIGHT_BG_COLOR, BOX_SIZE, GAP_SIZE
+from board import Board, random, BOARD_HEIGHT, BOARD_WIDTH
 from Screens.pacaneleScreen import PacaneleScreen
 from soundCue import SoundCue
 import os
 
-MOUSE_CURSOR_1 = "MOUSE_CURSOR1.jpg"
-
 class GameScreen(Screen):
+    MOUSE_CURSOR_1 = "MOUSE_CURSOR1.jpg"
+    INTELIGENT_SOUND_PATH = "Music//INTELIGENT_1.ogg"
+    SERGHEI_SOUND_PATH = "Music//SERGHEI_RAS.ogg"
+    BOX_REVEAL_SPEED = 6
+    NR_REVEALED_BOXES = 10
+    NR_OF_LEVELS = 3
+    END_LEVEL_FLASHES = 10
+    INCREASE_MONEY_AMOUNT = 0.1
+    LEFT_MARGIN = int((WINDOW_WIDTH - (BOARD_WIDTH * (BOX_SIZE + GAP_SIZE))) / 2)
+    TOP_MARGIN = int((WINDOW_HEIGHT - (BOARD_HEIGHT * (BOX_SIZE + GAP_SIZE))) / 2)
+    
     def __init__(self, gameDisplay, playlist):
         self.__gameDisplay = gameDisplay
         self.__playlist = playlist
@@ -27,7 +35,7 @@ class GameScreen(Screen):
         self.__mouseX = 0
         self.__mouseY = 0
         self.__mouseClicked = False
-        self.__mouseCursor = self.__loadSpecialImage(MOUSE_CURSOR_1)
+        self.__mouseCursorImage = self.__loadSpecialImage(GameScreen.MOUSE_CURSOR_1)
         
         self.__totalMoves = 0
         self.__totalTime = 0
@@ -45,8 +53,8 @@ class GameScreen(Screen):
         return pygame.image.load(os.path.join(currentImage, imageTitle))
     
     def __getTopLeftCoords(self, i, j):
-        top = TOP_MARGIN + i * (BOX_SIZE + GAP_SIZE)
-        left = LEFT_MARGIN + j * (BOX_SIZE + GAP_SIZE)
+        top = GameScreen.TOP_MARGIN + i * (BOX_SIZE + GAP_SIZE)
+        left = GameScreen.LEFT_MARGIN + j * (BOX_SIZE + GAP_SIZE)
         return (top, left)
     
     def __getBoxAtCoords(self, x, y):
@@ -82,12 +90,12 @@ class GameScreen(Screen):
         self.__clock.tick(FPS)
     
     def __revealBoxesAnimation(self, boxList):
-        for coverage in range(BOX_SIZE, -1, -BOX_REVEAL_SPEED):
+        for coverage in range(BOX_SIZE, -1, -GameScreen.BOX_REVEAL_SPEED):
             self.__displayBoxCoverage(boxList, coverage)
         self.__displayBoxCoverage(boxList, 0)
             
     def __coverBoxesAnimation(self, boxList):
-        for coverage in range(0, BOX_SIZE + 1, BOX_REVEAL_SPEED):
+        for coverage in range(0, BOX_SIZE + 1, GameScreen.BOX_REVEAL_SPEED):
             self.__displayBoxCoverage(boxList, coverage)
         self.__displayBoxCoverage(boxList, BOX_SIZE)
     
@@ -105,12 +113,12 @@ class GameScreen(Screen):
         self.__displayBoard()
         pygame.time.wait(100)
         
-        for i in range(nrBoxes // NR_REVEALED_BOXES):
-            self.__revealBoxesAnimation(boxList[i * NR_REVEALED_BOXES : (i + 1) * NR_REVEALED_BOXES])
-            self.__coverBoxesAnimation(boxList[i * NR_REVEALED_BOXES : (i + 1) * NR_REVEALED_BOXES])
+        for i in range(nrBoxes // GameScreen.NR_REVEALED_BOXES):
+            self.__revealBoxesAnimation(boxList[i * GameScreen.NR_REVEALED_BOXES : (i + 1) * GameScreen.NR_REVEALED_BOXES])
+            self.__coverBoxesAnimation(boxList[i * GameScreen.NR_REVEALED_BOXES : (i + 1) * GameScreen.NR_REVEALED_BOXES])
     
     def __showMouseCursor(self):
-        self.__gameDisplay.blit(self.__mouseCursor, (self.__mouseX, self.__mouseY))
+        self.__gameDisplay.blit(self.__mouseCursorImage, (self.__mouseX, self.__mouseY))
     
     def __convertTime(self, ms):
         minutes = ms / 60000
@@ -126,12 +134,12 @@ class GameScreen(Screen):
         self.__displayText(("Current moves = %d" % nrMoves), TEXT_LEFT_MARGIN, TEXT_TOP_MARGIN, self.__font, TEXT_COLOR)
         self.__displayText(("Total moves = %d" % self.__totalMoves), TEXT_LEFT_MARGIN, TEXT_TOP_MARGIN + TEXT_ROW_HEIGHT, self.__font, TEXT_COLOR) 
         self.__displayText(("%.2f lei" % self.__money), TEXT_LEFT_MARGIN, TEXT_TOP_MARGIN + 2 * TEXT_ROW_HEIGHT, self.__font, TEXT_COLOR)
-        self.__displayText(("Level = %d / %d" % (level, NR_OF_LEVELS)), TEXT_LEFT_MARGIN, TEXT_TOP_MARGIN + 3 * TEXT_ROW_HEIGHT, self.__font, TEXT_COLOR)
+        self.__displayText(("Level = %d / %d" % (level, GameScreen.NR_OF_LEVELS)), TEXT_LEFT_MARGIN, TEXT_TOP_MARGIN + 3 * TEXT_ROW_HEIGHT, self.__font, TEXT_COLOR)
         self.__displayText(self.__convertTime(timePassed), TEXT_LEFT_MARGIN, WINDOW_HEIGHT - 2 * TEXT_ROW_HEIGHT - TEXT_TOP_MARGIN, self.__font, TEXT_COLOR)
         self.__displayText(self.__convertTime(self.__totalTime), TEXT_LEFT_MARGIN, WINDOW_HEIGHT - TEXT_ROW_HEIGHT - TEXT_TOP_MARGIN, self.__font, TEXT_COLOR)
     
     def __endLevelAnimation(self):
-        for i in range(END_LEVEL_FLASHES):
+        for i in range(GameScreen.END_LEVEL_FLASHES):
             if i % 2 == 0:
                 self.__gameDisplay.fill(LIGHT_BG_COLOR)
             else:
@@ -158,7 +166,7 @@ class GameScreen(Screen):
             
             for event in pygame.event.get():
                 if event.type == QUIT or (event.type == KEYUP and event.key == K_ESCAPE):
-                    return QUIT_PROGRAM
+                    return Screen.QUIT_PROGRAM
                 elif event.type == MOUSEMOTION:
                     self.__mouseX, self.__mouseY = event.pos
                 elif event.type == MOUSEBUTTONUP:
@@ -173,8 +181,8 @@ class GameScreen(Screen):
             self.__displayInfo(timePassed, nrMoves, level)
             
             functionResult = self.__pacaneleScreen.displayContent(self.__mouseX, self.__mouseY, self.__mouseClicked, self.__money)
-            if functionResult == QUIT_PROGRAM:
-                return QUIT_PROGRAM
+            if functionResult == Screen.QUIT_PROGRAM:
+                return Screen.QUIT_PROGRAM
             self.__money = functionResult
             
             self.__displayBoard()
@@ -205,7 +213,7 @@ class GameScreen(Screen):
                                 
                             else:
                                 nrRevealed += 2
-                                self.__money += INCREASE_MONEY_AMOUNT
+                                self.__money += GameScreen.INCREASE_MONEY_AMOUNT
                                 
                                 if nrRevealed == self.__board.height * self.__board.width:  
                                 #if nrRevealed == 2: 
@@ -224,15 +232,15 @@ class GameScreen(Screen):
             self.__totalTime += self.__clock.get_time()
     
     def displayContent(self):
-        for level in range(1, NR_OF_LEVELS + 1):        # level indexing starts at 1
+        for level in range(1, GameScreen.NR_OF_LEVELS + 1):        # level indexing starts at 1
             levelResult = self.__playLevel(level)
-            if levelResult == QUIT_PROGRAM:
-                return (QUIT_PROGRAM, QUIT_PROGRAM)
+            if levelResult == Screen.QUIT_PROGRAM:
+                return (Screen.QUIT_PROGRAM, Screen.QUIT_PROGRAM)
             
-            if level == NR_OF_LEVELS:
-                SoundCue(INTELIGENT_SOUND_PATH).play(3.0)
+            if level == GameScreen.NR_OF_LEVELS:
+                SoundCue(GameScreen.INTELIGENT_SOUND_PATH).play(3.0)
             else:
-                SoundCue(SERGHEI_SOUND_PATH).play(1.0)
+                SoundCue(GameScreen.SERGHEI_SOUND_PATH).play(1.0)
             
             self.__endLevelAnimation()
             pygame.time.wait(2500)

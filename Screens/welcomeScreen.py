@@ -1,17 +1,19 @@
-from Screens.screen import Screen, QUIT_PROGRAM, CONTINUE_PROGRAM
-from constants import WELCOME_SONG_PATH, WINDOW_WIDTH, BG_COLOR, TRANSITION_STEPS, TRANSITION_TIME
+from Screens.screen import Screen
+from constants import WINDOW_WIDTH, BG_COLOR
 from song import Song
 import os
 import pygame
 from pygame.constants import K_RETURN, QUIT, KEYUP, K_ESCAPE
 
-BACKGROUND_IMAGE_TITLE = "WELCOME_SCREEN.jpg"
-WELCOME_SONG_PATH = "Music//W_FRESH.ogg"
-
 class WelcomeScreen(Screen):
+    IMAGE_TITLE = "WELCOME_SCREEN.jpg"
+    SONG_PATH = "Music//W_FRESH.ogg"
+    OUTRO_TRANSITION_STEPS = 20
+    OUTRO_TRANSITION_TIME = 300
+    
     def __init__(self, gameDisplay):
-        self.__backgroundSong = WELCOME_SONG_PATH
-        self.__backgroundImage = self.__loadSpecialImage(BACKGROUND_IMAGE_TITLE)
+        self.__backgroundSong = WelcomeScreen.SONG_PATH
+        self.__backgroundImage = self.__loadSpecialImage(WelcomeScreen.IMAGE_TITLE)
         
         self.__gameDisplay = gameDisplay
         
@@ -19,19 +21,19 @@ class WelcomeScreen(Screen):
         self.__gameDisplay.blit(self.__backgroundImage, (0, 0))
     
     def setBackgroundMusic(self):
-        Song(WELCOME_SONG_PATH).play(-1, 0)
+        Song(WelcomeScreen.SONG_PATH).play(-1, 0)
         
     def __loadSpecialImage(self, imageTitle):
         currentImage = os.path.join(os.getcwd(), "Images")
         currentImage = os.path.join(currentImage, "Special images")
         return pygame.image.load(os.path.join(currentImage, imageTitle))
-    
+        
     def __outroTransition(self):            
-        for leftMargin in range(0, WINDOW_WIDTH + 1, WINDOW_WIDTH // TRANSITION_STEPS):
+        for leftMargin in range(0, WINDOW_WIDTH + 1, WINDOW_WIDTH // WelcomeScreen.OUTRO_TRANSITION_STEPS):
             self.__gameDisplay.fill(BG_COLOR)
             self.__gameDisplay.blit(self.__backgroundImage, (leftMargin, 0))
             pygame.display.update()
-            pygame.time.wait(TRANSITION_TIME // TRANSITION_STEPS)
+            pygame.time.wait(WelcomeScreen.OUTRO_TRANSITION_TIME // WelcomeScreen.OUTRO_TRANSITION_STEPS)
     
     def displayContent(self):
         running = True
@@ -43,9 +45,9 @@ class WelcomeScreen(Screen):
                     running = False
                     self.__outroTransition()
                 elif event.type == QUIT or (event.type == KEYUP and event.key == K_ESCAPE):
-                    return QUIT_PROGRAM
+                    return Screen.QUIT_PROGRAM
             pygame.display.update() 
             
-        return CONTINUE_PROGRAM
+        return Screen.CONTINUE_PROGRAM
     
     

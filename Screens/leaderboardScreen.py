@@ -1,6 +1,6 @@
-from Screens.screen import Screen, QUIT_PROGRAM
+from Screens.screen import Screen
 import pygame
-from constants import BG_COLOR, WINDOW_HEIGHT, WINDOW_WIDTH, LIGHT_ORANGE, TEXT_LEFT_MARGIN, TEXT_ROW_HEIGHT, TABLE_ENTRIES,\
+from constants import BG_COLOR, WINDOW_HEIGHT, WINDOW_WIDTH, LIGHT_ORANGE, TEXT_LEFT_MARGIN, TEXT_ROW_HEIGHT,\
     TEXT_FONT, TEXT_FONT_SIZE
 from pygame.constants import QUIT, KEYUP, K_ESCAPE, K_RIGHT
 from leaderboard import Leaderboard
@@ -38,7 +38,7 @@ class LeaderboardScreen(Screen):
         self.__displayText("rapidu", WINDOW_WIDTH / 4 - 6 * 7, WINDOW_HEIGHT / 4, self.__font, LIGHT_ORANGE)
         self.__displayText("desteptu", 3 * WINDOW_WIDTH / 4 - 6 * 7, WINDOW_HEIGHT / 4, self.__font, LIGHT_ORANGE)
         
-        for i in range(TABLE_ENTRIES):
+        for i in range(Leaderboard.ENTRIES_COUNT):
             self.__displayText("%02d. %s" % (i + 1, self.__fastLeader.scoreList[i][0]), 2 * TEXT_LEFT_MARGIN, (i + 2) * TEXT_ROW_HEIGHT + WINDOW_HEIGHT / 4, self.__font, LIGHT_ORANGE)
             self.__displayText(self.__convertTime(self.__fastLeader.scoreList[i][1]), WINDOW_WIDTH / 2 - 6 * TEXT_LEFT_MARGIN, (i + 2) * TEXT_ROW_HEIGHT + WINDOW_HEIGHT / 4, self.__font, LIGHT_ORANGE)
             
@@ -62,7 +62,7 @@ class LeaderboardScreen(Screen):
         while True:
             for event in pygame.event.get(): 
                 if event.type == QUIT or (event.type == KEYUP and event.key == K_ESCAPE):
-                    return QUIT_PROGRAM
+                    return Screen.QUIT_PROGRAM
                 elif event.type == pygame.USEREVENT or (event.type == KEYUP and event.key == K_RIGHT):
                     self.__playlist.nextSong()
 

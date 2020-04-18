@@ -1,9 +1,9 @@
 import pygame
 import os
 from constants import APP_TITLE, WINDOW_HEIGHT, WINDOW_WIDTH
-from Screens.screen import QUIT_PROGRAM, CONTINUE_PROGRAM
+from Screens.screen import Screen
 from Screens.welcomeScreen import WelcomeScreen
-from Screens.exitScreen import ExitScreen, EXIT_SCREEN1, EXIT_SCREEN2
+from Screens.exitScreen import ExitScreen
 from playlist import Playlist
 from Screens.nameScreen import NameScreen
 from Screens.gameScreen import GameScreen
@@ -29,15 +29,15 @@ class GUI:
         return pygame.image.load(os.path.join(currentImage, imageTitle))
         
     def __quitGame(self):
-        ExitScreen(self.__gameDisplay, EXIT_SCREEN1).displayContent()
-        ExitScreen(self.__gameDisplay, EXIT_SCREEN2).displayContent()
+        ExitScreen(self.__gameDisplay, ExitScreen.EXIT_SCREEN1).displayContent()
+        ExitScreen(self.__gameDisplay, ExitScreen.EXIT_SCREEN2).displayContent()
         #self.__audioRepo.fadeOut()
         pygame.quit()
         quit()
         
     def start(self):
         programResult = WelcomeScreen(self.__gameDisplay).displayContent()
-        if programResult == QUIT_PROGRAM:
+        if programResult == Screen.QUIT_PROGRAM:
             self.__quitGame()
         
         # I will use the same playlist for all the screens (where it applies ofc)
@@ -46,7 +46,7 @@ class GUI:
         
         playerName = ""
         programResult = NameScreen(self.__gameDisplay, currentPlaylist).displayContent()
-        if programResult == QUIT_PROGRAM:
+        if programResult == Screen.QUIT_PROGRAM:
             self.__quitGame()
         else:
             playerName = programResult
@@ -54,13 +54,13 @@ class GUI:
         totalTime = 0
         totalMoves = 0
         programResult = GameScreen(self.__gameDisplay, currentPlaylist).displayContent()
-        if programResult[0] == QUIT_PROGRAM:
+        if programResult[0] == Screen.QUIT_PROGRAM:
             self.__quitGame()
         else:
             (totalTime, totalMoves) = programResult
         
         programResult = LeaderboardScreen(self.__gameDisplay, currentPlaylist, playerName, totalTime, totalMoves).displayContent()
-        if programResult[0] == QUIT_PROGRAM:
+        if programResult[0] == Screen.QUIT_PROGRAM:
             self.__quitGame()
             
         self.__quitGame()

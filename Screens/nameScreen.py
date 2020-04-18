@@ -1,9 +1,11 @@
-from Screens.screen import Screen, QUIT_PROGRAM, CONTINUE_PROGRAM
-from constants import BG_COLOR, MAX_NAME_LENGTH, WINDOW_HEIGHT, WINDOW_WIDTH, TEXT_ROW_HEIGHT, LIGHT_BG_COLOR, LIGHT_ORANGE, TEXT_FONT, TEXT_FONT_SIZE
+from Screens.screen import Screen
+from constants import BG_COLOR, WINDOW_HEIGHT, WINDOW_WIDTH, TEXT_ROW_HEIGHT, LIGHT_BG_COLOR, LIGHT_ORANGE, TEXT_FONT, TEXT_FONT_SIZE
 import pygame
 from pygame.constants import K_RETURN, QUIT, KEYUP, K_ESCAPE, KEYDOWN, K_BACKSPACE, K_RIGHT
 
 class NameScreen(Screen):
+    MAX_NAME_LENGTH = 24
+    
     def __init__(self, gameDisplay, playlist):
         self.__gameDisplay = gameDisplay
         self.__playlist = playlist
@@ -23,11 +25,11 @@ class NameScreen(Screen):
         while True:
             for event in pygame.event.get():
                 if event.type == QUIT or (event.type == KEYUP and event.key == K_ESCAPE):
-                    return QUIT_PROGRAM
+                    return Screen.QUIT_PROGRAM
                 if event.type == pygame.USEREVENT or (event.type == KEYUP and event.key == K_RIGHT):
                     self.__playlist.nextSong()
                 if event.type == KEYDOWN:
-                    if len(userInput) < MAX_NAME_LENGTH and (event.unicode.isalnum() or event.unicode in "!@#$%^&*()_+-=<>,.?/:{}\|`~ '"):
+                    if len(userInput) < NameScreen.MAX_NAME_LENGTH and (event.unicode.isalnum() or event.unicode in "!@#$%^&*()_+-=<>,.?/:{}\|`~ '"):
                         userInput += event.unicode
                     elif event.key == K_BACKSPACE:
                         userInput = userInput[:-1]

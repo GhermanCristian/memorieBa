@@ -1,15 +1,15 @@
 import pickle
 import os
-from constants import TABLE_ENTRIES
 
 class Leaderboard:
+    ENTRIES_COUNT = 10
+    
     def __init__(self, filePath):
         self.scoreList = []
         self.__filePath = os.path.join(os.getcwd(), "Leaderboards")
         self.__filePath = os.path.join(self.__filePath, filePath)
     
     def __initEmptyPickle(self):
-        print ("new empty")
         if "fast" in self.__filePath:
             self.scoreList = [
                 ("Emil Boc", 400000), 
@@ -58,10 +58,10 @@ class Leaderboard:
         
     def checkResult(self, result):
         self.__loadPickle()
-        return (result <= self.scoreList[TABLE_ENTRIES - 1][1])
+        return (result <= self.scoreList[Leaderboard.ENTRIES_COUNT - 1][1])
         
     def addResult(self, result, name):
-        index = TABLE_ENTRIES - 1
+        index = Leaderboard.ENTRIES_COUNT - 1
         
         while index >= 0 and result <= self.scoreList[index][1]:
             index -= 1

@@ -2,10 +2,10 @@ from Screens.screen import Screen
 import os
 import pygame
 
-EXIT_SCREEN1 = "EXIT_SCREEN1.jpg"
-EXIT_SCREEN2 = "EXIT_SCREEN2.jpg"
-
 class ExitScreen(Screen):
+    EXIT_SCREEN1 = "EXIT_SCREEN1.jpg"
+    EXIT_SCREEN2 = "EXIT_SCREEN2.jpg"
+    
     def __init__(self, gameDisplay, backgroundImage):
         self.__backgroundImage = os.path.join(os.getcwd(), "Images")
         self.__backgroundImage = os.path.join(self.__backgroundImage, "Special images")
