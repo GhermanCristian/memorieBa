@@ -31,6 +31,7 @@ class Playlist():
         random.shuffle(self.__songs)
         
     def nextSong(self, startTime = 0):
+        self.__isPaused = False
         self.__crtSong += 1
         if self.__crtSong >= self.__songCount:
             self.__crtSong = 0
@@ -43,6 +44,7 @@ class Playlist():
         self.__delayFlag = False
     
     def previousSong(self, startTime = 0):
+        self.__isPaused = False
         self.__crtSong -= 1
         if self.__crtSong < 0:
             self.__crtSong = self.__songCount - 1

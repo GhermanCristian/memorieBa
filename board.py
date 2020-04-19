@@ -1,19 +1,19 @@
-from constants import *
 from imageList import ImageList
 import random
 
-BOARD_WIDTH = 6
-BOARD_HEIGHT = 5
-
 class Board:
+    BOARD_WIDTH = 6
+    BOARD_HEIGHT = 5
+    
     def __init__(self):
-        self.__width = BOARD_WIDTH
-        self.__height = BOARD_HEIGHT
+        self.__width = Board.BOARD_WIDTH
+        self.__height = Board.BOARD_HEIGHT
         
         self.__revealed = [] # matrix form
         self.__images = [] # matrix form
         
-        self.__imageList = ImageList().images
+        self.__imageListObject = ImageList()
+        self.__imageList = self.__imageListObject.images
         
         for i in range(self.__height):
             aux = []
@@ -29,9 +29,27 @@ class Board:
 
         random.shuffle(self.__imageList)
         
+        self.__specialPairs = []
+        self.__specialPairs.extend(self.__imageListObject.specialPairs)
+        
     def newLevel(self, level):
         totalImages = (self.__height * self.__width) // 2 # total images in 1 level
-        icons = self.__imageList[(level - 1) * totalImages : level * totalImages] * 2
+        icons = []
+        
+        for index in range((level - 1) * totalImages, level * totalImages):
+            foundSpecialPair = False
+            for specialPair in self.__specialPairs:
+                if self.__imageList[index].title in specialPair[0].title or self.__imageList[index].title in specialPair[1].title:
+                    icons.append(specialPair[0])
+                    icons.append(specialPair[1])
+                    self.__specialPairs.remove(specialPair)
+                    foundSpecialPair = True
+                    break
+                
+            if foundSpecialPair == False:
+                icons.append(self.__imageList[index])
+                icons.append(self.__imageList[index])
+        
         random.shuffle(icons)
         
         for i in range(self.__height):
@@ -59,3 +77,7 @@ class Board:
     @property
     def height(self):
         return self.__height
+    
+    @property
+    def specialPairs(self):
+        return self.__imageListObject.specialPairs

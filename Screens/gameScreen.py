@@ -4,7 +4,7 @@ from pygame.constants import QUIT, KEYUP, K_ESCAPE, MOUSEMOTION, MOUSEBUTTONUP, 
 from constants import BG_COLOR, FPS, BOX_COLOR, HIGHLIGHT_BORDER_SIZE, HIGHLIGHT_COLOR, LIGHT_ORANGE,\
     TEXT_LEFT_MARGIN, TEXT_TOP_MARGIN, WINDOW_HEIGHT, WINDOW_WIDTH, TEXT_COLOR, TEXT_ROW_HEIGHT,\
     TEXT_FONT, TEXT_FONT_SIZE, LIGHT_BG_COLOR, BOX_SIZE, GAP_SIZE
-from board import Board, random, BOARD_HEIGHT, BOARD_WIDTH
+from board import Board, random
 from Screens.pacaneleScreen import PacaneleScreen
 from soundCue import SoundCue
 from text import Text
@@ -15,13 +15,14 @@ class GameScreen(Screen):
     MOUSE_CURSOR_1 = "MOUSE_CURSOR1.jpg"
     INTELIGENT_SOUND_PATH = "Music//INTELIGENT_1.ogg"
     SERGHEI_SOUND_PATH = "Music//SERGHEI_RAS.ogg"
-    BOX_REVEAL_SPEED = 360 // FPS
+    #BOX_REVEAL_SPEED = 360 // FPS
+    BOX_REVEAL_SPEED = 3
     NR_REVEALED_BOXES = 10
     NR_OF_LEVELS = 3
     END_LEVEL_FLASH_COUNT = 10
     INCREASE_MONEY_AMOUNT = 0.1
-    LEFT_MARGIN = int((WINDOW_WIDTH - (BOARD_WIDTH * (BOX_SIZE + GAP_SIZE))) / 2)
-    TOP_MARGIN = int((WINDOW_HEIGHT - (BOARD_HEIGHT * (BOX_SIZE + GAP_SIZE))) / 2)
+    LEFT_MARGIN = int((WINDOW_WIDTH - (Board.BOARD_WIDTH * (BOX_SIZE + GAP_SIZE))) / 2)
+    TOP_MARGIN = int((WINDOW_HEIGHT - (Board.BOARD_HEIGHT * (BOX_SIZE + GAP_SIZE))) / 2)
     
     MUSIC_PLAYER_BUTTON_TOP = TOP_MARGIN + 5 * TEXT_ROW_HEIGHT
     MUSIC_PLAYER_BUTTON_LEFT = TEXT_LEFT_MARGIN
@@ -105,7 +106,7 @@ class GameScreen(Screen):
         self.__displayBoxCoverage(boxList, BOX_SIZE, True)
     
     def __introBoardAnimation(self):
-        nrBoxes = BOARD_HEIGHT * BOARD_WIDTH
+        nrBoxes = Board.BOARD_HEIGHT * Board.BOARD_WIDTH
         auxList = list(range(nrBoxes))
         random.shuffle(auxList)
         boxList = []
@@ -121,6 +122,16 @@ class GameScreen(Screen):
         for i in range(nrBoxes // GameScreen.NR_REVEALED_BOXES):
             self.__revealBoxesAnimation(boxList[i * GameScreen.NR_REVEALED_BOXES : (i + 1) * GameScreen.NR_REVEALED_BOXES])
             self.__coverBoxesAnimation(boxList[i * GameScreen.NR_REVEALED_BOXES : (i + 1) * GameScreen.NR_REVEALED_BOXES])
+    
+    def __matchImages(self, image1, image2):
+        if image1.title == image2.title:
+            return True
+        
+        for specialPair in self.__board.specialPairs:
+            if specialPair == (image1, image2) or specialPair == (image2, image1):
+                return True
+            
+        return False
     
     def __showMouseCursor(self):
         self.__gameDisplay.blit(self.__mouseCursorImage, (self.__mouseX, self.__mouseY))
@@ -240,13 +251,7 @@ class GameScreen(Screen):
                             nrMoves += 1
                             self.__totalMoves += 1
                             
-                            if image1.title != image2.title:
-                                pygame.time.wait(1000)
-                                self.__coverBoxesAnimation([(firstBox[0], firstBox[1]), (xBox, yBox)])
-                                self.__board.coverBox(firstBox[0], firstBox[1])
-                                self.__board.coverBox(xBox, yBox)
-                                
-                            else:
+                            if self.__matchImages(image1, image2):
                                 nrRevealed += 2
                                 self.__money += GameScreen.INCREASE_MONEY_AMOUNT
                                 
@@ -256,6 +261,12 @@ class GameScreen(Screen):
 
                                 if image1.soundCue != None:
                                     SoundCue(image1.soundCue).play(3.0)
+                            
+                            else:
+                                pygame.time.wait(1000)
+                                self.__coverBoxesAnimation([(firstBox[0], firstBox[1]), (xBox, yBox)])
+                                self.__board.coverBox(firstBox[0], firstBox[1])
+                                self.__board.coverBox(xBox, yBox)
                                 
                             firstBox = None
                             

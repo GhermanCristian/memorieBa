@@ -21,6 +21,8 @@ class GUI:
         pygame.display.set_icon(self.__iconImage)
         self.__gameDisplay = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT), pygame.FULLSCREEN)
         
+        self.__playlist = Playlist()
+        
         pygame.mouse.set_visible(False)
     
     def __loadSpecialImage(self, imageTitle):
@@ -29,23 +31,19 @@ class GUI:
         return pygame.image.load(os.path.join(currentImage, imageTitle))
         
     def __quitGame(self):
-        ExitScreen(self.__gameDisplay, ExitScreen.EXIT_SCREEN1).displayContent()
-        ExitScreen(self.__gameDisplay, ExitScreen.EXIT_SCREEN2).displayContent()
-        #self.__audioRepo.fadeOut()
+        #ExitScreen(self.__gameDisplay, ExitScreen.EXIT_SCREEN1).displayContent()
+        #ExitScreen(self.__gameDisplay, ExitScreen.EXIT_SCREEN2).displayContent()
+        #self.__playlist.fadeOut()
         pygame.quit()
         quit()
         
     def start(self):
-        programResult = WelcomeScreen(self.__gameDisplay).displayContent()
-        if programResult == Screen.QUIT_PROGRAM:
-            self.__quitGame()
-        
-        # I will use the same playlist for all the screens (where it applies ofc)
-        # bc I don't want to reshuffle the songs each time I create the playlist
-        currentPlaylist = Playlist() 
+        #programResult = WelcomeScreen(self.__gameDisplay).displayContent()
+        #if programResult == Screen.QUIT_PROGRAM:
+            #self.__quitGame()
         
         playerName = ""
-        programResult = NameScreen(self.__gameDisplay, currentPlaylist).displayContent()
+        programResult = NameScreen(self.__gameDisplay, self.__playlist).displayContent()
         if programResult == Screen.QUIT_PROGRAM:
             self.__quitGame()
         else:
@@ -53,13 +51,13 @@ class GUI:
         
         totalTime = 0
         totalMoves = 0
-        programResult = GameScreen(self.__gameDisplay, currentPlaylist).displayContent()
+        programResult = GameScreen(self.__gameDisplay, self.__playlist).displayContent()
         if programResult[0] == Screen.QUIT_PROGRAM:
             self.__quitGame()
         else:
             (totalTime, totalMoves) = programResult
         
-        programResult = LeaderboardScreen(self.__gameDisplay, currentPlaylist, playerName, totalTime, totalMoves).displayContent()
+        programResult = LeaderboardScreen(self.__gameDisplay, self.__playlist, playerName, totalTime, totalMoves).displayContent()
         if programResult[0] == Screen.QUIT_PROGRAM:
             self.__quitGame()
             
