@@ -7,16 +7,12 @@ from leaderboard import Leaderboard
 from text import Text
 
 class LeaderboardScreen(Screen):
-    def __init__(self, gameDisplay, playlist, playerName, totalTime, totalMoves):
+    def __init__(self, gameDisplay, playlist):
         self.__gameDisplay = gameDisplay
         self.__playlist = playlist
         
         self.__fastLeader = Leaderboard("fast.pickle")
         self.__smartLeader = Leaderboard("smart.pickle")
-        
-        self.__playerName = playerName
-        self.__totalTime = totalTime
-        self.__totalMoves = totalMoves
         
     def setBackgroundImage(self):
         self.__gameDisplay.fill(BG_COLOR)
@@ -44,15 +40,16 @@ class LeaderboardScreen(Screen):
 
         pygame.display.update()
     
-    def __updateLeaderboard(self, result, leaderboard):
+    def __updateLeaderboard(self, result, leaderboard, playerName):
         newEntry = leaderboard.checkResult(result)
         if newEntry == True:
-            leaderboard.addResult(result, self.__playerName)
+            leaderboard.addResult(result, playerName)
+    
+    def updateAllLeaderboards(self, totalTime, totalMoves, playerName):
+        self.__updateLeaderboard(totalTime, self.__fastLeader, playerName)
+        self.__updateLeaderboard(totalMoves, self.__smartLeader, playerName)
     
     def displayContent(self):
-        self.__updateLeaderboard(self.__totalTime, self.__fastLeader)
-        self.__updateLeaderboard(self.__totalMoves, self.__smartLeader)
-        
         self.setBackgroundImage()
         self.__displayResults()
         

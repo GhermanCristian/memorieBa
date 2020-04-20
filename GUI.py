@@ -8,6 +8,7 @@ from playlist import Playlist
 from Screens.nameScreen import NameScreen
 from Screens.gameScreen import GameScreen
 from Screens.leaderboardScreen import LeaderboardScreen
+from Screens.mainMenuScreen import MainMenuScreen
 
 SERGHEI_ICON = "SERGHEI_ICON.ICO"
 
@@ -22,8 +23,6 @@ class GUI:
         self.__gameDisplay = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT), pygame.FULLSCREEN)
         
         self.__playlist = Playlist()
-        
-        pygame.mouse.set_visible(False)
     
     def __loadSpecialImage(self, imageTitle):
         currentImage = os.path.join(os.getcwd(), "Images")
@@ -31,36 +30,21 @@ class GUI:
         return pygame.image.load(os.path.join(currentImage, imageTitle))
         
     def __quitGame(self):
-        #ExitScreen(self.__gameDisplay, ExitScreen.EXIT_SCREEN1).displayContent()
-        #ExitScreen(self.__gameDisplay, ExitScreen.EXIT_SCREEN2).displayContent()
-        #self.__playlist.fadeOut()
+        ExitScreen(self.__gameDisplay, ExitScreen.EXIT_SCREEN1).displayContent()
+        ExitScreen(self.__gameDisplay, ExitScreen.EXIT_SCREEN2).displayContent()
+        self.__playlist.fadeOut()
         pygame.quit()
         quit()
         
     def start(self):
-        #programResult = WelcomeScreen(self.__gameDisplay).displayContent()
-        #if programResult == Screen.QUIT_PROGRAM:
-            #self.__quitGame()
-        
-        playerName = ""
-        programResult = NameScreen(self.__gameDisplay, self.__playlist).displayContent()
+        programResult = WelcomeScreen(self.__gameDisplay).displayContent()
         if programResult == Screen.QUIT_PROGRAM:
             self.__quitGame()
-        else:
-            playerName = programResult
         
-        totalTime = 0
-        totalMoves = 0
-        programResult = GameScreen(self.__gameDisplay, self.__playlist).displayContent()
-        if programResult[0] == Screen.QUIT_PROGRAM:
+        programResult = MainMenuScreen(self.__gameDisplay, self.__playlist).displayContent()
+        if programResult == Screen.QUIT_PROGRAM:
             self.__quitGame()
-        else:
-            (totalTime, totalMoves) = programResult
-        
-        programResult = LeaderboardScreen(self.__gameDisplay, self.__playlist, playerName, totalTime, totalMoves).displayContent()
-        if programResult[0] == Screen.QUIT_PROGRAM:
-            self.__quitGame()
-            
+
         self.__quitGame()
         
         

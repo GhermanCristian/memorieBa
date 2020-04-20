@@ -15,10 +15,9 @@ class GameScreen(Screen):
     MOUSE_CURSOR_1 = "MOUSE_CURSOR1.jpg"
     INTELIGENT_SOUND_PATH = "Music//INTELIGENT_1.ogg"
     SERGHEI_SOUND_PATH = "Music//SERGHEI_RAS.ogg"
-    #BOX_REVEAL_SPEED = 360 // FPS
-    BOX_REVEAL_SPEED = 3
+    BOX_REVEAL_SPEED = 360 // FPS
     NR_REVEALED_BOXES = 10
-    NR_OF_LEVELS = 3
+    NR_OF_LEVELS = 1
     END_LEVEL_FLASH_COUNT = 10
     INCREASE_MONEY_AMOUNT = 0.1
     LEFT_MARGIN = int((WINDOW_WIDTH - (Board.BOARD_WIDTH * (BOX_SIZE + GAP_SIZE))) / 2)
@@ -255,8 +254,8 @@ class GameScreen(Screen):
                                 nrRevealed += 2
                                 self.__money += GameScreen.INCREASE_MONEY_AMOUNT
                                 
-                                if nrRevealed == self.__board.height * self.__board.width:  
-                                #if nrRevealed == 2: 
+                                #if nrRevealed == self.__board.height * self.__board.width:  
+                                if nrRevealed == 2: 
                                     return
 
                                 if image1.soundCue != None:
@@ -278,9 +277,11 @@ class GameScreen(Screen):
             self.__totalTime += self.__clock.get_time()
     
     def displayContent(self):
+        pygame.mouse.set_visible(False)
         for level in range(1, GameScreen.NR_OF_LEVELS + 1):        # level indexing starts at 1
             levelResult = self.__playLevel(level)
             if levelResult == Screen.QUIT_PROGRAM:
+                pygame.mouse.set_visible(True)
                 return (Screen.QUIT_PROGRAM, Screen.QUIT_PROGRAM)
             
             if level == GameScreen.NR_OF_LEVELS:
@@ -291,5 +292,6 @@ class GameScreen(Screen):
             self.__endLevelAnimation()
             pygame.time.wait(2500)
             
+        pygame.mouse.set_visible(True)
         return (self.__totalTime, self.__totalMoves)
 

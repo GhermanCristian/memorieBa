@@ -8,6 +8,8 @@ class Leaderboard:
         self.scoreList = []
         self.__filePath = os.path.join(os.getcwd(), "Leaderboards")
         self.__filePath = os.path.join(self.__filePath, filePath)
+        
+        self.__loadPickle()
     
     def __initEmptyPickle(self):
         if "fast" in self.__filePath:

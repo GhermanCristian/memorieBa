@@ -33,8 +33,6 @@ class ImageList:
             
             if "special_" in file and previousImage != None and currentImageTitle[:self.__matchingFirstCharacters] == previousImage.title[:self.__matchingFirstCharacters]:
                 self.specialPairs.append((previousImage, currentImage))
-                print (previousImage.title)
-                print (currentImage.title)
                 
             previousImage = currentImage
             

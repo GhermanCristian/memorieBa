@@ -16,7 +16,7 @@ class NameScreen(Screen):
         self.__gameDisplay.fill(BG_COLOR)
     
     def setBackgroundMusic(self):
-        self.__playlist.nextSong()
+        pass
 
     def __getPlayerName(self):
         userInput = ""
@@ -43,7 +43,6 @@ class NameScreen(Screen):
             pygame.display.update()
     
     def displayContent(self):
-        self.setBackgroundMusic()
         return self.__getPlayerName()
     
     

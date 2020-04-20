@@ -133,7 +133,7 @@ class PacaneleScreen(Screen):
     
     def displayContent(self, money):
         self.setBackgroundMusic()
-        pygame.mouse.set_visible(True)
+        pygame.mouse.set_visible(False)
         
         functionResult = self.__redOrBlack(money)
         if functionResult == Screen.QUIT_PROGRAM:
