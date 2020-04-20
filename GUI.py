@@ -1,13 +1,10 @@
 import pygame
 import os
-from constants import APP_TITLE, WINDOW_HEIGHT, WINDOW_WIDTH
+from constants import Constants
 from Screens.screen import Screen
 from Screens.welcomeScreen import WelcomeScreen
 from Screens.exitScreen import ExitScreen
 from playlist import Playlist
-from Screens.nameScreen import NameScreen
-from Screens.gameScreen import GameScreen
-from Screens.leaderboardScreen import LeaderboardScreen
 from Screens.mainMenuScreen import MainMenuScreen
 
 SERGHEI_ICON = "SERGHEI_ICON.ICO"
@@ -15,12 +12,12 @@ SERGHEI_ICON = "SERGHEI_ICON.ICO"
 class GUI:
     def __init__(self):
         pygame.init()
-        pygame.display.set_caption(APP_TITLE)
+        pygame.display.set_caption(Constants.APP_TITLE)
         
         self.__iconImage = self.__loadSpecialImage(SERGHEI_ICON)
         
         pygame.display.set_icon(self.__iconImage)
-        self.__gameDisplay = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT), pygame.FULLSCREEN)
+        self.__gameDisplay = pygame.display.set_mode((Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT), pygame.FULLSCREEN)
         
         self.__playlist = Playlist()
     

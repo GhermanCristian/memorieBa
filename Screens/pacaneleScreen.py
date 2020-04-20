@@ -2,7 +2,7 @@ from Screens.screen import Screen
 import pygame
 import os
 import random
-from constants import TEXT_FONT, TEXT_FONT_SIZE, BOX_SIZE, GAP_SIZE, RED, TEXT_ROW_HEIGHT, WINDOW_WIDTH, LIGHT_BG_COLOR, LIGHT_ORANGE, WINDOW_HEIGHT, GOLD
+from constants import Constants
 from song import Song
 from text import Text
 from label import Label
@@ -15,30 +15,35 @@ class PacaneleScreen(Screen):
     SAVE_ICON_IMAGE = "SAVE_ICON.jpg"
     
     SONG_PATH = "Music//PACANELE.ogg"
-    
-    DOUBLE_MONEY_BOX_LEFT = WINDOW_WIDTH - 200
-    DOUBLE_MONEY_BOX_TOP = WINDOW_HEIGHT - 200
-    DOUBLE_MONEY_BOX_WIDTH = 125
+
+    BOX_SIZE = 130
+    GAP_SIZE = 10
     NR_PREV_COLORS = 7
+    PREVIOUS_RESULTS_LEFT_MARGIN = (Constants.WINDOW_WIDTH - NR_PREV_COLORS * BOX_SIZE - (NR_PREV_COLORS - 1) * GAP_SIZE) // 2
     
     TEXT_FONT = "felixtitling"
     TEXT_FONT_SIZE = 256
-    TEXT_FONT_COLOR = GOLD
+    TEXT_FONT_COLOR = Constants.GOLD
     
-    BG_COLOR = RED
+    MONEY_TEXT_FONT = "lucidasans"
+    MONEY_TEXT_FONT_SIZE = 20
+    MONEY_TEXT_COLOR = Constants.LIGHT_ORANGE
+    MONEY_TEXT_ROW_HEIGHT = 50
+    
+    BG_COLOR = Constants.RED
+    LIGHT_BG_COLOR = Constants.GRAY
     
     def __init__(self, gameDisplay, playlist):
         self.__gameDisplay = gameDisplay
         self.__playlist = playlist
         
-        self.__font = pygame.font.SysFont(TEXT_FONT, TEXT_FONT_SIZE, True, False)
+        self.__font = pygame.font.SysFont(PacaneleScreen.MONEY_TEXT_FONT, PacaneleScreen.TEXT_FONT_SIZE, True, False)
         self.__aceOfSpades = self.__loadSpecialImage(PacaneleScreen.ACE_OF_SPADES_IMAGE)
         self.__aceOfHearts = self.__loadSpecialImage(PacaneleScreen.ACE_OF_HEARTS_IMAGE)
         self.__saveIcon = self.__loadSpecialImage(PacaneleScreen.SAVE_ICON_IMAGE)
         
         self.__lastColors = [-1] * PacaneleScreen.NR_PREV_COLORS
         self.__pacaneleFont = pygame.font.SysFont(PacaneleScreen.TEXT_FONT, PacaneleScreen.TEXT_FONT_SIZE, True)
-        self.__LEFT_MARGIN = PacaneleScreen.NR_PREV_COLORS * BOX_SIZE + (PacaneleScreen.NR_PREV_COLORS - 1) * GAP_SIZE
         
         self.__previousSongTime = 0
         
@@ -56,19 +61,19 @@ class PacaneleScreen(Screen):
     def __displayLastColors(self):
         for i in range(PacaneleScreen.NR_PREV_COLORS):
             if self.__lastColors[i] == 0:
-                self.__gameDisplay.blit(self.__aceOfHearts, ((WINDOW_WIDTH - self.__LEFT_MARGIN) // 2 + i * (BOX_SIZE + GAP_SIZE), WINDOW_HEIGHT // 4))
+                self.__gameDisplay.blit(self.__aceOfHearts, (PacaneleScreen.PREVIOUS_RESULTS_LEFT_MARGIN+ i * (PacaneleScreen.BOX_SIZE + PacaneleScreen.GAP_SIZE), Constants.WINDOW_HEIGHT // 4))
             elif self.__lastColors[i] == 1:
-                self.__gameDisplay.blit(self.__aceOfSpades, ((WINDOW_WIDTH - self.__LEFT_MARGIN) // 2 + i * (BOX_SIZE + GAP_SIZE), WINDOW_HEIGHT // 4))
+                self.__gameDisplay.blit(self.__aceOfSpades, (PacaneleScreen.PREVIOUS_RESULTS_LEFT_MARGIN + i * (PacaneleScreen.BOX_SIZE + PacaneleScreen.GAP_SIZE), Constants.WINDOW_HEIGHT // 4))
             else:
-                pygame.draw.rect(self.__gameDisplay, LIGHT_BG_COLOR, ((WINDOW_WIDTH - self.__LEFT_MARGIN) // 2 + i * (BOX_SIZE + GAP_SIZE), WINDOW_HEIGHT // 4, BOX_SIZE, BOX_SIZE))
+                pygame.draw.rect(self.__gameDisplay, PacaneleScreen.LIGHT_BG_COLOR, (PacaneleScreen.PREVIOUS_RESULTS_LEFT_MARGIN + i * (PacaneleScreen.BOX_SIZE + PacaneleScreen.GAP_SIZE), Constants.WINDOW_HEIGHT // 4, PacaneleScreen.BOX_SIZE, PacaneleScreen.BOX_SIZE))
     
     def __displayContent(self, money):        
-        moneyText = Text("%.2f lei" % money, TEXT_FONT, TEXT_FONT_SIZE, LIGHT_ORANGE)
-        Label(WINDOW_HEIGHT / 2 - TEXT_ROW_HEIGHT, WINDOW_WIDTH / 2 - len(moneyText.content) * TEXT_FONT_SIZE / 2, -1, TEXT_ROW_HEIGHT, PacaneleScreen.BG_COLOR, moneyText).display(self.__gameDisplay)
+        moneyText = Text("%.2f lei" % money, PacaneleScreen.MONEY_TEXT_FONT, PacaneleScreen.MONEY_TEXT_FONT_SIZE, PacaneleScreen.MONEY_TEXT_COLOR)
+        Label(Constants.WINDOW_HEIGHT / 2 - PacaneleScreen.MONEY_TEXT_ROW_HEIGHT, Constants.WINDOW_WIDTH / 2 - len(moneyText.content) * PacaneleScreen.MONEY_TEXT_FONT_SIZE / 2, -1, PacaneleScreen.MONEY_TEXT_ROW_HEIGHT, PacaneleScreen.BG_COLOR, moneyText).display(self.__gameDisplay)
         
-        self.__gameDisplay.blit(self.__aceOfHearts, ((WINDOW_WIDTH - self.__LEFT_MARGIN) // 2, 3 * WINDOW_HEIGHT // 4))
-        self.__gameDisplay.blit(self.__aceOfSpades, ((WINDOW_WIDTH - self.__LEFT_MARGIN) // 2 + 3 * (BOX_SIZE + GAP_SIZE), 3 * WINDOW_HEIGHT // 4))
-        self.__gameDisplay.blit(self.__saveIcon, ((WINDOW_WIDTH - self.__LEFT_MARGIN) // 2 + 6 * (BOX_SIZE + GAP_SIZE), 3 * WINDOW_HEIGHT // 4))
+        self.__gameDisplay.blit(self.__aceOfHearts, (PacaneleScreen.PREVIOUS_RESULTS_LEFT_MARGIN, 3 * Constants.WINDOW_HEIGHT // 4))
+        self.__gameDisplay.blit(self.__aceOfSpades, (PacaneleScreen.PREVIOUS_RESULTS_LEFT_MARGIN + 3 * (PacaneleScreen.BOX_SIZE + PacaneleScreen.GAP_SIZE), 3 * Constants.WINDOW_HEIGHT // 4))
+        self.__gameDisplay.blit(self.__saveIcon, (PacaneleScreen.PREVIOUS_RESULTS_LEFT_MARGIN + 6 * (PacaneleScreen.BOX_SIZE + PacaneleScreen.GAP_SIZE), 3 * Constants.WINDOW_HEIGHT // 4))
     
     def __checkResult(self, choice):
         actualResult = random.randint(0, 1)
@@ -83,7 +88,7 @@ class PacaneleScreen(Screen):
         else:
             textBlock = self.__pacaneleFont.render("LOSS", True, PacaneleScreen.TEXT_FONT_COLOR)
         textRect = textBlock.get_rect()
-        textRect.center = (WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2)
+        textRect.center = (Constants.WINDOW_WIDTH / 2, Constants.WINDOW_HEIGHT / 2)
         self.__gameDisplay.blit(textBlock, textRect)
         
         pygame.display.update()
@@ -93,9 +98,9 @@ class PacaneleScreen(Screen):
         mouseX = mouseY = 0
         choice = -1
         
-        redBox = pygame.Rect((WINDOW_WIDTH - self.__LEFT_MARGIN) // 2, 3 * WINDOW_HEIGHT // 4, BOX_SIZE, BOX_SIZE)
-        blackBox = pygame.Rect((WINDOW_WIDTH - self.__LEFT_MARGIN) // 2 + 3 * (BOX_SIZE + GAP_SIZE), 3 * WINDOW_HEIGHT // 4, BOX_SIZE, BOX_SIZE)
-        saveBox = pygame.Rect((WINDOW_WIDTH - self.__LEFT_MARGIN) // 2 + 6 * (BOX_SIZE + GAP_SIZE), 3 * WINDOW_HEIGHT // 4, BOX_SIZE, BOX_SIZE)
+        redBox = pygame.Rect(PacaneleScreen.PREVIOUS_RESULTS_LEFT_MARGIN, 3 * Constants.WINDOW_HEIGHT // 4, PacaneleScreen.BOX_SIZE, PacaneleScreen.BOX_SIZE)
+        blackBox = pygame.Rect(PacaneleScreen.PREVIOUS_RESULTS_LEFT_MARGIN + 3 * (PacaneleScreen.BOX_SIZE + PacaneleScreen.GAP_SIZE), 3 * Constants.WINDOW_HEIGHT // 4, PacaneleScreen.BOX_SIZE, PacaneleScreen.BOX_SIZE)
+        saveBox = pygame.Rect(PacaneleScreen.PREVIOUS_RESULTS_LEFT_MARGIN + 6 * (PacaneleScreen.BOX_SIZE + PacaneleScreen.GAP_SIZE), 3 * Constants.WINDOW_HEIGHT // 4, PacaneleScreen.BOX_SIZE, PacaneleScreen.BOX_SIZE)
         
         while True:
             mouseClicked = False
@@ -133,7 +138,7 @@ class PacaneleScreen(Screen):
     
     def displayContent(self, money):
         self.setBackgroundMusic()
-        pygame.mouse.set_visible(False)
+        pygame.mouse.set_visible(True)
         
         functionResult = self.__redOrBlack(money)
         if functionResult == Screen.QUIT_PROGRAM:

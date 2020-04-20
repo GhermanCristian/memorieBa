@@ -1,6 +1,6 @@
 import pygame
 import os
-from constants import LOW_VOLUME, NORMAL_VOLUME
+from constants import Constants
 
 class SoundCue():
     SOUND_CUE_END_EVENT = pygame.USEREVENT + 1
@@ -19,5 +19,5 @@ class SoundCue():
         ch.play(cue)
         ch.set_endevent(SoundCue.SOUND_CUE_END_EVENT)
         
-        pygame.mixer.music.set_volume(LOW_VOLUME)
-        cue.set_volume(NORMAL_VOLUME * volumeMultiplier)
+        pygame.mixer.music.set_volume(Constants.LOW_VOLUME)
+        cue.set_volume(Constants.NORMAL_VOLUME * volumeMultiplier)

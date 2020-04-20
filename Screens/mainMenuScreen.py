@@ -1,8 +1,7 @@
 from Screens.screen import Screen
 from button import Button
 from text import Text
-from constants import DARK_GREEN, NORMAL_GREEN, NAVY_BLUE, WINDOW_WIDTH,\
-    WINDOW_HEIGHT
+from constants import Constants
 from Screens.nameScreen import NameScreen
 from Screens.gameScreen import GameScreen
 from Screens.leaderboardScreen import LeaderboardScreen
@@ -11,19 +10,19 @@ from pygame.constants import QUIT, KEYUP, K_ESCAPE, MOUSEMOTION, MOUSEBUTTONUP, 
 from soundCue import SoundCue
 
 class MainMenuScreen(Screen):
-    BG_COLOR = NAVY_BLUE
+    BG_COLOR = Constants.NAVY_BLUE
     
     TEXT_FONT = "candara"
     TEXT_FONT_SIZE = 26
-    TEXT_COLOR = NORMAL_GREEN
+    TEXT_COLOR = Constants.NORMAL_GREEN
     
     BUTTON_HEIGHT = 100
     BUTTON_WIDTH = 500
-    BUTTON_LEFT_COORD = (WINDOW_WIDTH - BUTTON_WIDTH) // 2
-    BUTTON_BACKGROUND_COLOR = DARK_GREEN
+    BUTTON_LEFT_COORD = (Constants.WINDOW_WIDTH - BUTTON_WIDTH) // 2
+    BUTTON_BACKGROUND_COLOR = Constants.DARK_GREEN
     GAP_SIZE = 30
     
-    PLAY_GAME_BUTTON_TOP_COORD = (WINDOW_HEIGHT - 4 * BUTTON_HEIGHT - 3 * GAP_SIZE) // 2
+    PLAY_GAME_BUTTON_TOP_COORD = (Constants.WINDOW_HEIGHT - 4 * BUTTON_HEIGHT - 3 * GAP_SIZE) // 2
     LEADERBOARD_BUTTON_TOP_COORD = PLAY_GAME_BUTTON_TOP_COORD + BUTTON_HEIGHT + GAP_SIZE
     ACHIEVEMENT_BUTTON_TOP_COORD = LEADERBOARD_BUTTON_TOP_COORD + BUTTON_HEIGHT + GAP_SIZE
     STATISTICS_BUTTON_TOP_COORD = ACHIEVEMENT_BUTTON_TOP_COORD + BUTTON_HEIGHT + GAP_SIZE
@@ -98,6 +97,7 @@ class MainMenuScreen(Screen):
                 programResult = self.__gameScreen.displayContent()
                 if programResult[0] == Screen.QUIT_PROGRAM:
                     #sth like "are you sure you want to quit"
+                    #when exiting the game from pacanele, the pacanele song remains on
                     continue
                 else:
                     (totalTime, totalMoves) = programResult

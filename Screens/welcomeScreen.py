@@ -1,5 +1,5 @@
 from Screens.screen import Screen
-from constants import WINDOW_WIDTH, BG_COLOR
+from constants import Constants
 from song import Song
 import os
 import pygame
@@ -10,6 +10,8 @@ class WelcomeScreen(Screen):
     SONG_PATH = "Music//W_FRESH.ogg"
     OUTRO_TRANSITION_STEPS = 20
     OUTRO_TRANSITION_TIME = 300
+    
+    BG_COLOR = Constants.NAVY_BLUE
     
     def __init__(self, gameDisplay):
         self.__backgroundSong = WelcomeScreen.SONG_PATH
@@ -29,8 +31,8 @@ class WelcomeScreen(Screen):
         return pygame.image.load(os.path.join(currentImage, imageTitle))
         
     def __outroTransition(self):            
-        for leftMargin in range(0, WINDOW_WIDTH + 1, WINDOW_WIDTH // WelcomeScreen.OUTRO_TRANSITION_STEPS):
-            self.__gameDisplay.fill(BG_COLOR)
+        for leftMargin in range(0, Constants.WINDOW_WIDTH + 1, Constants.WINDOW_WIDTH // WelcomeScreen.OUTRO_TRANSITION_STEPS):
+            self.__gameDisplay.fill(WelcomeScreen.BG_COLOR)
             self.__gameDisplay.blit(self.__backgroundImage, (leftMargin, 0))
             pygame.display.update()
             pygame.time.wait(WelcomeScreen.OUTRO_TRANSITION_TIME // WelcomeScreen.OUTRO_TRANSITION_STEPS)

@@ -1,41 +1,28 @@
-APP_TITLE = "Memorie, ba"
-FPS = 60
-
-### DIMENSIONS ###
-WINDOW_WIDTH = 1536
-WINDOW_HEIGHT = 864
-HIGHLIGHT_BORDER_SIZE = 5
-TEXT_LEFT_MARGIN = 35
-TEXT_TOP_MARGIN = 20
-TEXT_ROW_HEIGHT = 50
-
-BOX_SIZE = 130
-GAP_SIZE = 10
-
-### COLORS ###
-GRAY     = (100, 100, 100)
-NAVY_BLUE = ( 60,  60, 100)
-WHITE    = (255, 255, 255)
-BLUE     = (  0,   0, 255)
-ORANGE   = (255, 128,   0)
-LIGHT_ORANGE = (255, 191, 15)
-RED = (145, 0, 0)
-GOLD = (235, 202, 106)
-DARK_GREEN = (35, 66, 45)
-NORMAL_GREEN = (40, 178, 75)
-
-BG_COLOR = NAVY_BLUE
-LIGHT_BG_COLOR = GRAY
-BOX_COLOR = WHITE
-HIGHLIGHT_COLOR = LIGHT_ORANGE
-
-### TEXT ###
-TEXT_FONT = "lucidasans"
-TEXT_FONT_SIZE = 20
-TEXT_COLOR = LIGHT_ORANGE
-
-### VOLUME ###
-NORMAL_VOLUME = 0.35
-LOW_VOLUME = 0.1
-VOLUME_INCREMENT = 0.01
+class Constants():
+    APP_TITLE = "Memorie, ba"
+    FPS = 60
+    
+    ### DIMENSIONS ###
+    WINDOW_WIDTH = 1536
+    WINDOW_HEIGHT = 864
+    
+    ### COLORS ###
+    GRAY     = (100, 100, 100)
+    NAVY_BLUE = ( 60,  60, 100)
+    WHITE    = (255, 255, 255)
+    BLUE     = (  0,   0, 255)
+    ORANGE   = (255, 128,   0)
+    LIGHT_ORANGE = (255, 191, 15)
+    RED = (145, 0, 0)
+    GOLD = (235, 202, 106)
+    DARK_GREEN = (35, 66, 45)
+    NORMAL_GREEN = (40, 178, 75)
+    
+    ### VOLUME ###
+    NORMAL_VOLUME = 0.35
+    LOW_VOLUME = 0.1
+    VOLUME_INCREMENT = 0.01
+    
+    def __init__(self):
+        pass
 

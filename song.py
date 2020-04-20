@@ -1,6 +1,6 @@
 import pygame
 import os
-from constants import NORMAL_VOLUME
+from constants import Constants
 
 class Song():
     def __init__(self, title):
@@ -11,6 +11,6 @@ class Song():
         
         pygame.mixer.music.load(self.__path)
         pygame.mixer.music.play(loops, startTime / 1000)
-        pygame.mixer.music.set_volume(NORMAL_VOLUME)
+        pygame.mixer.music.set_volume(Constants.NORMAL_VOLUME)
         
         return previousSongTime

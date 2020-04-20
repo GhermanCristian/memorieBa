@@ -1,12 +1,19 @@
 from Screens.screen import Screen
 import pygame
-from constants import BG_COLOR, WINDOW_HEIGHT, WINDOW_WIDTH, LIGHT_ORANGE, TEXT_LEFT_MARGIN, TEXT_ROW_HEIGHT,\
-    TEXT_FONT, TEXT_FONT_SIZE
+from constants import Constants
 from pygame.constants import QUIT, KEYUP, K_ESCAPE, K_RIGHT
 from leaderboard import Leaderboard
 from text import Text
 
 class LeaderboardScreen(Screen):
+    TEXT_FONT = "lucidasans"
+    TEXT_FONT_SIZE = 20
+    TEXT_COLOR = Constants.LIGHT_ORANGE
+    TEXT_LEFT_MARGIN = 35
+    TEXT_ROW_HEIGHT = 50
+    
+    BG_COLOR = Constants.NAVY_BLUE
+    
     def __init__(self, gameDisplay, playlist):
         self.__gameDisplay = gameDisplay
         self.__playlist = playlist
@@ -15,7 +22,7 @@ class LeaderboardScreen(Screen):
         self.__smartLeader = Leaderboard("smart.pickle")
         
     def setBackgroundImage(self):
-        self.__gameDisplay.fill(BG_COLOR)
+        self.__gameDisplay.fill(LeaderboardScreen.BG_COLOR)
     
     def setBackgroundMusic(self):
         pass
@@ -28,15 +35,15 @@ class LeaderboardScreen(Screen):
         return ("%02d:%02d:%03d" % (minutes, seconds, ms)) 
     
     def __displayResults(self):
-        Text("rapidu", TEXT_FONT, TEXT_FONT_SIZE, LIGHT_ORANGE).display(self.__gameDisplay, WINDOW_HEIGHT / 4, WINDOW_WIDTH / 4 - 6 * 7)
-        Text("desteptu", TEXT_FONT, TEXT_FONT_SIZE, LIGHT_ORANGE).display(self.__gameDisplay, WINDOW_HEIGHT / 4, 3 * WINDOW_WIDTH / 4 - 6 * 7)
+        Text("rapidu", LeaderboardScreen.TEXT_FONT, LeaderboardScreen.TEXT_FONT_SIZE, LeaderboardScreen.TEXT_COLOR).display(self.__gameDisplay, Constants.WINDOW_HEIGHT / 4, Constants.WINDOW_WIDTH / 4 - 6 * 7)
+        Text("desteptu", LeaderboardScreen.TEXT_FONT, LeaderboardScreen.TEXT_FONT_SIZE, LeaderboardScreen.TEXT_COLOR).display(self.__gameDisplay, Constants.WINDOW_HEIGHT / 4, 3 * Constants.WINDOW_WIDTH / 4 - 6 * 7)
         
         for i in range(Leaderboard.ENTRIES_COUNT):
-            Text("%02d. %s" % (i + 1, self.__fastLeader.scoreList[i][0]), TEXT_FONT, TEXT_FONT_SIZE, LIGHT_ORANGE).display(self.__gameDisplay, (i + 2) * TEXT_ROW_HEIGHT + WINDOW_HEIGHT / 4, 2 * TEXT_LEFT_MARGIN)
-            Text(self.__convertTime(self.__fastLeader.scoreList[i][1]), TEXT_FONT, TEXT_FONT_SIZE, LIGHT_ORANGE).display(self.__gameDisplay, (i + 2) * TEXT_ROW_HEIGHT + WINDOW_HEIGHT / 4, WINDOW_WIDTH / 2 - 6 * TEXT_LEFT_MARGIN)
+            Text("%02d. %s" % (i + 1, self.__fastLeader.scoreList[i][0]), LeaderboardScreen.TEXT_FONT, LeaderboardScreen.TEXT_FONT_SIZE, LeaderboardScreen.TEXT_COLOR).display(self.__gameDisplay, (i + 2) * LeaderboardScreen.TEXT_ROW_HEIGHT + Constants.WINDOW_HEIGHT / 4, 2 * LeaderboardScreen.TEXT_LEFT_MARGIN)
+            Text(self.__convertTime(self.__fastLeader.scoreList[i][1]), LeaderboardScreen.TEXT_FONT, LeaderboardScreen.TEXT_FONT_SIZE, LeaderboardScreen.TEXT_COLOR).display(self.__gameDisplay, (i + 2) * LeaderboardScreen.TEXT_ROW_HEIGHT + Constants.WINDOW_HEIGHT / 4, Constants.WINDOW_WIDTH / 2 - 6 * LeaderboardScreen.TEXT_LEFT_MARGIN)
 
-            Text("%02d. %s" % (i + 1, self.__smartLeader.scoreList[i][0]), TEXT_FONT, TEXT_FONT_SIZE, LIGHT_ORANGE).display(self.__gameDisplay, (i + 2) * TEXT_ROW_HEIGHT + WINDOW_HEIGHT / 4, WINDOW_WIDTH / 2 + 2 * TEXT_LEFT_MARGIN)
-            Text("%d moves" % (self.__smartLeader.scoreList[i][1]), TEXT_FONT, TEXT_FONT_SIZE, LIGHT_ORANGE).display(self.__gameDisplay, (i + 2) * TEXT_ROW_HEIGHT + WINDOW_HEIGHT / 4, WINDOW_WIDTH - 6 * TEXT_LEFT_MARGIN)
+            Text("%02d. %s" % (i + 1, self.__smartLeader.scoreList[i][0]), LeaderboardScreen.TEXT_FONT, LeaderboardScreen.TEXT_FONT_SIZE, LeaderboardScreen.TEXT_COLOR).display(self.__gameDisplay, (i + 2) * LeaderboardScreen.TEXT_ROW_HEIGHT + Constants.WINDOW_HEIGHT / 4, Constants.WINDOW_WIDTH / 2 + 2 * LeaderboardScreen.TEXT_LEFT_MARGIN)
+            Text("%d moves" % (self.__smartLeader.scoreList[i][1]), LeaderboardScreen.TEXT_FONT, LeaderboardScreen.TEXT_FONT_SIZE, LeaderboardScreen.TEXT_COLOR).display(self.__gameDisplay, (i + 2) * LeaderboardScreen.TEXT_ROW_HEIGHT + Constants.WINDOW_HEIGHT / 4, Constants.WINDOW_WIDTH - 6 * LeaderboardScreen.TEXT_LEFT_MARGIN)
 
         pygame.display.update()
     
