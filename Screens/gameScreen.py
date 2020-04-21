@@ -18,6 +18,8 @@ class GameScreen(Screen):
     BOX_COLOR = Constants.WHITE
     GAP_SIZE = 10
     
+    GAME_DIFFICULTY = 1.0
+    
     BOX_REVEAL_SPEED = 360 // Constants.FPS
     NR_REVEALED_BOXES = 10
     NR_OF_LEVELS = 3
@@ -25,6 +27,7 @@ class GameScreen(Screen):
     INCREASE_MONEY_AMOUNT = 0.1
     LEFT_MARGIN = int((Constants.WINDOW_WIDTH - (Board.BOARD_WIDTH * (BOX_SIZE + GAP_SIZE) - GAP_SIZE)) / 2)
     TOP_MARGIN = int((Constants.WINDOW_HEIGHT - (Board.BOARD_HEIGHT * (BOX_SIZE + GAP_SIZE) - GAP_SIZE)) / 2)
+    IMAGE_DISPLAY_TIME = 1000
     
     TEXT_FONT = "lucidasans"
     TEXT_FONT_SIZE = 20
@@ -215,6 +218,12 @@ class GameScreen(Screen):
         
         if nextSongButton.collides(self.__mouseX, self.__mouseY) and self.__mouseClicked:
             self.__playlist.nextSong()
+    
+    def setGameDifficulty(self, gameDifficulty):
+        GameScreen.GAME_DIFFICULTY = gameDifficulty
+        GameScreen.BOX_REVEAL_SPEED = (int)(GameScreen.BOX_REVEAL_SPEED * GameScreen.GAME_DIFFICULTY)
+        GameScreen.IMAGE_DISPLAY_TIME = (int)(GameScreen.IMAGE_DISPLAY_TIME // GameScreen.GAME_DIFFICULTY)
+        GameScreen.INCREASE_MONEY_AMOUNT *= GameScreen.GAME_DIFFICULTY
         
     def __playLevel(self, level):
         self.__board.newLevel(level)
@@ -283,7 +292,7 @@ class GameScreen(Screen):
                                     SoundCue(image1.soundCue).play(3.0)
                             
                             else:
-                                pygame.time.wait(1000)
+                                pygame.time.wait(GameScreen.IMAGE_DISPLAY_TIME)
                                 self.__coverBoxesAnimation([(firstBox[0], firstBox[1]), (xBox, yBox)])
                                 self.__board.coverBox(firstBox[0], firstBox[1])
                                 self.__board.coverBox(xBox, yBox)

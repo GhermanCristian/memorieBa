@@ -36,7 +36,6 @@ class MainMenuScreen(Screen):
         self.__mouseClicked = False
         
         self.__nameScreen = NameScreen(self.__gameDisplay, self.__playlist)
-        #self.__gameScreen = GameScreen(self.__gameDisplay, self.__playlist)
         self.__leaderboardScreen = LeaderboardScreen(self.__gameDisplay, self.__playlist)
         
     def setBackgroundImage(self):
@@ -63,6 +62,7 @@ class MainMenuScreen(Screen):
         playerName = ""
         totalTime = 0
         totalMoves = 0
+        difficulty = NameScreen.EASY_DIFFICULTY_MULTIPLIER
         
         while True:
             self.__mouseClicked = False
@@ -89,15 +89,16 @@ class MainMenuScreen(Screen):
             
             if self.__mouseClicked and playGameButton.collides(self.__mouseX, self.__mouseY):
                 programResult = self.__nameScreen.displayContent()
-                if programResult == Screen.QUIT_PROGRAM:
+                if programResult[0] == Screen.QUIT_PROGRAM:
                     continue
                 else:
-                    playerName = programResult
+                    (playerName, difficulty) = programResult
                 
-                programResult = GameScreen(self.__gameDisplay, self.__playlist).displayContent()
+                gameScreen = GameScreen(self.__gameDisplay, self.__playlist)
+                gameScreen.setGameDifficulty(difficulty)
+                programResult = gameScreen.displayContent()
                 if programResult[0] == Screen.QUIT_PROGRAM:
                     #sth like "are you sure you want to quit"
-                    #when exiting the game from pacanele, the pacanele song remains on
                     continue
                 else:
                     (totalTime, totalMoves) = programResult
