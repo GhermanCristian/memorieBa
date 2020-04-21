@@ -9,12 +9,15 @@ class Constants():
     ### COLORS ###
     GRAY     = (100, 100, 100)
     NAVY_BLUE = ( 60,  60, 100)
+    AQUAMARINE_BLUE = (26, 44, 87)
     WHITE    = (255, 255, 255)
     BLUE     = (  0,   0, 255)
     ORANGE   = (255, 128,   0)
     LIGHT_ORANGE = (255, 191, 15)
     RED = (145, 0, 0)
+    NAVY_RED = (127, 21, 24)
     GOLD = (235, 202, 106)
+    PALE_GOLD = (209, 166, 131)
     DARK_GREEN = (35, 66, 45)
     NORMAL_GREEN = (40, 178, 75)
     

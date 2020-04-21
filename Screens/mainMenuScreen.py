@@ -36,7 +36,7 @@ class MainMenuScreen(Screen):
         self.__mouseClicked = False
         
         self.__nameScreen = NameScreen(self.__gameDisplay, self.__playlist)
-        self.__gameScreen = GameScreen(self.__gameDisplay, self.__playlist)
+        #self.__gameScreen = GameScreen(self.__gameDisplay, self.__playlist)
         self.__leaderboardScreen = LeaderboardScreen(self.__gameDisplay, self.__playlist)
         
     def setBackgroundImage(self):
@@ -94,7 +94,7 @@ class MainMenuScreen(Screen):
                 else:
                     playerName = programResult
                 
-                programResult = self.__gameScreen.displayContent()
+                programResult = GameScreen(self.__gameDisplay, self.__playlist).displayContent()
                 if programResult[0] == Screen.QUIT_PROGRAM:
                     #sth like "are you sure you want to quit"
                     #when exiting the game from pacanele, the pacanele song remains on

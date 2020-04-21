@@ -27,8 +27,8 @@ class GUI:
         return pygame.image.load(os.path.join(currentImage, imageTitle))
         
     def __quitGame(self):
-        ExitScreen(self.__gameDisplay, ExitScreen.EXIT_SCREEN1).displayContent()
-        ExitScreen(self.__gameDisplay, ExitScreen.EXIT_SCREEN2).displayContent()
+        #ExitScreen(self.__gameDisplay, ExitScreen.EXIT_SCREEN1).displayContent()
+        #ExitScreen(self.__gameDisplay, ExitScreen.EXIT_SCREEN2).displayContent()
         self.__playlist.fadeOut()
         pygame.quit()
         quit()

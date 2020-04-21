@@ -6,13 +6,13 @@ from leaderboard import Leaderboard
 from text import Text
 
 class LeaderboardScreen(Screen):
-    TEXT_FONT = "lucidasans"
-    TEXT_FONT_SIZE = 20
-    TEXT_COLOR = Constants.LIGHT_ORANGE
+    TEXT_FONT = "candara"
+    TEXT_FONT_SIZE = 30
+    TEXT_COLOR = Constants.PALE_GOLD
     TEXT_LEFT_MARGIN = 35
     TEXT_ROW_HEIGHT = 50
     
-    BG_COLOR = Constants.NAVY_BLUE
+    BG_COLOR = Constants.AQUAMARINE_BLUE
     
     def __init__(self, gameDisplay, playlist):
         self.__gameDisplay = gameDisplay

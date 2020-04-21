@@ -30,7 +30,7 @@ class PacaneleScreen(Screen):
     MONEY_TEXT_COLOR = Constants.LIGHT_ORANGE
     MONEY_TEXT_ROW_HEIGHT = 50
     
-    BG_COLOR = Constants.RED
+    BG_COLOR = Constants.NAVY_RED
     LIGHT_BG_COLOR = Constants.GRAY
     
     def __init__(self, gameDisplay, playlist):
@@ -141,12 +141,13 @@ class PacaneleScreen(Screen):
         pygame.mouse.set_visible(True)
         
         functionResult = self.__redOrBlack(money)
-        if functionResult == Screen.QUIT_PROGRAM:
-            return Screen.QUIT_PROGRAM
-        money = functionResult
         
         self.__playlist.restorePreviousSong(self.__previousSongTime)
         pygame.mouse.set_visible(False)
+        
+        if functionResult == Screen.QUIT_PROGRAM:
+            return Screen.QUIT_PROGRAM
+        money = functionResult
              
         return money
     

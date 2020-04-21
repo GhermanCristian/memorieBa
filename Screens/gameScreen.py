@@ -23,8 +23,8 @@ class GameScreen(Screen):
     NR_OF_LEVELS = 3
     END_LEVEL_FLASH_COUNT = 10
     INCREASE_MONEY_AMOUNT = 0.1
-    LEFT_MARGIN = int((Constants.WINDOW_WIDTH - (Board.BOARD_WIDTH * (BOX_SIZE + GAP_SIZE))) / 2)
-    TOP_MARGIN = int((Constants.WINDOW_HEIGHT - (Board.BOARD_HEIGHT * (BOX_SIZE + GAP_SIZE))) / 2)
+    LEFT_MARGIN = int((Constants.WINDOW_WIDTH - (Board.BOARD_WIDTH * (BOX_SIZE + GAP_SIZE) - GAP_SIZE)) / 2)
+    TOP_MARGIN = int((Constants.WINDOW_HEIGHT - (Board.BOARD_HEIGHT * (BOX_SIZE + GAP_SIZE) - GAP_SIZE)) / 2)
     
     TEXT_FONT = "lucidasans"
     TEXT_FONT_SIZE = 20
@@ -36,9 +36,10 @@ class GameScreen(Screen):
     HIGHLIGHT_COLOR = Constants.LIGHT_ORANGE
     HIGHLIGHT_BORDER_SIZE = 5
     
-    DOUBLE_MONEY_BOX_LEFT = Constants.WINDOW_WIDTH - 200
-    DOUBLE_MONEY_BOX_TOP = Constants.WINDOW_HEIGHT - 200
     DOUBLE_MONEY_BOX_WIDTH = 125
+    DOUBLE_MONEY_BOX_HEIGHT = 50
+    DOUBLE_MONEY_BOX_LEFT = Constants.WINDOW_WIDTH - (LEFT_MARGIN + DOUBLE_MONEY_BOX_WIDTH) // 2
+    DOUBLE_MONEY_BOX_TOP = Constants.WINDOW_HEIGHT - TOP_MARGIN - DOUBLE_MONEY_BOX_HEIGHT
     
     MUSIC_PLAYER_BUTTON_TOP = TOP_MARGIN + 5 * TEXT_ROW_HEIGHT
     MUSIC_PLAYER_BUTTON_LEFT = TEXT_LEFT_MARGIN
@@ -159,8 +160,8 @@ class GameScreen(Screen):
         minutes = ms / 60000
         ms %= 60000
         seconds = ms / 1000
-        ms %= 1000
-        return ("%02d:%02d:%03d" % (minutes, seconds, ms))  
+        ms = (ms % 1000) / 10
+        return ("%02d:%02d:%02d" % (minutes, seconds, ms))  
     
     def __displayGameInfo(self, timePassed, nrMoves, level):
         Text(("Current moves = %d" % nrMoves), GameScreen.TEXT_FONT, GameScreen.TEXT_FONT_SIZE, GameScreen.TEXT_COLOR).display(self.__gameDisplay, GameScreen.TEXT_TOP_MARGIN, GameScreen.TEXT_LEFT_MARGIN)
@@ -182,7 +183,7 @@ class GameScreen(Screen):
     
     def __displayPacaneleButton(self):
         pacaneleButtonText = Text("Dubleaza", GameScreen.TEXT_FONT, GameScreen.TEXT_FONT_SIZE, GameScreen.TEXT_COLOR)
-        pacaneleButton = Button(GameScreen.DOUBLE_MONEY_BOX_TOP, GameScreen.DOUBLE_MONEY_BOX_LEFT, GameScreen.DOUBLE_MONEY_BOX_WIDTH, GameScreen.TEXT_ROW_HEIGHT, GameScreen.LIGHT_BG_COLOR, pacaneleButtonText)
+        pacaneleButton = Button(GameScreen.DOUBLE_MONEY_BOX_TOP, GameScreen.DOUBLE_MONEY_BOX_LEFT, GameScreen.DOUBLE_MONEY_BOX_WIDTH, GameScreen.DOUBLE_MONEY_BOX_HEIGHT, GameScreen.LIGHT_BG_COLOR, pacaneleButtonText)
         pacaneleButton.display(self.__gameDisplay)
         
         if pacaneleButton.collides(self.__mouseX, self.__mouseY):
