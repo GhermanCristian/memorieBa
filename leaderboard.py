@@ -6,7 +6,8 @@ class Leaderboard:
     
     def __init__(self, filePath):
         self.scoreList = []
-        self.__filePath = os.path.join(os.getcwd(), "Leaderboards")
+        self.__filePath = os.path.join(os.getcwd(), "Data")
+        self.__filePath = os.path.join(self.__filePath, "Leaderboards")
         self.__filePath = os.path.join(self.__filePath, filePath)
         
         self.__loadPickle()

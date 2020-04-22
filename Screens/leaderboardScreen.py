@@ -1,9 +1,11 @@
 from Screens.screen import Screen
 import pygame
 from constants import Constants
-from pygame.constants import QUIT, KEYUP, K_ESCAPE, K_RIGHT
+from pygame.constants import QUIT, KEYUP, K_ESCAPE, K_RIGHT, MOUSEMOTION, MOUSEBUTTONUP
 from leaderboard import Leaderboard
 from text import Text
+from button import Button
+from Screens.nameScreen import NameScreen
 
 class LeaderboardScreen(Screen):
     TEXT_FONT = "candara"
@@ -14,12 +16,29 @@ class LeaderboardScreen(Screen):
     
     BG_COLOR = Constants.AQUAMARINE_BLUE
     
+    DIFFICULTY_TEXT_TOP_COORD = 80
+    DIFFICULTY_TEXT_LEFT_COORD = Constants.WINDOW_WIDTH // 2 - 65
+    
+    TITLE_TEXT_TOP_COORD = Constants.WINDOW_HEIGHT // 4 - 100
+    TITLE_TEXT_SIZE = 50
+    
+    DIRECTION_BUTTON_TOP_COORD = Constants.WINDOW_HEIGHT - 80 - 34
+    DIRECTION_BUTTON_SIZE = 80
+    DIRECTION_BUTTON_COLOR = Constants.NAVY_RED
+    DIRECTION_BUTTON_TEXT_SIZE = 40
+    PREVIOUS_BUTTON_LEFT_COORD = 500
+    NEXT_BUTTON_LEFT_COORD = Constants.WINDOW_WIDTH - 500 - DIRECTION_BUTTON_SIZE
+    
     def __init__(self, gameDisplay, playlist):
         self.__gameDisplay = gameDisplay
         self.__playlist = playlist
         
-        self.__fastLeader = Leaderboard("fast.pickle")
-        self.__smartLeader = Leaderboard("smart.pickle")
+        self.__fastLeaderEasy = Leaderboard("fast_easy.pickle")
+        self.__smartLeaderEasy = Leaderboard("smart_easy.pickle")
+        self.__fastLeaderMedium = Leaderboard("fast_medium.pickle")
+        self.__smartLeaderMedium = Leaderboard("smart_medium.pickle")
+        self.__fastLeaderHard = Leaderboard("fast_hard.pickle")
+        self.__smartLeaderHard = Leaderboard("smart_hard.pickle")
         
     def setBackgroundImage(self):
         self.__gameDisplay.fill(LeaderboardScreen.BG_COLOR)
@@ -34,36 +53,89 @@ class LeaderboardScreen(Screen):
         ms %= 1000
         return ("%02d:%02d:%03d" % (minutes, seconds, ms)) 
     
-    def __displayResults(self):
-        Text("rapidu", LeaderboardScreen.TEXT_FONT, LeaderboardScreen.TEXT_FONT_SIZE, LeaderboardScreen.TEXT_COLOR).display(self.__gameDisplay, Constants.WINDOW_HEIGHT / 4, Constants.WINDOW_WIDTH / 4 - 6 * 7)
-        Text("desteptu", LeaderboardScreen.TEXT_FONT, LeaderboardScreen.TEXT_FONT_SIZE, LeaderboardScreen.TEXT_COLOR).display(self.__gameDisplay, Constants.WINDOW_HEIGHT / 4, 3 * Constants.WINDOW_WIDTH / 4 - 6 * 7)
+    def __displayResults(self, leaderboardDifficulty):
+        leaderboardsByDifficulty = [
+            (self.__fastLeaderEasy, self.__smartLeaderEasy, "EASY"),
+            (self.__fastLeaderMedium, self.__smartLeaderMedium, "MEDIUM"),
+            (self.__fastLeaderHard, self.__smartLeaderHard, "HARD")
+        ]
+        
+        Text(leaderboardsByDifficulty[leaderboardDifficulty][2], LeaderboardScreen.TEXT_FONT, LeaderboardScreen.TITLE_TEXT_SIZE, LeaderboardScreen.TEXT_COLOR).display(self.__gameDisplay, LeaderboardScreen.DIFFICULTY_TEXT_TOP_COORD, LeaderboardScreen.DIFFICULTY_TEXT_LEFT_COORD)
+        Text("rapidu", LeaderboardScreen.TEXT_FONT, LeaderboardScreen.TEXT_FONT_SIZE, LeaderboardScreen.TEXT_COLOR).display(self.__gameDisplay, LeaderboardScreen.TITLE_TEXT_TOP_COORD, Constants.WINDOW_WIDTH / 4 - 6 * 7)
+        Text("desteptu", LeaderboardScreen.TEXT_FONT, LeaderboardScreen.TEXT_FONT_SIZE, LeaderboardScreen.TEXT_COLOR).display(self.__gameDisplay, LeaderboardScreen.TITLE_TEXT_TOP_COORD, 3 * Constants.WINDOW_WIDTH / 4 - 6 * 7)
         
         for i in range(Leaderboard.ENTRIES_COUNT):
-            Text("%02d. %s" % (i + 1, self.__fastLeader.scoreList[i][0]), LeaderboardScreen.TEXT_FONT, LeaderboardScreen.TEXT_FONT_SIZE, LeaderboardScreen.TEXT_COLOR).display(self.__gameDisplay, (i + 2) * LeaderboardScreen.TEXT_ROW_HEIGHT + Constants.WINDOW_HEIGHT / 4, 2 * LeaderboardScreen.TEXT_LEFT_MARGIN)
-            Text(self.__convertTime(self.__fastLeader.scoreList[i][1]), LeaderboardScreen.TEXT_FONT, LeaderboardScreen.TEXT_FONT_SIZE, LeaderboardScreen.TEXT_COLOR).display(self.__gameDisplay, (i + 2) * LeaderboardScreen.TEXT_ROW_HEIGHT + Constants.WINDOW_HEIGHT / 4, Constants.WINDOW_WIDTH / 2 - 6 * LeaderboardScreen.TEXT_LEFT_MARGIN)
+            Text("%02d. %s" % (i + 1, leaderboardsByDifficulty[leaderboardDifficulty][0].scoreList[i][0]), LeaderboardScreen.TEXT_FONT, LeaderboardScreen.TEXT_FONT_SIZE, LeaderboardScreen.TEXT_COLOR).display(self.__gameDisplay, (i + 2) * LeaderboardScreen.TEXT_ROW_HEIGHT + LeaderboardScreen.TITLE_TEXT_TOP_COORD, 2 * LeaderboardScreen.TEXT_LEFT_MARGIN)
+            Text(self.__convertTime(leaderboardsByDifficulty[leaderboardDifficulty][0].scoreList[i][1]), LeaderboardScreen.TEXT_FONT, LeaderboardScreen.TEXT_FONT_SIZE, LeaderboardScreen.TEXT_COLOR).display(self.__gameDisplay, (i + 2) * LeaderboardScreen.TEXT_ROW_HEIGHT + LeaderboardScreen.TITLE_TEXT_TOP_COORD, Constants.WINDOW_WIDTH / 2 - 6 * LeaderboardScreen.TEXT_LEFT_MARGIN)
 
-            Text("%02d. %s" % (i + 1, self.__smartLeader.scoreList[i][0]), LeaderboardScreen.TEXT_FONT, LeaderboardScreen.TEXT_FONT_SIZE, LeaderboardScreen.TEXT_COLOR).display(self.__gameDisplay, (i + 2) * LeaderboardScreen.TEXT_ROW_HEIGHT + Constants.WINDOW_HEIGHT / 4, Constants.WINDOW_WIDTH / 2 + 2 * LeaderboardScreen.TEXT_LEFT_MARGIN)
-            Text("%d moves" % (self.__smartLeader.scoreList[i][1]), LeaderboardScreen.TEXT_FONT, LeaderboardScreen.TEXT_FONT_SIZE, LeaderboardScreen.TEXT_COLOR).display(self.__gameDisplay, (i + 2) * LeaderboardScreen.TEXT_ROW_HEIGHT + Constants.WINDOW_HEIGHT / 4, Constants.WINDOW_WIDTH - 6 * LeaderboardScreen.TEXT_LEFT_MARGIN)
-
-        pygame.display.update()
+            Text("%02d. %s" % (i + 1, leaderboardsByDifficulty[leaderboardDifficulty][1].scoreList[i][0]), LeaderboardScreen.TEXT_FONT, LeaderboardScreen.TEXT_FONT_SIZE, LeaderboardScreen.TEXT_COLOR).display(self.__gameDisplay, (i + 2) * LeaderboardScreen.TEXT_ROW_HEIGHT + LeaderboardScreen.TITLE_TEXT_TOP_COORD, Constants.WINDOW_WIDTH / 2 + 2 * LeaderboardScreen.TEXT_LEFT_MARGIN)
+            Text("%d moves" % (leaderboardsByDifficulty[leaderboardDifficulty][1].scoreList[i][1]), LeaderboardScreen.TEXT_FONT, LeaderboardScreen.TEXT_FONT_SIZE, LeaderboardScreen.TEXT_COLOR).display(self.__gameDisplay, (i + 2) * LeaderboardScreen.TEXT_ROW_HEIGHT + LeaderboardScreen.TITLE_TEXT_TOP_COORD, Constants.WINDOW_WIDTH - 6 * LeaderboardScreen.TEXT_LEFT_MARGIN)
+        
     
     def __updateLeaderboard(self, result, leaderboard, playerName):
         newEntry = leaderboard.checkResult(result)
         if newEntry == True:
             leaderboard.addResult(result, playerName)
     
-    def updateAllLeaderboards(self, totalTime, totalMoves, playerName):
-        self.__updateLeaderboard(totalTime, self.__fastLeader, playerName)
-        self.__updateLeaderboard(totalMoves, self.__smartLeader, playerName)
+    def updateLeaderboards(self, totalTime, totalMoves, playerName, difficulty):
+        leaderboardsByDifficulty = {
+            NameScreen.EASY_DIFFICULTY_MULTIPLIER: (self.__fastLeaderEasy, self.__smartLeaderEasy),
+            NameScreen.MEDIUM_DIFFICULTY_MULTIPLIER: (self.__fastLeaderMedium, self.__smartLeaderMedium),
+            NameScreen.HARD_DIFFICULTY_MULTIPLIER: (self.__fastLeaderHard, self.__smartLeaderHard)
+        }
+        self.__updateLeaderboard(totalTime, leaderboardsByDifficulty[difficulty][0], playerName)
+        self.__updateLeaderboard(totalMoves, leaderboardsByDifficulty[difficulty][1], playerName)
+    
+    def __adjustLeaderboardDifficulty(self, leaderboardDifficulty, increment):
+        leaderboardDifficulty += increment
+        if leaderboardDifficulty >= NameScreen.NUMBER_OF_DIFFICULTIES:
+            return 0
+        if leaderboardDifficulty < 0:
+            return NameScreen.NUMBER_OF_DIFFICULTIES - 1
+        return leaderboardDifficulty
     
     def displayContent(self):
+        leaderboardDifficulty = 0
+        
+        previousButtonText = Text("<", LeaderboardScreen.TEXT_FONT, LeaderboardScreen.DIRECTION_BUTTON_TEXT_SIZE, LeaderboardScreen.TEXT_COLOR);
+        previousButton = Button(LeaderboardScreen.DIRECTION_BUTTON_TOP_COORD, LeaderboardScreen.PREVIOUS_BUTTON_LEFT_COORD, LeaderboardScreen.DIRECTION_BUTTON_SIZE, LeaderboardScreen.DIRECTION_BUTTON_SIZE, LeaderboardScreen.DIRECTION_BUTTON_COLOR, previousButtonText);
+        nextButtonText = Text(">", LeaderboardScreen.TEXT_FONT, LeaderboardScreen.DIRECTION_BUTTON_TEXT_SIZE, LeaderboardScreen.TEXT_COLOR);
+        nextButton = Button(LeaderboardScreen.DIRECTION_BUTTON_TOP_COORD, LeaderboardScreen.NEXT_BUTTON_LEFT_COORD, LeaderboardScreen.DIRECTION_BUTTON_SIZE, LeaderboardScreen.DIRECTION_BUTTON_SIZE, LeaderboardScreen.DIRECTION_BUTTON_COLOR, nextButtonText);
+        
         self.setBackgroundImage()
-        self.__displayResults()
+        self.__displayResults(leaderboardDifficulty)
+        previousButton.display(self.__gameDisplay)
+        nextButton.display(self.__gameDisplay)
+        pygame.display.update()
+        
+        mouseX = 0
+        mouseY = 0
+        mouseClicked = False
         
         while True:
+            mouseClicked = False
+             
             for event in pygame.event.get(): 
                 if event.type == QUIT or (event.type == KEYUP and event.key == K_ESCAPE):
                     return Screen.QUIT_PROGRAM
                 elif event.type == pygame.USEREVENT or (event.type == KEYUP and event.key == K_RIGHT):
                     self.__playlist.nextSong()
+                elif event.type == MOUSEMOTION:
+                    mouseX, mouseY = event.pos
+                elif event.type == MOUSEBUTTONUP:
+                    mouseX, mouseY = event.pos
+                    mouseClicked = True
+            
+            if mouseClicked == True:
+                if previousButton.collides(mouseX, mouseY):
+                    leaderboardDifficulty = self.__adjustLeaderboardDifficulty(leaderboardDifficulty, -1)
+                
+                elif nextButton.collides(mouseX, mouseY):
+                    leaderboardDifficulty = self.__adjustLeaderboardDifficulty(leaderboardDifficulty, 1)
+                    
+                self.setBackgroundImage()
+                self.__displayResults(leaderboardDifficulty)
+                previousButton.display(self.__gameDisplay)
+                nextButton.display(self.__gameDisplay)    
+                pygame.display.update()
 

@@ -35,7 +35,6 @@ class MainMenuScreen(Screen):
         self.__mouseY = 0
         self.__mouseClicked = False
         
-        self.__nameScreen = NameScreen(self.__gameDisplay, self.__playlist)
         self.__leaderboardScreen = LeaderboardScreen(self.__gameDisplay, self.__playlist)
         
     def setBackgroundImage(self):
@@ -62,7 +61,7 @@ class MainMenuScreen(Screen):
         playerName = ""
         totalTime = 0
         totalMoves = 0
-        difficulty = NameScreen.EASY_DIFFICULTY_MULTIPLIER
+        difficulty = NameScreen.EASY_DIFFICULTY_MULTIPLIER #default value
         
         while True:
             self.__mouseClicked = False
@@ -88,7 +87,7 @@ class MainMenuScreen(Screen):
             pygame.display.update() 
             
             if self.__mouseClicked and playGameButton.collides(self.__mouseX, self.__mouseY):
-                programResult = self.__nameScreen.displayContent()
+                programResult = NameScreen(self.__gameDisplay, self.__playlist).displayContent()
                 if programResult[0] == Screen.QUIT_PROGRAM:
                     continue
                 else:
@@ -102,7 +101,7 @@ class MainMenuScreen(Screen):
                     continue
                 else:
                     (totalTime, totalMoves) = programResult
-                    self.__leaderboardScreen.updateAllLeaderboards(totalTime, totalMoves, playerName)
+                    self.__leaderboardScreen.updateLeaderboards(totalTime, totalMoves, playerName, difficulty)
                     if self.__leaderboardScreen.displayContent() == Screen.QUIT_PROGRAM:
                         continue
                     
