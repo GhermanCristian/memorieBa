@@ -112,7 +112,7 @@ class PacaneleScreen(Screen):
             
             for event in pygame.event.get():
                 if event.type == QUIT or (event.type == KEYUP and event.key == K_ESCAPE):
-                    return Screen.QUIT_PROGRAM
+                    return money
                 elif event.type == MOUSEMOTION:
                     mouseX, mouseY = event.pos
                 elif event.type == MOUSEBUTTONUP:
@@ -144,11 +144,8 @@ class PacaneleScreen(Screen):
         
         self.__playlist.restorePreviousSong(self.__previousSongTime)
         pygame.mouse.set_visible(False)
-        
-        if functionResult == Screen.QUIT_PROGRAM:
-            return Screen.QUIT_PROGRAM
-        money = functionResult
-             
+
+        money = functionResult             
         return money
     
     

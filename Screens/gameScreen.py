@@ -7,6 +7,7 @@ from Screens.pacaneleScreen import PacaneleScreen
 from soundCue import SoundCue
 from text import Text
 from button import Button
+from moneySum import MoneyStorage
 import os
 
 class GameScreen(Screen):
@@ -20,14 +21,17 @@ class GameScreen(Screen):
     
     GAME_DIFFICULTY = 1.0
     
-    BOX_REVEAL_SPEED = 360 // Constants.FPS
+    BASE_BOX_REVEAL_SPEED = 360 // Constants.FPS
+    BOX_REVEAL_SPEED = BASE_BOX_REVEAL_SPEED
     NR_REVEALED_BOXES = 10
     NR_OF_LEVELS = 3
     END_LEVEL_FLASH_COUNT = 10
-    INCREASE_MONEY_AMOUNT = 0.1
+    BASE_INCREASE_MONEY_AMOUNT = 0.1
+    INCREASE_MONEY_AMOUNT = BASE_INCREASE_MONEY_AMOUNT
     LEFT_MARGIN = int((Constants.WINDOW_WIDTH - (Board.BOARD_WIDTH * (BOX_SIZE + GAP_SIZE) - GAP_SIZE)) / 2)
     TOP_MARGIN = int((Constants.WINDOW_HEIGHT - (Board.BOARD_HEIGHT * (BOX_SIZE + GAP_SIZE) - GAP_SIZE)) / 2)
-    IMAGE_DISPLAY_TIME = 1000
+    BASE_IMAGE_DISPLAY_TIME = 1000
+    IMAGE_DISPLAY_TIME = BASE_IMAGE_DISPLAY_TIME
     
     TEXT_FONT = "lucidasans"
     TEXT_FONT_SIZE = 20
@@ -67,7 +71,7 @@ class GameScreen(Screen):
         
         self.__totalMoves = 0
         self.__totalTime = 0
-        self.__money = 0.0
+        self.__money = MoneyStorage().loadMoney()
         
     def setBackgroundImage(self):
         self.__gameDisplay.fill(GameScreen.BG_COLOR)
@@ -192,10 +196,7 @@ class GameScreen(Screen):
         if pacaneleButton.collides(self.__mouseX, self.__mouseY):
             pacaneleButton.drawHighlight(self.__gameDisplay, GameScreen.HIGHLIGHT_COLOR, GameScreen.HIGHLIGHT_BORDER_SIZE)
             if self.__mouseClicked and self.__money > 0.0:
-                functionResult = self.__pacaneleScreen.displayContent(self.__money)
-                if functionResult == Screen.QUIT_PROGRAM:
-                    return Screen.QUIT_PROGRAM
-                self.__money = functionResult
+                self.__money = self.__pacaneleScreen.displayContent(self.__money)
                 
     def __displayMusicPlayer(self):
         previousSongButtonText = Text("<", GameScreen.TEXT_FONT, GameScreen.TEXT_FONT_SIZE, GameScreen.TEXT_COLOR)
@@ -221,9 +222,9 @@ class GameScreen(Screen):
     
     def setGameDifficulty(self, gameDifficulty):
         GameScreen.GAME_DIFFICULTY = gameDifficulty
-        GameScreen.BOX_REVEAL_SPEED = (int)(GameScreen.BOX_REVEAL_SPEED * GameScreen.GAME_DIFFICULTY)
-        GameScreen.IMAGE_DISPLAY_TIME = (int)(GameScreen.IMAGE_DISPLAY_TIME // GameScreen.GAME_DIFFICULTY)
-        GameScreen.INCREASE_MONEY_AMOUNT *= GameScreen.GAME_DIFFICULTY
+        GameScreen.BOX_REVEAL_SPEED = (int)(GameScreen.BASE_BOX_REVEAL_SPEED * GameScreen.GAME_DIFFICULTY)
+        GameScreen.IMAGE_DISPLAY_TIME = (int)(GameScreen.BASE_IMAGE_DISPLAY_TIME // GameScreen.GAME_DIFFICULTY)
+        GameScreen.INCREASE_MONEY_AMOUNT = GameScreen.BASE_INCREASE_MONEY_AMOUNT * GameScreen.GAME_DIFFICULTY
         
     def __playLevel(self, level):
         self.__board.newLevel(level)
@@ -256,9 +257,7 @@ class GameScreen(Screen):
             self.setBackgroundImage()
             self.__displayGameInfo(timePassed, nrMoves, level)
             self.__displayMusicPlayer()
-            pacaneleResult = self.__displayPacaneleButton()
-            if pacaneleResult == Screen.QUIT_PROGRAM:
-                return Screen.QUIT_PROGRAM
+            self.__displayPacaneleButton()
             
             self.__displayBoard()
             
@@ -312,6 +311,7 @@ class GameScreen(Screen):
             levelResult = self.__playLevel(level)
             if levelResult == Screen.QUIT_PROGRAM:
                 pygame.mouse.set_visible(True)
+                MoneyStorage().saveMoney(self.__money)
                 return (Screen.QUIT_PROGRAM, Screen.QUIT_PROGRAM)
             
             if level == GameScreen.NR_OF_LEVELS:
@@ -323,5 +323,6 @@ class GameScreen(Screen):
             pygame.time.wait(2500)
             
         pygame.mouse.set_visible(True)
+        MoneyStorage().saveMoney(self.__money)
         return (self.__totalTime, self.__totalMoves)
 
