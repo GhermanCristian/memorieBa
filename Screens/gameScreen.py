@@ -7,7 +7,7 @@ from Screens.pacaneleScreen import PacaneleScreen
 from soundCue import SoundCue
 from text import Text
 from button import Button
-from moneySum import MoneyStorage
+from moneyStorage import MoneyStorage
 import os
 
 class GameScreen(Screen):
@@ -239,6 +239,7 @@ class GameScreen(Screen):
         timePassed = 0
         
         while True:
+            pygame.time.wait(1)
             self.__mouseClicked = False
             
             for event in pygame.event.get():
@@ -320,7 +321,7 @@ class GameScreen(Screen):
                 SoundCue(GameScreen.SERGHEI_SOUND_PATH).play(1.0)
             
             self.__endLevelAnimation()
-            pygame.time.wait(2500)
+            pygame.time.wait(2500) #PSA: don't have task manager open when ending a level, apparently wait() behaves weirdly
             
         pygame.mouse.set_visible(True)
         MoneyStorage().saveMoney(self.__money)

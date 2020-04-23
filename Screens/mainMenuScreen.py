@@ -65,6 +65,15 @@ class MainMenuScreen(Screen):
         
         while True:
             self.__mouseClicked = False
+            pygame.time.wait(1)
+            
+            #this section should only be displayed when the program enters the mainMenu + exits from game/leaderboard etc
+            self.setBackgroundImage()
+            playGameButton.display(self.__gameDisplay)
+            leaderboardButton.display(self.__gameDisplay)
+            achievementButton.display(self.__gameDisplay)
+            statisticsButton.display(self.__gameDisplay)
+            pygame.display.update() 
             
             for event in pygame.event.get():
                 if event.type == QUIT or (event.type == KEYUP and event.key == K_ESCAPE):
@@ -78,13 +87,6 @@ class MainMenuScreen(Screen):
                     self.__playlist.nextSong()
                 elif event.type == SoundCue.SOUND_CUE_END_EVENT:
                     self.__playlist.fadeIn()
-                    
-            self.setBackgroundImage()
-            playGameButton.display(self.__gameDisplay)
-            leaderboardButton.display(self.__gameDisplay)
-            achievementButton.display(self.__gameDisplay)
-            statisticsButton.display(self.__gameDisplay)
-            pygame.display.update() 
             
             if self.__mouseClicked and playGameButton.collides(self.__mouseX, self.__mouseY):
                 programResult = NameScreen(self.__gameDisplay, self.__playlist).displayContent()

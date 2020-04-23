@@ -43,10 +43,22 @@ class NameScreen(Screen):
     def setBackgroundMusic(self):
         pass
 
+    def __displayTextBox(self, userInput):
+        userInputText = Text(userInput, NameScreen.TEXT_FONT, NameScreen.TEXT_FONT_SIZE, NameScreen.TEXT_COLOR)
+        Label(Constants.WINDOW_HEIGHT / 2 - NameScreen.TEXT_ROW_HEIGHT / 2, Constants.WINDOW_WIDTH / 2 - 250, 500, NameScreen.TEXT_ROW_HEIGHT, NameScreen.LIGHT_BG_COLOR, userInputText).display(self.__gameDisplay)    
+        pygame.display.update()
+    
     def __getPlayerName(self):
         userInput = ""
         promptText = Text("baga un nume", NameScreen.TEXT_FONT, NameScreen.TEXT_FONT_SIZE, NameScreen.TEXT_COLOR)
+        
+        self.setBackgroundImage()
+        promptText.display(self.__gameDisplay, Constants.WINDOW_HEIGHT / 2 - 2 * NameScreen.TEXT_ROW_HEIGHT, Constants.WINDOW_WIDTH / 2 - 12 * 7)
+        self.__displayTextBox(userInput)
+        
         while True:
+            pygame.time.wait(1)
+            
             for event in pygame.event.get():
                 if event.type == QUIT or (event.type == KEYUP and event.key == K_ESCAPE):
                     return Screen.QUIT_PROGRAM
@@ -55,24 +67,14 @@ class NameScreen(Screen):
                 if event.type == KEYDOWN:
                     if len(userInput) < NameScreen.MAX_NAME_LENGTH and (event.unicode.isalnum() or event.unicode in "!@#$%^&*()_+-=<>,.?/:{}\|`~ '"):
                         userInput += event.unicode
+                        self.__displayTextBox(userInput)
                     elif event.key == K_BACKSPACE:
                         userInput = userInput[:-1]
+                        self.__displayTextBox(userInput)
                     elif event.key == K_RETURN:
                         return userInput
-                    
-            self.setBackgroundImage()
-            promptText.display(self.__gameDisplay, Constants.WINDOW_HEIGHT / 2 - 2 * NameScreen.TEXT_ROW_HEIGHT, Constants.WINDOW_WIDTH / 2 - 12 * 7)
-            userInputText = Text(userInput, NameScreen.TEXT_FONT, NameScreen.TEXT_FONT_SIZE, NameScreen.TEXT_COLOR)
-            Label(Constants.WINDOW_HEIGHT / 2 - NameScreen.TEXT_ROW_HEIGHT / 2, Constants.WINDOW_WIDTH / 2 - 250, 500, NameScreen.TEXT_ROW_HEIGHT, NameScreen.LIGHT_BG_COLOR, userInputText).display(self.__gameDisplay)
             
-            pygame.display.update()
-    
-    def displayContent(self):
-        userName = self.__getPlayerName()
-        
-        if (userName == Screen.QUIT_PROGRAM):
-            return (Screen.QUIT_PROGRAM, Screen.QUIT_PROGRAM)
-        
+    def __getDifficulty(self):
         easyButtonText = Text("easy", NameScreen.TEXT_FONT, NameScreen.TEXT_FONT_SIZE, NameScreen.TEXT_COLOR)
         easyButton = Button(NameScreen.DIFFICULTY_BUTTON_TOP_COORD, NameScreen.EASY_BUTTON_LEFT_COORD, NameScreen.DIFFICULTY_BUTTON_SIZE, NameScreen.DIFFICULTY_BUTTON_SIZE, NameScreen.EASY_BUTTON_BG_COLOR, easyButtonText)
         mediumButtonText = Text("medium", NameScreen.TEXT_FONT, NameScreen.TEXT_FONT_SIZE, NameScreen.TEXT_COLOR)
@@ -84,17 +86,18 @@ class NameScreen(Screen):
         mouseY = 0
         mouseClicked = False
         
+        easyButton.display(self.__gameDisplay)
+        mediumButton.display(self.__gameDisplay)
+        hardButton.display(self.__gameDisplay)
+        pygame.display.update()
+        
         while True:
             mouseClicked = False
-            
-            easyButton.display(self.__gameDisplay)
-            mediumButton.display(self.__gameDisplay)
-            hardButton.display(self.__gameDisplay)
-            pygame.display.update()
-            
+            pygame.time.wait(1)
+
             for event in pygame.event.get():
                 if event.type == QUIT or (event.type == KEYUP and event.key == K_ESCAPE):
-                    return (Screen.QUIT_PROGRAM, Screen.QUIT_PROGRAM)
+                    return Screen.QUIT_PROGRAM
                 elif event.type == pygame.USEREVENT or (event.type == KEYUP and event.key == K_RIGHT):
                     self.__playlist.nextSong()
                 elif event.type == MOUSEMOTION:
@@ -105,13 +108,25 @@ class NameScreen(Screen):
                     
             if mouseClicked == True:
                 if easyButton.collides(mouseX, mouseY):
-                    return (userName, NameScreen.EASY_DIFFICULTY_MULTIPLIER)
+                    return NameScreen.EASY_DIFFICULTY_MULTIPLIER
                 
                 if mediumButton.collides(mouseX, mouseY):
-                    return (userName, NameScreen.MEDIUM_DIFFICULTY_MULTIPLIER)
+                    return NameScreen.MEDIUM_DIFFICULTY_MULTIPLIER
                 
                 if hardButton.collides(mouseX, mouseY):
-                    return (userName, NameScreen.HARD_DIFFICULTY_MULTIPLIER)
+                    return NameScreen.HARD_DIFFICULTY_MULTIPLIER
+                
+    def displayContent(self):
+        userName = self.__getPlayerName()
+        if (userName == Screen.QUIT_PROGRAM):
+            return (Screen.QUIT_PROGRAM, Screen.QUIT_PROGRAM)
+        
+        difficulty = self.__getDifficulty()
+        if (difficulty == Screen.QUIT_PROGRAM):
+            return (Screen.QUIT_PROGRAM, Screen.QUIT_PROGRAM)
+        
+        return (userName, difficulty)
+        
             
             
     

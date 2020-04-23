@@ -102,13 +102,14 @@ class PacaneleScreen(Screen):
         blackBox = pygame.Rect(PacaneleScreen.PREVIOUS_RESULTS_LEFT_MARGIN + 3 * (PacaneleScreen.BOX_SIZE + PacaneleScreen.GAP_SIZE), 3 * Constants.WINDOW_HEIGHT // 4, PacaneleScreen.BOX_SIZE, PacaneleScreen.BOX_SIZE)
         saveBox = pygame.Rect(PacaneleScreen.PREVIOUS_RESULTS_LEFT_MARGIN + 6 * (PacaneleScreen.BOX_SIZE + PacaneleScreen.GAP_SIZE), 3 * Constants.WINDOW_HEIGHT // 4, PacaneleScreen.BOX_SIZE, PacaneleScreen.BOX_SIZE)
         
+        self.setBackgroundImage()
+        self.__displayLastColors()
+        self.__displayContent(money)
+        pygame.display.update()
+        
         while True:
             mouseClicked = False
-            
-            self.setBackgroundImage()
-            self.__displayLastColors()
-            self.__displayContent(money)
-            pygame.display.update()
+            pygame.time.wait(1)
             
             for event in pygame.event.get():
                 if event.type == QUIT or (event.type == KEYUP and event.key == K_ESCAPE):
@@ -132,6 +133,12 @@ class PacaneleScreen(Screen):
                 if self.__checkResult(choice):
                     money *= 2.0
                     self.__resultScreen(True)
+                    
+                    self.setBackgroundImage()
+                    self.__displayLastColors()
+                    self.__displayContent(money)
+                    pygame.display.update()
+                    
                 else:
                     self.__resultScreen(False)
                     return 0.0

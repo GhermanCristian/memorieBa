@@ -38,17 +38,19 @@ class WelcomeScreen(Screen):
             pygame.time.wait(WelcomeScreen.OUTRO_TRANSITION_TIME // WelcomeScreen.OUTRO_TRANSITION_STEPS)
     
     def displayContent(self):
-        running = True
         self.setBackgroundMusic()
-        while running:
-            self.setBackgroundImage()
+        self.setBackgroundImage()
+        pygame.display.update() 
+        
+        while True:
+            pygame.time.wait(1)
+            
             for event in pygame.event.get(): 
                 if event.type == KEYUP and event.key == K_RETURN:
-                    running = False
                     self.__outroTransition()
+                    return Screen.CONTINUE_PROGRAM
                 elif event.type == QUIT or (event.type == KEYUP and event.key == K_ESCAPE):
                     return Screen.QUIT_PROGRAM
-            pygame.display.update() 
             
         return Screen.CONTINUE_PROGRAM
     

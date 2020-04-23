@@ -114,6 +114,7 @@ class LeaderboardScreen(Screen):
         
         while True:
             mouseClicked = False
+            pygame.time.wait(1)
              
             for event in pygame.event.get(): 
                 if event.type == QUIT or (event.type == KEYUP and event.key == K_ESCAPE):
