@@ -1,6 +1,6 @@
 from Screens.screen import Screen
 import pygame
-from pygame.constants import QUIT, KEYUP, K_ESCAPE, MOUSEMOTION, MOUSEBUTTONUP, K_RIGHT
+from pygame.constants import QUIT, KEYUP, K_ESCAPE, MOUSEMOTION, MOUSEBUTTONUP, K_RIGHT, KEYDOWN
 from constants import Constants
 from board import Board, random
 from Screens.pacaneleScreen import PacaneleScreen
@@ -47,6 +47,12 @@ class GameScreen(Screen):
     DOUBLE_MONEY_BOX_HEIGHT = 50
     DOUBLE_MONEY_BOX_LEFT = Constants.WINDOW_WIDTH - (LEFT_MARGIN + DOUBLE_MONEY_BOX_WIDTH) // 2
     DOUBLE_MONEY_BOX_TOP = Constants.WINDOW_HEIGHT - TOP_MARGIN - DOUBLE_MONEY_BOX_HEIGHT
+    
+    QUIT_PROMPT_TEXT_FONT = "lucidasans"
+    QUIT_PROMPT_TEXT_TOP_COORD = Constants.WINDOW_HEIGHT - 350
+    QUIT_PROMPT_TEXT_LEFT_COORD = TEXT_LEFT_MARGIN
+    QUIT_PROMPT_TEXT_SIZE = TEXT_FONT_SIZE
+    QUIT_PROMPT_TEXT_COLOR = TEXT_COLOR
     
     MUSIC_PLAYER_BUTTON_TOP = TOP_MARGIN + 5 * TEXT_ROW_HEIGHT
     MUSIC_PLAYER_BUTTON_LEFT = TEXT_LEFT_MARGIN
@@ -226,6 +232,23 @@ class GameScreen(Screen):
         GameScreen.IMAGE_DISPLAY_TIME = (int)(GameScreen.BASE_IMAGE_DISPLAY_TIME // GameScreen.GAME_DIFFICULTY)
         GameScreen.INCREASE_MONEY_AMOUNT = GameScreen.BASE_INCREASE_MONEY_AMOUNT * GameScreen.GAME_DIFFICULTY
         
+    def __quitGamePrompt(self):
+        Text("Really want to quit ? (y/n)", GameScreen.QUIT_PROMPT_TEXT_FONT, GameScreen.QUIT_PROMPT_TEXT_SIZE, GameScreen.QUIT_PROMPT_TEXT_COLOR).display(self.__gameDisplay, GameScreen.QUIT_PROMPT_TEXT_TOP_COORD, GameScreen.QUIT_PROMPT_TEXT_LEFT_COORD)
+        pygame.display.update()
+        
+        while True:
+            pygame.time.wait(1)
+            
+            for event in pygame.event.get():
+                if event.type == QUIT or (event.type == KEYUP and event.key == K_ESCAPE):
+                    return Screen.QUIT_PROGRAM
+                if event.type == KEYDOWN:
+                    if event.unicode in "yY":
+                        return Screen.QUIT_PROGRAM
+                    if event.unicode in "nN":
+                        return Screen.CONTINUE_PROGRAM
+                    
+        
     def __playLevel(self, level):
         self.__board.newLevel(level)
         
@@ -244,7 +267,8 @@ class GameScreen(Screen):
             
             for event in pygame.event.get():
                 if event.type == QUIT or (event.type == KEYUP and event.key == K_ESCAPE):
-                    return Screen.QUIT_PROGRAM
+                    if self.__quitGamePrompt() == Screen.QUIT_PROGRAM:
+                        return Screen.QUIT_PROGRAM
                 elif event.type == MOUSEMOTION:
                     self.__mouseX, self.__mouseY = event.pos
                 elif event.type == MOUSEBUTTONUP:

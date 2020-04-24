@@ -41,6 +41,9 @@ class Board:
 
             for specialPair in self.__specialPairs:
                 if self.__imageList[index].title in specialPair[0].title or self.__imageList[index].title in specialPair[1].title:
+                    print (specialPair[0].title)
+                    print (specialPair[1].title)
+                    print ()
                     icons.append(specialPair[0])
                     icons.append(specialPair[1])
                     self.__specialPairs.remove(specialPair)
