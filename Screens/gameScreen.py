@@ -54,21 +54,16 @@ class GameScreen(Screen):
     QUIT_PROMPT_TEXT_SIZE = TEXT_FONT_SIZE
     QUIT_PROMPT_TEXT_COLOR = TEXT_COLOR
     
-    MUSIC_PLAYER_BUTTON_TOP = TOP_MARGIN + 5 * TEXT_ROW_HEIGHT
-    MUSIC_PLAYER_BUTTON_LEFT = TEXT_LEFT_MARGIN
-    MUSIC_PLAYER_BUTTON_SIZE = TEXT_FONT_SIZE
-    MUSIC_PLAYER_BUTTON_GAP_SIZE = 5
-    
     BG_COLOR = Constants.NAVY_BLUE
     LIGHT_BG_COLOR = Constants.GRAY
     
-    def __init__(self, gameDisplay, playlist):
+    def __init__(self, gameDisplay, musicPlayer):
         self.__gameDisplay = gameDisplay
-        self.__playlist = playlist
+        self.__musicPlayer = musicPlayer
         
         self.__board = Board()
         self.__clock = pygame.time.Clock()
-        self.__pacaneleScreen = PacaneleScreen(self.__gameDisplay, self.__playlist)
+        self.__pacaneleScreen = PacaneleScreen(self.__gameDisplay, self.__musicPlayer)
         
         self.__mouseX = 0
         self.__mouseY = 0
@@ -203,28 +198,6 @@ class GameScreen(Screen):
             pacaneleButton.drawHighlight(self.__gameDisplay, GameScreen.HIGHLIGHT_COLOR, GameScreen.HIGHLIGHT_BORDER_SIZE)
             if self.__mouseClicked and self.__money > 0.0:
                 self.__money = self.__pacaneleScreen.displayContent(self.__money)
-                
-    def __displayMusicPlayer(self):
-        previousSongButtonText = Text("<", GameScreen.TEXT_FONT, GameScreen.TEXT_FONT_SIZE, GameScreen.TEXT_COLOR)
-        previousSongButton = Button(GameScreen.MUSIC_PLAYER_BUTTON_TOP, GameScreen.MUSIC_PLAYER_BUTTON_LEFT, GameScreen.MUSIC_PLAYER_BUTTON_SIZE, GameScreen.MUSIC_PLAYER_BUTTON_SIZE, GameScreen.LIGHT_BG_COLOR, previousSongButtonText)
-        previousSongButton.display(self.__gameDisplay)
-        
-        if previousSongButton.collides(self.__mouseX, self.__mouseY) and self.__mouseClicked:
-            self.__playlist.previousSong()
-            
-        pauseSongButtonText = Text("||", GameScreen.TEXT_FONT, GameScreen.TEXT_FONT_SIZE, GameScreen.TEXT_COLOR)
-        pauseSongButton = Button(GameScreen.MUSIC_PLAYER_BUTTON_TOP, GameScreen.MUSIC_PLAYER_BUTTON_LEFT + GameScreen.MUSIC_PLAYER_BUTTON_GAP_SIZE + GameScreen.MUSIC_PLAYER_BUTTON_SIZE, GameScreen.MUSIC_PLAYER_BUTTON_SIZE, GameScreen.MUSIC_PLAYER_BUTTON_SIZE, GameScreen.LIGHT_BG_COLOR, pauseSongButtonText)
-        pauseSongButton.display(self.__gameDisplay)
-        
-        if pauseSongButton.collides(self.__mouseX, self.__mouseY) and self.__mouseClicked:
-            self.__playlist.pauseButtonAction()
-            
-        nextSongButtonText = Text(">", GameScreen.TEXT_FONT, GameScreen.TEXT_FONT_SIZE, GameScreen.TEXT_COLOR)
-        nextSongButton = Button(GameScreen.MUSIC_PLAYER_BUTTON_TOP, GameScreen.MUSIC_PLAYER_BUTTON_LEFT + 2 * GameScreen.MUSIC_PLAYER_BUTTON_GAP_SIZE + 2 * GameScreen.MUSIC_PLAYER_BUTTON_SIZE, GameScreen.MUSIC_PLAYER_BUTTON_SIZE, GameScreen.MUSIC_PLAYER_BUTTON_SIZE, GameScreen.LIGHT_BG_COLOR, nextSongButtonText)
-        nextSongButton.display(self.__gameDisplay)
-        
-        if nextSongButton.collides(self.__mouseX, self.__mouseY) and self.__mouseClicked:
-            self.__playlist.nextSong()
     
     def setGameDifficulty(self, gameDifficulty):
         GameScreen.GAME_DIFFICULTY = gameDifficulty
@@ -247,7 +220,6 @@ class GameScreen(Screen):
                         return Screen.QUIT_PROGRAM
                     if event.unicode in "nN":
                         return Screen.CONTINUE_PROGRAM
-                    
         
     def __playLevel(self, level):
         self.__board.newLevel(level)
@@ -275,13 +247,15 @@ class GameScreen(Screen):
                     self.__mouseX, self.__mouseY = event.pos
                     self.__mouseClicked = True
                 elif event.type == pygame.USEREVENT or (event.type == KEYUP and event.key == K_RIGHT):
-                    self.__playlist.nextSong()
+                    self.__musicPlayer.nextSong()
                 elif event.type == SoundCue.SOUND_CUE_END_EVENT:
-                    self.__playlist.fadeIn() 
+                    self.__musicPlayer.fadeIn() 
                     
             self.setBackgroundImage()
             self.__displayGameInfo(timePassed, nrMoves, level)
-            self.__displayMusicPlayer()
+            self.__musicPlayer.displayButtons()
+            if self.__mouseClicked:
+                self.__musicPlayer.checkInput(self.__mouseX, self.__mouseY)
             self.__displayPacaneleButton()
             
             self.__displayBoard()
@@ -342,7 +316,7 @@ class GameScreen(Screen):
             if level == GameScreen.NR_OF_LEVELS:
                 SoundCue(GameScreen.INTELIGENT_SOUND_PATH).play(3.0)
             else:
-                SoundCue(GameScreen.SERGHEI_SOUND_PATH).play(1.0)
+                SoundCue(GameScreen.SERGHEI_SOUND_PATH).play(0.75)
             
             self.__endLevelAnimation()
             pygame.time.wait(2500) #PSA: don't have task manager open when ending a level, apparently wait() behaves weirdly

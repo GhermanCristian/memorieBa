@@ -33,9 +33,9 @@ class NameScreen(Screen):
     MEDIUM_BUTTON_BG_COLOR = Constants.DARK_GREEN
     HARD_BUTTON_BG_COLOR = Constants.DARK_GREEN
     
-    def __init__(self, gameDisplay, playlist):
+    def __init__(self, gameDisplay, musicPlayer):
         self.__gameDisplay = gameDisplay
-        self.__playlist = playlist
+        self.__musicPlayer = musicPlayer
         
     def setBackgroundImage(self):
         self.__gameDisplay.fill(NameScreen.BG_COLOR)
@@ -63,7 +63,7 @@ class NameScreen(Screen):
                 if event.type == QUIT or (event.type == KEYUP and event.key == K_ESCAPE):
                     return Screen.QUIT_PROGRAM
                 if event.type == pygame.USEREVENT or (event.type == KEYUP and event.key == K_RIGHT):
-                    self.__playlist.nextSong()
+                    self.__musicPlayer.nextSong()
                 if event.type == KEYDOWN:
                     if len(userInput) < NameScreen.MAX_NAME_LENGTH and (event.unicode.isalnum() or event.unicode in "!@#$%^&*()_+-=<>,.?/:{}\|`~ '"):
                         userInput += event.unicode
@@ -99,7 +99,7 @@ class NameScreen(Screen):
                 if event.type == QUIT or (event.type == KEYUP and event.key == K_ESCAPE):
                     return Screen.QUIT_PROGRAM
                 elif event.type == pygame.USEREVENT or (event.type == KEYUP and event.key == K_RIGHT):
-                    self.__playlist.nextSong()
+                    self.__musicPlayer.nextSong()
                 elif event.type == MOUSEMOTION:
                     mouseX, mouseY = event.pos
                 elif event.type == MOUSEBUTTONUP:

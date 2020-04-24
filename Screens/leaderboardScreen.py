@@ -29,9 +29,9 @@ class LeaderboardScreen(Screen):
     PREVIOUS_BUTTON_LEFT_COORD = 500
     NEXT_BUTTON_LEFT_COORD = Constants.WINDOW_WIDTH - 500 - DIRECTION_BUTTON_SIZE
     
-    def __init__(self, gameDisplay, playlist):
+    def __init__(self, gameDisplay, musicPlayer):
         self.__gameDisplay = gameDisplay
-        self.__playlist = playlist
+        self.__musicPlayer = musicPlayer
         
         self.__fastLeaderEasy = Leaderboard("fast_easy.pickle")
         self.__smartLeaderEasy = Leaderboard("smart_easy.pickle")
@@ -120,7 +120,7 @@ class LeaderboardScreen(Screen):
                 if event.type == QUIT or (event.type == KEYUP and event.key == K_ESCAPE):
                     return Screen.QUIT_PROGRAM
                 elif event.type == pygame.USEREVENT or (event.type == KEYUP and event.key == K_RIGHT):
-                    self.__playlist.nextSong()
+                    self.__musicPlayer.nextSong()
                 elif event.type == MOUSEMOTION:
                     mouseX, mouseY = event.pos
                 elif event.type == MOUSEBUTTONUP:

@@ -33,9 +33,9 @@ class PacaneleScreen(Screen):
     BG_COLOR = Constants.NAVY_RED
     LIGHT_BG_COLOR = Constants.GRAY
     
-    def __init__(self, gameDisplay, playlist):
+    def __init__(self, gameDisplay, musicPlayer):
         self.__gameDisplay = gameDisplay
-        self.__playlist = playlist
+        self.__musicPlayer = musicPlayer
         
         self.__font = pygame.font.SysFont(PacaneleScreen.MONEY_TEXT_FONT, PacaneleScreen.TEXT_FONT_SIZE, True, False)
         self.__aceOfSpades = self.__loadSpecialImage(PacaneleScreen.ACE_OF_SPADES_IMAGE)
@@ -149,7 +149,7 @@ class PacaneleScreen(Screen):
         
         functionResult = self.__redOrBlack(money)
         
-        self.__playlist.restorePreviousSong(self.__previousSongTime)
+        self.__musicPlayer.restorePreviousSong(self.__previousSongTime)
         pygame.mouse.set_visible(False)
 
         money = functionResult             

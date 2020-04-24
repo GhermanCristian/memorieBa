@@ -39,6 +39,7 @@ class Board:
         for index in range((level - 1) * totalImages, level * totalImages):
             foundSpecialPair = False
 
+            #this is bugged af
             for specialPair in self.__specialPairs:
                 if self.__imageList[index].title in specialPair[0].title or self.__imageList[index].title in specialPair[1].title:
                     print (specialPair[0].title)
