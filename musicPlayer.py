@@ -16,12 +16,19 @@ class MusicPlayer():
     MUSIC_PLAYER_BUTTON_SIZE = TEXT_FONT_SIZE
     MUSIC_PLAYER_BUTTON_GAP_SIZE = 5
     
+    BALKANIK_FM_LOCATION = "Balkanik FM 0901"
+    KITSCH_FM_LOCATION = "Kitsch FM"
+    
     #i will create a m.p. object only once, in the mainMenu, and pass it as a parameter to the gameScreen
     def __init__(self, gameDisplay):
         self.__gameDisplay = gameDisplay
-        self.__playlist = Playlist()
-        self.__currentPlaylist = self.__playlist
-        #I could have more playlists (aka radio stations)
+        
+        self.__completePlaylist = Playlist("")
+        self.__completePlaylistNoAds = Playlist("", False)
+        self.__balkanikFM = Playlist(MusicPlayer.BALKANIK_FM_LOCATION)
+        self.__kitschFM = Playlist(MusicPlayer.KITSCH_FM_LOCATION)
+        
+        self.__currentPlaylist = self.__completePlaylistNoAds
         
         previousSongButtonText = Text("<", MusicPlayer.TEXT_FONT, MusicPlayer.TEXT_FONT_SIZE, MusicPlayer.TEXT_COLOR)
         self.__previousSongButton = Button(MusicPlayer.MUSIC_PLAYER_BUTTON_TOP, MusicPlayer.MUSIC_PLAYER_BUTTON_LEFT, MusicPlayer.MUSIC_PLAYER_BUTTON_SIZE, MusicPlayer.MUSIC_PLAYER_BUTTON_SIZE, MusicPlayer.MUSIC_PLAYER_BUTTON_COLOR, previousSongButtonText)

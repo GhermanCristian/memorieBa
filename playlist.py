@@ -4,27 +4,38 @@ import pygame
 from song import Song
 
 class Playlist():   
-    def __init__(self, location = ""):
+    def __init__(self, radioStation, hasAds = True):
         self.__songs = []
         self.__songCount = 0
         self.__crtSong = -1
         self.__isPaused = True
         
-        self.__path = os.path.join(os.getcwd(), "Music")
-        if location != "":
-            self.__path = os.path.join(self.__path, location)
-            
         self.__delay = 0
         self.__delayFlag = False #when this is True, the delay won't be reset
         
         pygame.mixer.music.set_endevent(pygame.USEREVENT)
         
-        self.__loadPlaylist()
+        self.__path = os.path.join(os.getcwd(), "Music")
+        self.__hasAds = hasAds
+        if radioStation == "":
+            self.__loadPlaylist("")
+        else:
+            self.__loadPlaylist(radioStation)
         
-    def __loadPlaylist(self):
-        for file in os.listdir(self.__path):
-            if file[0] == "S" and file[1] == "_":
-                self.__songs.append(Song(os.path.join("Music", file)))
+    def __loadPlaylist(self, radioStation):
+        path = os.path.join(self.__path, radioStation)
+        songFolder = os.path.join("Music", radioStation)
+        
+        for file in os.listdir(path):
+            if os.path.isdir(os.path.join(path, file)):
+                self.__loadPlaylist(os.path.join(path, file))
+            
+            elif file[0] == "S" and file[1] == "_":
+                if "RECLAMA" in file:
+                    if self.__hasAds == True:
+                        self.__songs.append(Song(os.path.join(songFolder, file)))
+                else:
+                    self.__songs.append(Song(os.path.join(songFolder, file)))
                 
         self.__songCount = len(self.__songs)
         random.shuffle(self.__songs)
