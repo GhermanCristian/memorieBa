@@ -73,6 +73,7 @@ class MainMenuScreen(Screen):
             leaderboardButton.display(self.__gameDisplay)
             achievementButton.display(self.__gameDisplay)
             statisticsButton.display(self.__gameDisplay)
+            self.__musicPlayer.displayButtons()
             pygame.display.update() 
             
             for event in pygame.event.get():
@@ -86,28 +87,30 @@ class MainMenuScreen(Screen):
                 elif event.type == pygame.USEREVENT or (event.type == KEYUP and event.key == K_RIGHT):
                     self.__musicPlayer.nextSong()
             
-            if self.__mouseClicked and playGameButton.collides(self.__mouseX, self.__mouseY):
-                programResult = NameScreen(self.__gameDisplay, self.__musicPlayer).displayContent()
-                if programResult[0] == Screen.QUIT_PROGRAM:
-                    continue
-                else:
-                    (playerName, difficulty) = programResult
+            if self.__mouseClicked:
+                self.__musicPlayer.checkInput(self.__mouseX, self.__mouseY)
                 
-                gameScreen = GameScreen(self.__gameDisplay, self.__musicPlayer)
-                gameScreen.setGameDifficulty(difficulty)
-                programResult = gameScreen.displayContent()
-                if programResult[0] == Screen.QUIT_PROGRAM:
-                    #sth like "are you sure you want to quit"
-                    continue
-                else:
-                    (totalTime, totalMoves) = programResult
-                    self.__leaderboardScreen.updateLeaderboards(totalTime, totalMoves, playerName, difficulty)
+                if playGameButton.collides(self.__mouseX, self.__mouseY):
+                    programResult = NameScreen(self.__gameDisplay, self.__musicPlayer).displayContent()
+                    if programResult[0] == Screen.QUIT_PROGRAM:
+                        continue
+                    else:
+                        (playerName, difficulty) = programResult
+                    
+                    gameScreen = GameScreen(self.__gameDisplay, self.__musicPlayer)
+                    gameScreen.setGameDifficulty(difficulty)
+                    programResult = gameScreen.displayContent()
+                    if programResult[0] == Screen.QUIT_PROGRAM:
+                        continue
+                    else:
+                        (totalTime, totalMoves) = programResult
+                        self.__leaderboardScreen.updateLeaderboards(totalTime, totalMoves, playerName, difficulty)
+                        if self.__leaderboardScreen.displayContent() == Screen.QUIT_PROGRAM:
+                            continue
+                    
+                elif leaderboardButton.collides(self.__mouseX, self.__mouseY):
                     if self.__leaderboardScreen.displayContent() == Screen.QUIT_PROGRAM:
                         continue
-                    
-            elif self.__mouseClicked and leaderboardButton.collides(self.__mouseX, self.__mouseY):
-                if self.__leaderboardScreen.displayContent() == Screen.QUIT_PROGRAM:
-                    continue
                 
 
 

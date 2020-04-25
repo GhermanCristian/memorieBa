@@ -106,6 +106,7 @@ class LeaderboardScreen(Screen):
         self.__displayResults(leaderboardDifficulty)
         previousButton.display(self.__gameDisplay)
         nextButton.display(self.__gameDisplay)
+        self.__musicPlayer.displayButtons()
         pygame.display.update()
         
         mouseX = 0
@@ -134,9 +135,12 @@ class LeaderboardScreen(Screen):
                 elif nextButton.collides(mouseX, mouseY):
                     leaderboardDifficulty = self.__adjustLeaderboardDifficulty(leaderboardDifficulty, 1)
                     
+                self.__musicPlayer.checkInput(mouseX, mouseY)    
+                    
                 self.setBackgroundImage()
                 self.__displayResults(leaderboardDifficulty)
                 previousButton.display(self.__gameDisplay)
-                nextButton.display(self.__gameDisplay)    
+                nextButton.display(self.__gameDisplay)
+                self.__musicPlayer.displayButtons()    
                 pygame.display.update()
 
