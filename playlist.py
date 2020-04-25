@@ -40,26 +40,26 @@ class Playlist():
         self.__songCount = len(self.__songs)
         random.shuffle(self.__songs)
         
-    def nextSong(self, startTime = 0):
+    def nextSong(self, volume, startTime = 0):
         self.__isPaused = False
         self.__crtSong += 1
         if self.__crtSong >= self.__songCount:
             self.__crtSong = 0
             
-        self.__songs[self.__crtSong].play(0, startTime)
+        self.__songs[self.__crtSong].play(volume, 0, startTime)
             
         # this happens when the song changes (the delay becomes 0 again, because the song has just started)
         if self.__delayFlag == False:
             self.__delay = 0
         self.__delayFlag = False
     
-    def previousSong(self, startTime = 0):
+    def previousSong(self, volume, startTime = 0):
         self.__isPaused = False
         self.__crtSong -= 1
         if self.__crtSong < 0:
             self.__crtSong = self.__songCount - 1
             
-        self.__songs[self.__crtSong].play(0, startTime)
+        self.__songs[self.__crtSong].play(volume, 0, startTime)
         
         if self.__delayFlag == False:
             self.__delay = 0

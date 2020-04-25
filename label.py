@@ -19,6 +19,8 @@ class Label():
             self._textFontSize = text.fontSize
             
             self._font = pygame.font.SysFont(self._textFontName, self._textFontSize, True, False)
+        else:
+            self._text = None
         
     def display(self, gameDisplay):
         pygame.draw.rect(gameDisplay, self._backgroundColor, (self._leftCoord, self._topCoord, self._width, self._height))

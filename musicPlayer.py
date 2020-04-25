@@ -1,6 +1,7 @@
 from text import Text
 from button import Button
 from playlist import Playlist
+from soundCue import SoundCue
 from constants import Constants
 import pygame
 
@@ -27,10 +28,13 @@ class MusicPlayer():
     
     VOLUME_BAR_HEIGHT = MUSIC_PLAYER_BUTTON_SIZE
     VOLUME_BAR_WIDTH = RADIO_STATION_PICTURE_SIZE
+    VOLUME_BAR_TOP = CHANGE_RADIO_STATION_TOP + CHANGE_RADIO_STATION_HEIGHT + MUSIC_PLAYER_BUTTON_GAP_SIZE
+    VOLUME_BAR_LEFT = RADIO_STATION_PICTURE_LEFT
     
     RADIO_STATION_COUNT = 4
     BALKANIK_FM_LOCATION = "Balkanik FM 0901"
     KITSCH_FM_LOCATION = "Kitsch FM"
+    RADIO_CHANGING_SOUND_LOCATION = "Music//RADIO_CHANGING_SOUND.ogg" #i know i should've used os path join but just no
     
     #i will create a m.p. object only once, in the mainMenu, and pass it as a parameter to the gameScreen
     def __init__(self, gameDisplay):
@@ -40,6 +44,7 @@ class MusicPlayer():
         self.__completePlaylistNoAds = Playlist("", False)
         self.__balkanikFM = Playlist(MusicPlayer.BALKANIK_FM_LOCATION)
         self.__kitschFM = Playlist(MusicPlayer.KITSCH_FM_LOCATION)
+        self.__radioChangingSound = SoundCue(MusicPlayer.RADIO_CHANGING_SOUND_LOCATION)
         
         self.__radioStationList = [
             (self.__completePlaylist, 1),
@@ -49,6 +54,7 @@ class MusicPlayer():
         ]
         
         self.__currentPlaylistIndex = 0
+        self.__musicVolume = Constants.NORMAL_VOLUME
         
         previousSongButtonText = Text("<", MusicPlayer.TEXT_FONT, MusicPlayer.TEXT_FONT_SIZE, MusicPlayer.TEXT_COLOR)
         self.__previousSongButton = Button(MusicPlayer.MUSIC_PLAYER_BUTTON_TOP, MusicPlayer.MUSIC_PLAYER_BUTTON_LEFT, MusicPlayer.MUSIC_PLAYER_BUTTON_SIZE, MusicPlayer.MUSIC_PLAYER_BUTTON_SIZE, MusicPlayer.MUSIC_PLAYER_BUTTON_COLOR, previousSongButtonText)
@@ -60,6 +66,8 @@ class MusicPlayer():
         self.__previousRadioStationButton = Button(MusicPlayer.CHANGE_RADIO_STATION_TOP, MusicPlayer.PREV_RADIO_STATION_LEFT, MusicPlayer.CHANGE_RADIO_STATION_WIDTH, MusicPlayer.CHANGE_RADIO_STATION_HEIGHT, MusicPlayer.MUSIC_PLAYER_BUTTON_COLOR, previousRadioStationText)
         nextRadioStationText = Text("r+", MusicPlayer.TEXT_FONT, MusicPlayer.TEXT_FONT_SIZE, MusicPlayer.TEXT_COLOR)
         self.__nextRadioStationButton = Button(MusicPlayer.CHANGE_RADIO_STATION_TOP, MusicPlayer.NEXT_RADIO_STATION_LEFT, MusicPlayer.CHANGE_RADIO_STATION_WIDTH, MusicPlayer.CHANGE_RADIO_STATION_HEIGHT, MusicPlayer.MUSIC_PLAYER_BUTTON_COLOR, nextRadioStationText)
+        self.__volumeBarButton = Button(MusicPlayer.VOLUME_BAR_TOP, MusicPlayer.VOLUME_BAR_LEFT, MusicPlayer.VOLUME_BAR_WIDTH, MusicPlayer.VOLUME_BAR_HEIGHT, MusicPlayer.MUSIC_PLAYER_BUTTON_COLOR, None)
+        self.__currentVolumeBarButton = Button(MusicPlayer.VOLUME_BAR_TOP, MusicPlayer.VOLUME_BAR_LEFT, self.__musicVolume * MusicPlayer.VOLUME_BAR_WIDTH, MusicPlayer.VOLUME_BAR_HEIGHT, MusicPlayer.MUSIC_PLAYER_BUTTON_COLOR, None)
         
     def displayButtons(self):
         pygame.draw.rect(self.__gameDisplay, MusicPlayer.MUSIC_PLAYER_BUTTON_COLOR, pygame.Rect(MusicPlayer.RADIO_STATION_PICTURE_LEFT, MusicPlayer.RADIO_STATION_PICTURE_TOP, MusicPlayer.RADIO_STATION_PICTURE_SIZE, MusicPlayer.RADIO_STATION_PICTURE_SIZE))
@@ -68,31 +76,39 @@ class MusicPlayer():
         self.__previousSongButton.display(self.__gameDisplay)
         self.__pauseSongButton.display(self.__gameDisplay)
         self.__nextSongButton.display(self.__gameDisplay)
+        self.__volumeBarButton.display(self.__gameDisplay)
+        Button(MusicPlayer.VOLUME_BAR_TOP, MusicPlayer.VOLUME_BAR_LEFT, self.__musicVolume * MusicPlayer.VOLUME_BAR_WIDTH, MusicPlayer.VOLUME_BAR_HEIGHT, MusicPlayer.TEXT_COLOR, None).display(self.__gameDisplay)
     
     def nextSong(self):
-        self.__radioStationList[self.__currentPlaylistIndex][0].nextSong()
+        self.__radioStationList[self.__currentPlaylistIndex][0].nextSong(self.__musicVolume)
         
     def restorePreviousSong(self, previousSongTime):
         self.__radioStationList[self.__currentPlaylistIndex][0].restorePreviousSong(previousSongTime)
     
     def __changeRadioStations(self, increment):
+        self.__radioChangingSound.play(1.0)
         self.__currentPlaylistIndex += increment
         if self.__currentPlaylistIndex >= MusicPlayer.RADIO_STATION_COUNT:
             self.__currentPlaylistIndex = 0
         elif self.__currentPlaylistIndex < 0:
             self.__currentPlaylistIndex = MusicPlayer.RADIO_STATION_COUNT - 1
         
+        pygame.time.delay(1300)
         self.nextSong()
+    
+    def __changeMusicVolume(self, mouseX):
+        self.__musicVolume = (mouseX - MusicPlayer.VOLUME_BAR_LEFT) / MusicPlayer.VOLUME_BAR_WIDTH
+        pygame.mixer.music.set_volume(self.__musicVolume)
     
     def checkInput(self, mouseX, mouseY):
         if self.__previousSongButton.collides(mouseX, mouseY):
-            self.__radioStationList[self.__currentPlaylistIndex][0].previousSong()
+            self.__radioStationList[self.__currentPlaylistIndex][0].previousSong(self.__musicVolume)
         
         elif self.__pauseSongButton.collides(mouseX, mouseY):
             self.__radioStationList[self.__currentPlaylistIndex][0].pauseButtonAction()
         
         elif self.__nextSongButton.collides(mouseX, mouseY):
-            self.__radioStationList[self.__currentPlaylistIndex][0].nextSong()
+            self.__radioStationList[self.__currentPlaylistIndex][0].nextSong(self.__musicVolume)
             
         elif self.__previousRadioStationButton.collides(mouseX, mouseY):
             self.__changeRadioStations(-1)
@@ -100,12 +116,15 @@ class MusicPlayer():
         elif self.__nextRadioStationButton.collides(mouseX, mouseY):
             self.__changeRadioStations(1)
             
+        elif self.__volumeBarButton.collides(mouseX, mouseY):
+            self.__changeMusicVolume(mouseX)
+            
     def fadeIn(self):
-        vol = pygame.mixer.music.get_volume()
-        while vol < Constants.NORMAL_VOLUME:
-            vol += Constants.VOLUME_INCREMENT
-            pygame.mixer.music.set_volume(vol)
-        pygame.mixer.music.set_volume(Constants.NORMAL_VOLUME)
+        temporaryVolume = pygame.mixer.music.get_volume()
+        while temporaryVolume < self.__musicVolume:
+            temporaryVolume += Constants.VOLUME_INCREMENT
+            pygame.mixer.music.set_volume(temporaryVolume)
+        pygame.mixer.music.set_volume(self.__musicVolume)
         
 
 
