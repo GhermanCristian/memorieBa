@@ -31,13 +31,15 @@ class MusicPlayer():
     VOLUME_BAR_TOP = CHANGE_RADIO_STATION_TOP + CHANGE_RADIO_STATION_HEIGHT + MUSIC_PLAYER_BUTTON_GAP_SIZE
     VOLUME_BAR_LEFT = RADIO_STATION_PICTURE_LEFT
     
-    RADIO_STATION_COUNT = 4
+    RADIO_STATION_COUNT = 5
     BALKANIK_FM_LOCATION = "Balkanik FM 0901"
     BALKANIK_FM_IMAGE = "BALKANIK_FM.jpg"
     KITSCH_FM_LOCATION = "Kitsch FM"
     KITSCH_FM_IMAGE = "KITSCH_FM.jpg"
     RADIO_CONTACT_IMAGE = "RADIO_CONTACT.jpg"
     RADIO_CONTACT_NO_ADS_IMAGE = "RADIO_CONTACT_NO_ADS.jpg"
+    MP3_PLAYER_LOCATION = "MP3"
+    MP3_PLAYER_IMAGE = "MP3_PLAYER.jpg"
     RADIO_CHANGING_SOUND_LOCATION = os.path.join("Music", "RADIO_CHANGING_SOUND.ogg")
     
     #i will create a m.p. object only once, in the mainMenu, and pass it as a parameter to the gameScreen
@@ -48,18 +50,21 @@ class MusicPlayer():
         self.__completePlaylistNoAds = Playlist("", False) 
         self.__balkanikFM = Playlist(MusicPlayer.BALKANIK_FM_LOCATION)
         self.__kitschFM = Playlist(MusicPlayer.KITSCH_FM_LOCATION)
+        self.__MP3Player = Playlist(MusicPlayer.MP3_PLAYER_LOCATION)
         self.__radioChangingSound = SoundCue(MusicPlayer.RADIO_CHANGING_SOUND_LOCATION)
         
         self.__radioContactImage = self.__loadSpecialImage(MusicPlayer.RADIO_CONTACT_IMAGE)
         self.__radioContactNoAdsImage = self.__loadSpecialImage(MusicPlayer.RADIO_CONTACT_NO_ADS_IMAGE)
         self.__balkanikFMImage = self.__loadSpecialImage(MusicPlayer.BALKANIK_FM_IMAGE)
         self.__kitschFMImage = self.__loadSpecialImage(MusicPlayer.KITSCH_FM_IMAGE)
+        self.__MP3PlayerImage = self.__loadSpecialImage(MusicPlayer.MP3_PLAYER_IMAGE)
         
         self.__radioStationList = [
             (self.__completePlaylist, self.__radioContactImage),
             (self.__completePlaylistNoAds, self.__radioContactNoAdsImage),
             (self.__balkanikFM, self.__balkanikFMImage),
-            (self.__kitschFM, self.__kitschFMImage)
+            (self.__kitschFM, self.__kitschFMImage),
+            (self.__MP3Player, self.__MP3PlayerImage)
         ]
         
         self.__currentPlaylistIndex = 0
@@ -71,9 +76,9 @@ class MusicPlayer():
         self.__pauseSongButton = Button(MusicPlayer.MUSIC_PLAYER_BUTTON_TOP, MusicPlayer.MUSIC_PLAYER_BUTTON_LEFT + MusicPlayer.MUSIC_PLAYER_BUTTON_GAP_SIZE + MusicPlayer.MUSIC_PLAYER_BUTTON_SIZE, MusicPlayer.MUSIC_PLAYER_BUTTON_SIZE, MusicPlayer.MUSIC_PLAYER_BUTTON_SIZE, MusicPlayer.MUSIC_PLAYER_BUTTON_COLOR, pauseSongButtonText)
         nextSongButtonText = Text(">", MusicPlayer.TEXT_FONT, MusicPlayer.TEXT_FONT_SIZE, MusicPlayer.TEXT_COLOR)
         self.__nextSongButton = Button(MusicPlayer.MUSIC_PLAYER_BUTTON_TOP, MusicPlayer.MUSIC_PLAYER_BUTTON_LEFT + 2 * MusicPlayer.MUSIC_PLAYER_BUTTON_GAP_SIZE + 2 * MusicPlayer.MUSIC_PLAYER_BUTTON_SIZE, MusicPlayer.MUSIC_PLAYER_BUTTON_SIZE, MusicPlayer.MUSIC_PLAYER_BUTTON_SIZE, MusicPlayer.MUSIC_PLAYER_BUTTON_COLOR, nextSongButtonText)
-        previousRadioStationText = Text("r-", MusicPlayer.TEXT_FONT, MusicPlayer.TEXT_FONT_SIZE, MusicPlayer.TEXT_COLOR)
+        previousRadioStationText = Text("R-", MusicPlayer.TEXT_FONT, MusicPlayer.TEXT_FONT_SIZE, MusicPlayer.TEXT_COLOR)
         self.__previousRadioStationButton = Button(MusicPlayer.CHANGE_RADIO_STATION_TOP, MusicPlayer.PREV_RADIO_STATION_LEFT, MusicPlayer.CHANGE_RADIO_STATION_WIDTH, MusicPlayer.CHANGE_RADIO_STATION_HEIGHT, MusicPlayer.MUSIC_PLAYER_BUTTON_COLOR, previousRadioStationText)
-        nextRadioStationText = Text("r+", MusicPlayer.TEXT_FONT, MusicPlayer.TEXT_FONT_SIZE, MusicPlayer.TEXT_COLOR)
+        nextRadioStationText = Text("R+", MusicPlayer.TEXT_FONT, MusicPlayer.TEXT_FONT_SIZE, MusicPlayer.TEXT_COLOR)
         self.__nextRadioStationButton = Button(MusicPlayer.CHANGE_RADIO_STATION_TOP, MusicPlayer.NEXT_RADIO_STATION_LEFT, MusicPlayer.CHANGE_RADIO_STATION_WIDTH, MusicPlayer.CHANGE_RADIO_STATION_HEIGHT, MusicPlayer.MUSIC_PLAYER_BUTTON_COLOR, nextRadioStationText)
         self.__volumeBarButton = Button(MusicPlayer.VOLUME_BAR_TOP, MusicPlayer.VOLUME_BAR_LEFT, MusicPlayer.VOLUME_BAR_WIDTH, MusicPlayer.VOLUME_BAR_HEIGHT, MusicPlayer.MUSIC_PLAYER_BUTTON_COLOR, None)
         self.__currentVolumeBarButton = Button(MusicPlayer.VOLUME_BAR_TOP, MusicPlayer.VOLUME_BAR_LEFT, self.__musicVolume * MusicPlayer.VOLUME_BAR_WIDTH, MusicPlayer.VOLUME_BAR_HEIGHT, MusicPlayer.MUSIC_PLAYER_BUTTON_COLOR, None)
@@ -84,7 +89,6 @@ class MusicPlayer():
         return pygame.image.load(os.path.join(currentImage, imageTitle))
         
     def displayButtons(self):
-        #pygame.draw.rect(self.__gameDisplay, MusicPlayer.MUSIC_PLAYER_BUTTON_COLOR, pygame.Rect(MusicPlayer.RADIO_STATION_PICTURE_LEFT, MusicPlayer.RADIO_STATION_PICTURE_TOP, MusicPlayer.RADIO_STATION_PICTURE_SIZE, MusicPlayer.RADIO_STATION_PICTURE_SIZE))
         self.__gameDisplay.blit(self.__radioStationList[self.__currentPlaylistIndex][1], (MusicPlayer.RADIO_STATION_PICTURE_LEFT, MusicPlayer.RADIO_STATION_PICTURE_TOP))
         self.__previousRadioStationButton.display(self.__gameDisplay)
         self.__nextRadioStationButton.display(self.__gameDisplay)

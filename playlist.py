@@ -21,6 +21,9 @@ class Playlist():
             self.__loadPlaylist("")
         else:
             self.__loadPlaylist(radioStation)
+            
+        self.__songCount = len(self.__songs)
+        random.shuffle(self.__songs)
         
     def __loadPlaylist(self, radioStation):
         path = os.path.join(self.__path, radioStation)
@@ -30,17 +33,21 @@ class Playlist():
             if os.path.isdir(os.path.join(path, file)):
                 self.__loadPlaylist(os.path.join(path, file))
             
+            elif "MP3" in radioStation:
+                self.__songs.append(Song(os.path.join(songFolder, file)))
+            
             elif file[0] == "S" and file[1] == "_":
                 if "RECLAMA" in file:
                     if self.__hasAds == True:
                         self.__songs.append(Song(os.path.join(songFolder, file)))
                 else:
                     self.__songs.append(Song(os.path.join(songFolder, file)))
-                
-        self.__songCount = len(self.__songs)
-        random.shuffle(self.__songs)
         
     def nextSong(self, volume, startTime = 0):
+        if (self.__songCount == 0):
+            pygame.mixer.music.stop()
+            return
+        
         self.__isPaused = False
         self.__crtSong += 1
         if self.__crtSong >= self.__songCount:
@@ -54,6 +61,10 @@ class Playlist():
         self.__delayFlag = False
     
     def previousSong(self, volume, startTime = 0):
+        if (self.__songCount == 0):
+            pygame.mixer.music.stop()
+            return
+        
         self.__isPaused = False
         self.__crtSong -= 1
         if self.__crtSong < 0:
