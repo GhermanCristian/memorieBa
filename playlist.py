@@ -73,12 +73,12 @@ class Playlist():
             
         self.__isPaused = not self.__isPaused
         
-    def restorePreviousSong(self, previousSongTime):
+    def restorePreviousSong(self, volume, previousSongTime):
         self.__crtSong -= 1
         if self.__crtSong < 0:
             self.__crtSong = self.__songCount - 1
         self.__delayFlag = True
-        self.nextSong(previousSongTime + self.__delay)
+        self.nextSong(volume, previousSongTime + self.__delay)
         self.__delay += previousSongTime
 
 
