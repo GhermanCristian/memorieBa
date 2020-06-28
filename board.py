@@ -29,25 +29,26 @@ class Board:
 
         random.shuffle(self.__imageList)
         
-        self.__specialPairs = []
-        self.__specialPairs.extend(self.__imageListObject.specialPairs)
+        self.__specialPairs = self.__imageListObject.specialPairs
         
     def newLevel(self, level):
-        totalImages = (self.__height * self.__width) // 2 # total images in 1 level
         icons = []
+        totalImages = (self.__height * self.__width) // 2 # total images in 1 level
         
         for index in range((level - 1) * totalImages, level * totalImages):
             foundSpecialPair = False
 
-            #this is bugged af
             for specialPair in self.__specialPairs:
                 if self.__imageList[index].title == specialPair[0].title or self.__imageList[index].title == specialPair[1].title:
-                    print ("prev len = " + str(len(self.__specialPairs)))
                     icons.append(specialPair[0])
                     icons.append(specialPair[1])
-                    self.__specialPairs.remove(specialPair)
-                    print ("new len = " + str(len(self.__specialPairs)))
                     foundSpecialPair = True
+
+                    # remove the "opposite" image
+                    if self.__imageList[index].title == specialPair[0].title:
+                        self.__imageList.remove(specialPair[1])
+                    else:
+                        self.__imageList.remove(specialPair[0])
                     break
                 
             if foundSpecialPair == False:
@@ -84,4 +85,4 @@ class Board:
     
     @property
     def specialPairs(self):
-        return self.__imageListObject.specialPairs
+        return self.__specialPairs
