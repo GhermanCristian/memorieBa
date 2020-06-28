@@ -46,7 +46,7 @@ class MusicPlayer():
     def __init__(self, gameDisplay):
         self.__gameDisplay = gameDisplay
         
-        self.__completePlaylist = Playlist("") #radio contact
+        self.__completePlaylist = Playlist("") #Radio Contact
         self.__completePlaylistNoAds = Playlist("", False) 
         self.__balkanikFM = Playlist(MusicPlayer.BALKANIK_FM_LOCATION)
         self.__kitschFM = Playlist(MusicPlayer.KITSCH_FM_LOCATION)
