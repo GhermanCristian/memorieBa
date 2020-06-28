@@ -6,8 +6,8 @@ class ImageList:
         self.__images = []
         self.__path = os.path.join(os.getcwd(), "Images")
         
-        self.specialPairs = []
-        self.__matchingFirstCharacters = 10
+        self.__specialPairs = []
+        self.__matchingFirstCharacters = 10 # special_xx => 10 chararcters
         
         self.__loadImages()
         
@@ -32,11 +32,15 @@ class ImageList:
             self.__images.append(currentImage)
             
             if "special_" in file and previousImage != None and currentImageTitle[:self.__matchingFirstCharacters] == previousImage.title[:self.__matchingFirstCharacters]:
-                self.specialPairs.append((previousImage, currentImage))
+                self.__specialPairs.append((previousImage, currentImage))
                 
             previousImage = currentImage
             
     @property
     def images(self):
         return self.__images
+    
+    @property
+    def specialPairs(self):
+        return self.__specialPairs
 

@@ -22,7 +22,7 @@ class Constants():
     NORMAL_GREEN = (40, 178, 75)
     
     ### VOLUME ###
-    NORMAL_VOLUME = 0.22
+    NORMAL_VOLUME = 0.0 # 0.22
     LOW_VOLUME = 0.1
     VOLUME_INCREMENT = 0.01
     

@@ -30,9 +30,9 @@ class GUI:
         quit()
         
     def start(self):
-        programResult = WelcomeScreen(self.__gameDisplay).displayContent()
-        if programResult == Screen.QUIT_PROGRAM:
-            self.__quitGame()
+        #programResult = WelcomeScreen(self.__gameDisplay).displayContent()
+        #if programResult == Screen.QUIT_PROGRAM:
+            #self.__quitGame()
         
         programResult = MainMenuScreen(self.__gameDisplay).displayContent()
         if programResult == Screen.QUIT_PROGRAM:

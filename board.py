@@ -41,13 +41,12 @@ class Board:
 
             #this is bugged af
             for specialPair in self.__specialPairs:
-                if self.__imageList[index].title in specialPair[0].title or self.__imageList[index].title in specialPair[1].title:
-                    print (specialPair[0].title)
-                    print (specialPair[1].title)
-                    print ()
+                if self.__imageList[index].title == specialPair[0].title or self.__imageList[index].title == specialPair[1].title:
+                    print ("prev len = " + str(len(self.__specialPairs)))
                     icons.append(specialPair[0])
                     icons.append(specialPair[1])
                     self.__specialPairs.remove(specialPair)
+                    print ("new len = " + str(len(self.__specialPairs)))
                     foundSpecialPair = True
                     break
                 

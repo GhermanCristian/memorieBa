@@ -8,7 +8,7 @@ class SoundCue():
     def __init__(self, title):
         self.__path = os.path.join(os.getcwd(), title)
     
-    def play(self, volumeMultiplier):
+    def play(self):
         cue = pygame.mixer.Sound(self.__path)
         
         channel = 1
@@ -19,5 +19,8 @@ class SoundCue():
         ch.play(cue)
         ch.set_endevent(SoundCue.SOUND_CUE_END_EVENT)
         
-        pygame.mixer.music.set_volume(Constants.LOW_VOLUME)
-        cue.set_volume(Constants.NORMAL_VOLUME * volumeMultiplier)
+        currentVolume = pygame.mixer.music.get_volume()
+        
+        # we use this min in case the current volume is 0 (or lower then LOW_VOLUME)
+        pygame.mixer.music.set_volume(min(Constants.LOW_VOLUME, currentVolume))
+        cue.set_volume(currentVolume)

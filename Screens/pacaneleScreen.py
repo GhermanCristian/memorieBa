@@ -51,7 +51,7 @@ class PacaneleScreen(Screen):
         self.__gameDisplay.fill(PacaneleScreen.BG_COLOR)
     
     def setBackgroundMusic(self):
-        self.__previousSongTime = Song(PacaneleScreen.SONG_PATH).play(-1, 0)
+        self.__previousSongTime = Song(PacaneleScreen.SONG_PATH).play(Constants.NORMAL_VOLUME, -1, 0)
         
     def __loadSpecialImage(self, imageTitle):
         currentImage = os.path.join(os.getcwd(), "Images")

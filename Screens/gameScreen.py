@@ -151,7 +151,7 @@ class GameScreen(Screen):
             self.__revealBoxesAnimation(boxList[i * GameScreen.NR_REVEALED_BOXES : (i + 1) * GameScreen.NR_REVEALED_BOXES])
             self.__coverBoxesAnimation(boxList[i * GameScreen.NR_REVEALED_BOXES : (i + 1) * GameScreen.NR_REVEALED_BOXES])
     
-    def __matchImages(self, image1, image2):
+    def __imagesMatch(self, image1, image2):
         if image1.title == image2.title:
             return True
         
@@ -278,7 +278,7 @@ class GameScreen(Screen):
                             nrMoves += 1
                             self.__totalMoves += 1
                             
-                            if self.__matchImages(image1, image2):
+                            if self.__imagesMatch(image1, image2):
                                 nrRevealed += 2
                                 self.__money += GameScreen.INCREASE_MONEY_AMOUNT
                                 
@@ -287,7 +287,7 @@ class GameScreen(Screen):
                                     return
 
                                 if image1.soundCue != None:
-                                    SoundCue(image1.soundCue).play(3.0)
+                                    SoundCue(image1.soundCue).play()
                             
                             else:
                                 pygame.time.wait(GameScreen.IMAGE_DISPLAY_TIME)
@@ -314,9 +314,9 @@ class GameScreen(Screen):
                 return (Screen.QUIT_PROGRAM, Screen.QUIT_PROGRAM)
             
             if level == GameScreen.NR_OF_LEVELS:
-                SoundCue(GameScreen.INTELIGENT_SOUND_PATH).play(3.0)
+                SoundCue(GameScreen.INTELIGENT_SOUND_PATH).play()
             else:
-                SoundCue(GameScreen.SERGHEI_SOUND_PATH).play(0.75)
+                SoundCue(GameScreen.SERGHEI_SOUND_PATH).play()
             
             self.__endLevelAnimation()
             pygame.time.wait(2500) #PSA: don't have task manager open when ending a level, apparently wait() behaves weirdly

@@ -23,7 +23,7 @@ class WelcomeScreen(Screen):
         self.__gameDisplay.blit(self.__backgroundImage, (0, 0))
     
     def setBackgroundMusic(self):
-        Song(WelcomeScreen.SONG_PATH).play(-1, 0)
+        Song(WelcomeScreen.SONG_PATH).play(Constants.NORMAL_VOLUME, -1, 0)
         
     def __loadSpecialImage(self, imageTitle):
         currentImage = os.path.join(os.getcwd(), "Images")
