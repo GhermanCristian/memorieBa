@@ -5,11 +5,11 @@ from pygame.constants import QUIT, KEYUP, K_ESCAPE, K_RIGHT, MOUSEMOTION, MOUSEB
 from leaderboard import Leaderboard
 from text import Text
 from button import Button
-from Screens.nameScreen import NameScreen
 
 class LeaderboardScreen(Screen):
     TEXT_FONT = "candara"
     TEXT_FONT_SIZE = 30
+    TEXT_FONT_CHARACTER_WIDTH = 30
     TEXT_COLOR = Constants.PALE_GOLD
     TEXT_LEFT_MARGIN = 35
     TEXT_ROW_HEIGHT = 50
@@ -17,7 +17,7 @@ class LeaderboardScreen(Screen):
     BG_COLOR = Constants.AQUAMARINE_BLUE
     
     DIFFICULTY_TEXT_TOP_COORD = 80
-    DIFFICULTY_TEXT_LEFT_COORD = Constants.WINDOW_WIDTH // 2 - 65
+    DIFFICULTY_TEXT_MID_WIEGHT_COORD = Constants.WINDOW_WIDTH // 2
     
     TITLE_TEXT_TOP_COORD = Constants.WINDOW_HEIGHT // 4 - 100
     TITLE_TEXT_SIZE = 50
@@ -60,7 +60,8 @@ class LeaderboardScreen(Screen):
             (self.__fastLeaderHard, self.__smartLeaderHard, "HARD")
         ]
         
-        Text(leaderboardsByDifficulty[leaderboardDifficulty][2], LeaderboardScreen.TEXT_FONT, LeaderboardScreen.TITLE_TEXT_SIZE, LeaderboardScreen.TEXT_COLOR).display(self.__gameDisplay, LeaderboardScreen.DIFFICULTY_TEXT_TOP_COORD, LeaderboardScreen.DIFFICULTY_TEXT_LEFT_COORD)
+        #pygame.draw.line(self.__gameDisplay, LeaderboardScreen.TEXT_COLOR, (Constants.WINDOW_WIDTH // 2, 0), (Constants.WINDOW_WIDTH // 2, 500))
+        Text(leaderboardsByDifficulty[leaderboardDifficulty][2], LeaderboardScreen.TEXT_FONT, LeaderboardScreen.TITLE_TEXT_SIZE, LeaderboardScreen.TEXT_COLOR).display(self.__gameDisplay, LeaderboardScreen.DIFFICULTY_TEXT_TOP_COORD, LeaderboardScreen.DIFFICULTY_TEXT_MID_WIEGHT_COORD - len(leaderboardsByDifficulty[leaderboardDifficulty][2]) * LeaderboardScreen.TEXT_FONT_CHARACTER_WIDTH / 2)
         Text("rapidu", LeaderboardScreen.TEXT_FONT, LeaderboardScreen.TEXT_FONT_SIZE, LeaderboardScreen.TEXT_COLOR).display(self.__gameDisplay, LeaderboardScreen.TITLE_TEXT_TOP_COORD, Constants.WINDOW_WIDTH / 4 - 6 * 7)
         Text("desteptu", LeaderboardScreen.TEXT_FONT, LeaderboardScreen.TEXT_FONT_SIZE, LeaderboardScreen.TEXT_COLOR).display(self.__gameDisplay, LeaderboardScreen.TITLE_TEXT_TOP_COORD, 3 * Constants.WINDOW_WIDTH / 4 - 6 * 7)
         
@@ -79,19 +80,19 @@ class LeaderboardScreen(Screen):
     
     def updateLeaderboards(self, totalTime, totalMoves, playerName, difficulty):
         leaderboardsByDifficulty = {
-            NameScreen.EASY_DIFFICULTY_MULTIPLIER: (self.__fastLeaderEasy, self.__smartLeaderEasy),
-            NameScreen.MEDIUM_DIFFICULTY_MULTIPLIER: (self.__fastLeaderMedium, self.__smartLeaderMedium),
-            NameScreen.HARD_DIFFICULTY_MULTIPLIER: (self.__fastLeaderHard, self.__smartLeaderHard)
+            Constants.EASY_DIFFICULTY_MULTIPLIER: (self.__fastLeaderEasy, self.__smartLeaderEasy),
+            Constants.MEDIUM_DIFFICULTY_MULTIPLIER: (self.__fastLeaderMedium, self.__smartLeaderMedium),
+            Constants.HARD_DIFFICULTY_MULTIPLIER: (self.__fastLeaderHard, self.__smartLeaderHard)
         }
         self.__updateLeaderboard(totalTime, leaderboardsByDifficulty[difficulty][0], playerName)
         self.__updateLeaderboard(totalMoves, leaderboardsByDifficulty[difficulty][1], playerName)
     
     def __adjustLeaderboardDifficulty(self, leaderboardDifficulty, increment):
         leaderboardDifficulty += increment
-        if leaderboardDifficulty >= NameScreen.NUMBER_OF_DIFFICULTIES:
+        if leaderboardDifficulty >= Constants.NUMBER_OF_DIFFICULTIES:
             return 0
         if leaderboardDifficulty < 0:
-            return NameScreen.NUMBER_OF_DIFFICULTIES - 1
+            return Constants.NUMBER_OF_DIFFICULTIES - 1
         return leaderboardDifficulty
     
     def displayContent(self):

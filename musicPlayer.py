@@ -105,7 +105,7 @@ class MusicPlayer():
         self.__radioStationList[self.__currentPlaylistIndex][0].restorePreviousSong(self.__musicVolume, previousSongTime)
     
     def __changeRadioStations(self, increment):
-        self.__radioChangingSound.play(1.0)
+        self.__radioChangingSound.play()
         self.__currentPlaylistIndex += increment
         if self.__currentPlaylistIndex >= MusicPlayer.RADIO_STATION_COUNT:
             self.__currentPlaylistIndex = 0
