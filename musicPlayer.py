@@ -145,5 +145,7 @@ class MusicPlayer():
             pygame.mixer.music.set_volume(temporaryVolume)
         pygame.mixer.music.set_volume(self.__musicVolume)
         
-
+    @property
+    def musicVolume(self):
+        return self.__musicVolume
 

@@ -13,10 +13,12 @@ class PacaneleScreen(Screen):
     ACE_OF_SPADES_IMAGE = "ACE_SPADES.jpg"
     ACE_OF_HEARTS_IMAGE = "ACE_HEARTS.jpg"
     SAVE_ICON_IMAGE = "SAVE_ICON.jpg"
-    BILL_1_RON = "BILL_1_RON.jpg"
-    BILL_5_RON = "BILL_5_RON.jpg"
-    BILL_10_RON = "BILL_10_RON.jpg"
-    BILL_50_RON = "BILL_50_RON.jpg"
+    BILL_1_RON_IMAGE = "BILL_1_RON.jpg"
+    BILL_5_RON_IMAGE = "BILL_5_RON.jpg"
+    BILL_10_RON_IMAGE = "BILL_10_RON.jpg"
+    BILL_50_RON_IMAGE = "BILL_50_RON.jpg"
+    FREEDOM_IMAGE = "FREEDOM.jpg"
+    TIMISOREANA_IMAGE = "TIMISOREANA.jpg"
     
     SONG_PATH = "Music//PACANELE.ogg"
 
@@ -24,6 +26,13 @@ class PacaneleScreen(Screen):
     GAP_SIZE = 10
     BILL_WIDTH = 235
     BILL_HEIGHT = BOX_SIZE
+    
+    DRINK_IMAGE_LEFT_MARGIN = 50
+    DRINK_IMAGE_TOP_MARGIN = 50
+    DRINK_IMAGE_SIZE = BOX_SIZE
+    FREEDOM_PRICE = 2.0
+    TIMISOREANA_PRICE = 2.5
+    
     NR_PREV_COLORS = 7
     PREVIOUS_RESULTS_LEFT_MARGIN = (Constants.WINDOW_WIDTH - NR_PREV_COLORS * BOX_SIZE - (NR_PREV_COLORS - 1) * GAP_SIZE) // 2
     
@@ -39,6 +48,8 @@ class PacaneleScreen(Screen):
     BG_COLOR = Constants.NAVY_RED
     LIGHT_BG_COLOR = Constants.GRAY
     
+    RESULT_DISPLAY_TIME = 1000
+    
     def __init__(self, gameDisplay, musicPlayer):
         self.__gameDisplay = gameDisplay
         self.__musicPlayer = musicPlayer
@@ -47,10 +58,12 @@ class PacaneleScreen(Screen):
         self.__aceOfSpades = self.__loadSpecialImage(PacaneleScreen.ACE_OF_SPADES_IMAGE)
         self.__aceOfHearts = self.__loadSpecialImage(PacaneleScreen.ACE_OF_HEARTS_IMAGE)
         self.__saveIcon = self.__loadSpecialImage(PacaneleScreen.SAVE_ICON_IMAGE)
-        self.__1RonBill = self.__loadSpecialImage(PacaneleScreen.BILL_1_RON)
-        self.__5RonBill = self.__loadSpecialImage(PacaneleScreen.BILL_5_RON)
-        self.__10RonBill = self.__loadSpecialImage(PacaneleScreen.BILL_10_RON)
-        self.__50RonBill = self.__loadSpecialImage(PacaneleScreen.BILL_50_RON)
+        self.__1RonBill = self.__loadSpecialImage(PacaneleScreen.BILL_1_RON_IMAGE)
+        self.__5RonBill = self.__loadSpecialImage(PacaneleScreen.BILL_5_RON_IMAGE)
+        self.__10RonBill = self.__loadSpecialImage(PacaneleScreen.BILL_10_RON_IMAGE)
+        self.__50RonBill = self.__loadSpecialImage(PacaneleScreen.BILL_50_RON_IMAGE)
+        self.__freedom = self.__loadSpecialImage(PacaneleScreen.FREEDOM_IMAGE)
+        self.__timisoreana = self.__loadSpecialImage(PacaneleScreen.TIMISOREANA_IMAGE)
         
         self.__lastColors = [-1] * PacaneleScreen.NR_PREV_COLORS
         self.__pacaneleFont = pygame.font.SysFont(PacaneleScreen.TEXT_FONT, PacaneleScreen.TEXT_FONT_SIZE, True)
@@ -61,7 +74,7 @@ class PacaneleScreen(Screen):
         self.__gameDisplay.fill(PacaneleScreen.BG_COLOR)
     
     def setBackgroundMusic(self):
-        self.__previousSongTime = Song(PacaneleScreen.SONG_PATH).play(Constants.NORMAL_VOLUME, -1, 0)
+        self.__previousSongTime = Song(PacaneleScreen.SONG_PATH).play(self.__musicPlayer.musicVolume, -1, 0)
         
     def __loadSpecialImage(self, imageTitle):
         currentImage = os.path.join(os.getcwd(), "Images")
@@ -79,10 +92,15 @@ class PacaneleScreen(Screen):
     
     def __displayContent(self, moneyLeft, currentBet):        
         totalMoneyText = Text("Left: %.2f lei" % moneyLeft, PacaneleScreen.MONEY_TEXT_FONT, PacaneleScreen.MONEY_TEXT_FONT_SIZE, PacaneleScreen.MONEY_TEXT_COLOR)
+        # we don't just display the text (and use labels) because they will center the text
         Label(Constants.WINDOW_HEIGHT / 2 - PacaneleScreen.MONEY_TEXT_ROW_HEIGHT, Constants.WINDOW_WIDTH / 2 - len(totalMoneyText.content) * PacaneleScreen.MONEY_TEXT_FONT_SIZE / 2, -1, PacaneleScreen.MONEY_TEXT_ROW_HEIGHT, PacaneleScreen.BG_COLOR, totalMoneyText).display(self.__gameDisplay)
-        
         currentBetText = Text("Current bet: %.2f lei" % currentBet, PacaneleScreen.MONEY_TEXT_FONT, PacaneleScreen.MONEY_TEXT_FONT_SIZE, PacaneleScreen.MONEY_TEXT_COLOR)
         Label(Constants.WINDOW_HEIGHT / 2, Constants.WINDOW_WIDTH / 2 - len(currentBetText.content) * PacaneleScreen.MONEY_TEXT_FONT_SIZE / 2, -1, PacaneleScreen.MONEY_TEXT_ROW_HEIGHT, PacaneleScreen.BG_COLOR, currentBetText).display(self.__gameDisplay)
+        
+        Text("Cico", PacaneleScreen.MONEY_TEXT_FONT, PacaneleScreen.MONEY_TEXT_FONT_SIZE, PacaneleScreen.MONEY_TEXT_COLOR).display(self.__gameDisplay, PacaneleScreen.DRINK_IMAGE_TOP_MARGIN + PacaneleScreen.DRINK_IMAGE_SIZE + PacaneleScreen.GAP_SIZE, PacaneleScreen.DRINK_IMAGE_LEFT_MARGIN + PacaneleScreen.DRINK_IMAGE_SIZE // 2 - 30)
+        Text("%.0f lei" % PacaneleScreen.FREEDOM_PRICE, PacaneleScreen.MONEY_TEXT_FONT, PacaneleScreen.MONEY_TEXT_FONT_SIZE, PacaneleScreen.MONEY_TEXT_COLOR).display(self.__gameDisplay, PacaneleScreen.DRINK_IMAGE_TOP_MARGIN + PacaneleScreen.DRINK_IMAGE_SIZE + PacaneleScreen.MONEY_TEXT_ROW_HEIGHT, PacaneleScreen.DRINK_IMAGE_LEFT_MARGIN + PacaneleScreen.DRINK_IMAGE_SIZE // 2 - 30)
+        Text("Timisoreana", PacaneleScreen.MONEY_TEXT_FONT, PacaneleScreen.MONEY_TEXT_FONT_SIZE, PacaneleScreen.MONEY_TEXT_COLOR).display(self.__gameDisplay, PacaneleScreen.DRINK_IMAGE_TOP_MARGIN + PacaneleScreen.DRINK_IMAGE_SIZE + PacaneleScreen.GAP_SIZE, Constants.WINDOW_WIDTH - PacaneleScreen.DRINK_IMAGE_LEFT_MARGIN - PacaneleScreen.DRINK_IMAGE_SIZE)
+        Text("%.1f lei" % PacaneleScreen.TIMISOREANA_PRICE, PacaneleScreen.MONEY_TEXT_FONT, PacaneleScreen.MONEY_TEXT_FONT_SIZE, PacaneleScreen.MONEY_TEXT_COLOR).display(self.__gameDisplay, PacaneleScreen.DRINK_IMAGE_TOP_MARGIN + PacaneleScreen.DRINK_IMAGE_SIZE + PacaneleScreen.MONEY_TEXT_ROW_HEIGHT, Constants.WINDOW_WIDTH - PacaneleScreen.DRINK_IMAGE_LEFT_MARGIN - PacaneleScreen.DRINK_IMAGE_SIZE)
         
         # normally these could just be blitted once when we enter the pacanele screen - however, because of the text we need to reblit
         # the background => these are covered => it's necessary that we do this
@@ -93,6 +111,8 @@ class PacaneleScreen(Screen):
         self.__gameDisplay.blit(self.__5RonBill, (PacaneleScreen.PREVIOUS_RESULTS_LEFT_MARGIN + PacaneleScreen.GAP_SIZE + PacaneleScreen.BILL_WIDTH, 3 * Constants.WINDOW_HEIGHT // 4 - PacaneleScreen.GAP_SIZE - PacaneleScreen.BILL_HEIGHT))
         self.__gameDisplay.blit(self.__10RonBill, (PacaneleScreen.PREVIOUS_RESULTS_LEFT_MARGIN + 2 * (PacaneleScreen.GAP_SIZE + PacaneleScreen.BILL_WIDTH), 3 * Constants.WINDOW_HEIGHT // 4 - PacaneleScreen.GAP_SIZE - PacaneleScreen.BILL_HEIGHT))
         self.__gameDisplay.blit(self.__50RonBill, (PacaneleScreen.PREVIOUS_RESULTS_LEFT_MARGIN + 3 * (PacaneleScreen.GAP_SIZE + PacaneleScreen.BILL_WIDTH), 3 * Constants.WINDOW_HEIGHT // 4 - PacaneleScreen.GAP_SIZE - PacaneleScreen.BILL_HEIGHT))
+        self.__gameDisplay.blit(self.__freedom, (PacaneleScreen.DRINK_IMAGE_LEFT_MARGIN, PacaneleScreen.DRINK_IMAGE_TOP_MARGIN))
+        self.__gameDisplay.blit(self.__timisoreana, (Constants.WINDOW_WIDTH - PacaneleScreen.DRINK_IMAGE_LEFT_MARGIN - PacaneleScreen.DRINK_IMAGE_SIZE, PacaneleScreen.DRINK_IMAGE_TOP_MARGIN))
     
     def __checkResult(self, choice):
         actualResult = random.randint(0, 1)
@@ -111,7 +131,7 @@ class PacaneleScreen(Screen):
         self.__gameDisplay.blit(textBlock, textRect)
         
         pygame.display.update()
-        pygame.time.wait(1000)
+        pygame.time.wait(PacaneleScreen.RESULT_DISPLAY_TIME)
     
     def __redOrBlack(self, moneyLeft):
         mouseX = mouseY = 0
@@ -121,11 +141,16 @@ class PacaneleScreen(Screen):
         redBox = pygame.Rect(PacaneleScreen.PREVIOUS_RESULTS_LEFT_MARGIN, 3 * Constants.WINDOW_HEIGHT // 4, PacaneleScreen.BOX_SIZE, PacaneleScreen.BOX_SIZE)
         blackBox = pygame.Rect(PacaneleScreen.PREVIOUS_RESULTS_LEFT_MARGIN + 3 * (PacaneleScreen.BOX_SIZE + PacaneleScreen.GAP_SIZE), 3 * Constants.WINDOW_HEIGHT // 4, PacaneleScreen.BOX_SIZE, PacaneleScreen.BOX_SIZE)
         saveBox = pygame.Rect(PacaneleScreen.PREVIOUS_RESULTS_LEFT_MARGIN + 6 * (PacaneleScreen.BOX_SIZE + PacaneleScreen.GAP_SIZE), 3 * Constants.WINDOW_HEIGHT // 4, PacaneleScreen.BOX_SIZE, PacaneleScreen.BOX_SIZE)
+        
         box1Ron = pygame.Rect(PacaneleScreen.PREVIOUS_RESULTS_LEFT_MARGIN, 3 * Constants.WINDOW_HEIGHT // 4 - PacaneleScreen.GAP_SIZE - PacaneleScreen.BILL_HEIGHT, PacaneleScreen.BILL_WIDTH, PacaneleScreen.BILL_HEIGHT)
         box5Ron = pygame.Rect(PacaneleScreen.PREVIOUS_RESULTS_LEFT_MARGIN + PacaneleScreen.GAP_SIZE + PacaneleScreen.BILL_WIDTH, 3 * Constants.WINDOW_HEIGHT // 4 - PacaneleScreen.GAP_SIZE - PacaneleScreen.BILL_HEIGHT, PacaneleScreen.BILL_WIDTH, PacaneleScreen.BILL_HEIGHT)
         box10Ron = pygame.Rect(PacaneleScreen.PREVIOUS_RESULTS_LEFT_MARGIN + 2 * (PacaneleScreen.GAP_SIZE + PacaneleScreen.BILL_WIDTH), 3 * Constants.WINDOW_HEIGHT // 4 - PacaneleScreen.GAP_SIZE - PacaneleScreen.BILL_HEIGHT, PacaneleScreen.BILL_WIDTH, PacaneleScreen.BILL_HEIGHT)
         box50Ron = pygame.Rect(PacaneleScreen.PREVIOUS_RESULTS_LEFT_MARGIN + 3 * (PacaneleScreen.GAP_SIZE + PacaneleScreen.BILL_WIDTH), 3 * Constants.WINDOW_HEIGHT // 4 - PacaneleScreen.GAP_SIZE - PacaneleScreen.BILL_HEIGHT, PacaneleScreen.BILL_WIDTH, PacaneleScreen.BILL_HEIGHT)
         billList = [(box1Ron, 1), (box5Ron, 5), (box10Ron, 10), (box50Ron, 50)]
+        
+        freedomBox = pygame.Rect(PacaneleScreen.DRINK_IMAGE_LEFT_MARGIN, PacaneleScreen.DRINK_IMAGE_TOP_MARGIN, PacaneleScreen.DRINK_IMAGE_SIZE, PacaneleScreen.DRINK_IMAGE_SIZE)
+        timisoreanaBox = pygame.Rect(Constants.WINDOW_WIDTH - PacaneleScreen.DRINK_IMAGE_LEFT_MARGIN - PacaneleScreen.DRINK_IMAGE_SIZE, PacaneleScreen.DRINK_IMAGE_TOP_MARGIN, PacaneleScreen.DRINK_IMAGE_SIZE, PacaneleScreen.DRINK_IMAGE_SIZE)
+        drinkList = [(freedomBox, PacaneleScreen.FREEDOM_PRICE), (timisoreanaBox, PacaneleScreen.TIMISOREANA_PRICE)]
         
         self.setBackgroundImage()
         self.__displayLastColors()
@@ -146,18 +171,28 @@ class PacaneleScreen(Screen):
                     mouseClicked = True
                     
             if mouseClicked == True:
-                clickedBill = False
+                alreadyClicked = False
                 for bill in billList: #bill[0] = the rect object; bill[1] = the value of the bill
                     if bill[0].collidepoint(mouseX, mouseY) and bill[1] <= moneyLeft:
                         currentBet += bill[1]
                         moneyLeft -= bill[1]
-                        clickedBill = True
+                        alreadyClicked = True
                         break
                     
-                if clickedBill == False:
+                for drink in drinkList: #drink[0] = the rect object; drink[1] = the price of the drink
+                    if drink[0].collidepoint(mouseX, mouseY) and drink[1] <= moneyLeft:
+                        moneyLeft -= drink[1]
+                        alreadyClicked = True
+                        break
+                
+                if alreadyClicked == False:
                     if saveBox.collidepoint(mouseX, mouseY):
                         moneyLeft += currentBet
                         return moneyLeft
+                    
+                    # no use in clicking the red/ black buttons if there is nothing to bet
+                    if currentBet == 0:
+                        continue
                     
                     if redBox.collidepoint(mouseX, mouseY):
                         choice = 0

@@ -15,7 +15,7 @@ class Constants():
     ORANGE   = (255, 128,   0)
     LIGHT_ORANGE = (255, 191, 15)
     RED = (145, 0, 0)
-    NAVY_RED = (127, 21, 24)
+    NAVY_RED = (104, 16, 19)
     GOLD = (235, 202, 106)
     PALE_GOLD = (209, 166, 131)
     DARK_GREEN = (35, 66, 45)
