@@ -60,7 +60,6 @@ class LeaderboardScreen(Screen):
             (self.__fastLeaderHard, self.__smartLeaderHard, "HARD")
         ]
         
-        #pygame.draw.line(self.__gameDisplay, LeaderboardScreen.TEXT_COLOR, (Constants.WINDOW_WIDTH // 2, 0), (Constants.WINDOW_WIDTH // 2, 500))
         Text(leaderboardsByDifficulty[leaderboardDifficulty][2], LeaderboardScreen.TEXT_FONT, LeaderboardScreen.TITLE_TEXT_SIZE, LeaderboardScreen.TEXT_COLOR).display(self.__gameDisplay, LeaderboardScreen.DIFFICULTY_TEXT_TOP_COORD, LeaderboardScreen.DIFFICULTY_TEXT_MID_WIEGHT_COORD - len(leaderboardsByDifficulty[leaderboardDifficulty][2]) * LeaderboardScreen.TEXT_FONT_CHARACTER_WIDTH / 2)
         Text("rapidu", LeaderboardScreen.TEXT_FONT, LeaderboardScreen.TEXT_FONT_SIZE, LeaderboardScreen.TEXT_COLOR).display(self.__gameDisplay, LeaderboardScreen.TITLE_TEXT_TOP_COORD, Constants.WINDOW_WIDTH / 4 - 6 * 7)
         Text("desteptu", LeaderboardScreen.TEXT_FONT, LeaderboardScreen.TEXT_FONT_SIZE, LeaderboardScreen.TEXT_COLOR).display(self.__gameDisplay, LeaderboardScreen.TITLE_TEXT_TOP_COORD, 3 * Constants.WINDOW_WIDTH / 4 - 6 * 7)

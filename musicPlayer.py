@@ -42,6 +42,8 @@ class MusicPlayer():
     MP3_PLAYER_IMAGE = "MP3_PLAYER.jpg"
     RADIO_CHANGING_SOUND_LOCATION = os.path.join("Music", "RADIO_CHANGING_SOUND.ogg")
     
+    RADIO_CHANGING_SOUND_DURATION = 1300
+    
     #i will create a m.p. object only once, in the mainMenu, and pass it as a parameter to the gameScreen
     def __init__(self, gameDisplay):
         self.__gameDisplay = gameDisplay
@@ -112,7 +114,7 @@ class MusicPlayer():
         elif self.__currentPlaylistIndex < 0:
             self.__currentPlaylistIndex = MusicPlayer.RADIO_STATION_COUNT - 1
         
-        pygame.time.delay(1300)
+        pygame.time.delay(MusicPlayer.RADIO_CHANGING_SOUND_DURATION)
         self.nextSong()
     
     def __changeMusicVolume(self, mouseX):

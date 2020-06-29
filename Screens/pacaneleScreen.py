@@ -24,8 +24,6 @@ class PacaneleScreen(Screen):
 
     BOX_SIZE = 130
     GAP_SIZE = 10
-    BILL_WIDTH = 235
-    BILL_HEIGHT = BOX_SIZE
     
     DRINK_IMAGE_LEFT_MARGIN = 50
     DRINK_IMAGE_TOP_MARGIN = 50
@@ -35,6 +33,15 @@ class PacaneleScreen(Screen):
     
     NR_PREV_COLORS = 7
     PREVIOUS_RESULTS_LEFT_MARGIN = (Constants.WINDOW_WIDTH - NR_PREV_COLORS * BOX_SIZE - (NR_PREV_COLORS - 1) * GAP_SIZE) // 2
+    PREVIOUS_RESULTS_TOP_MARGIN = Constants.WINDOW_HEIGHT // 4
+    
+    BILL_WIDTH = 235
+    BILL_HEIGHT = BOX_SIZE
+    BILL_LEFT_MARGIN = PREVIOUS_RESULTS_LEFT_MARGIN
+    BILL_TOP_MARGIN = 3 * Constants.WINDOW_HEIGHT // 4 - GAP_SIZE - BILL_HEIGHT
+    
+    BUTTON_LEFT_MARGIN = PREVIOUS_RESULTS_LEFT_MARGIN
+    BUTTON_TOP_MARGIN = 3 * Constants.WINDOW_HEIGHT // 4
     
     TEXT_FONT = "felixtitling"
     TEXT_FONT_SIZE = 256
@@ -84,15 +91,15 @@ class PacaneleScreen(Screen):
     def __displayLastColors(self):
         for i in range(PacaneleScreen.NR_PREV_COLORS):
             if self.__lastColors[i] == 0:
-                self.__gameDisplay.blit(self.__aceOfHearts, (PacaneleScreen.PREVIOUS_RESULTS_LEFT_MARGIN+ i * (PacaneleScreen.BOX_SIZE + PacaneleScreen.GAP_SIZE), Constants.WINDOW_HEIGHT // 4))
+                self.__gameDisplay.blit(self.__aceOfHearts, (PacaneleScreen.PREVIOUS_RESULTS_LEFT_MARGIN + i * (PacaneleScreen.BOX_SIZE + PacaneleScreen.GAP_SIZE), PacaneleScreen.PREVIOUS_RESULTS_TOP_MARGIN))
             elif self.__lastColors[i] == 1:
-                self.__gameDisplay.blit(self.__aceOfSpades, (PacaneleScreen.PREVIOUS_RESULTS_LEFT_MARGIN + i * (PacaneleScreen.BOX_SIZE + PacaneleScreen.GAP_SIZE), Constants.WINDOW_HEIGHT // 4))
+                self.__gameDisplay.blit(self.__aceOfSpades, (PacaneleScreen.PREVIOUS_RESULTS_LEFT_MARGIN + i * (PacaneleScreen.BOX_SIZE + PacaneleScreen.GAP_SIZE), PacaneleScreen.PREVIOUS_RESULTS_TOP_MARGIN))
             else:
-                pygame.draw.rect(self.__gameDisplay, PacaneleScreen.LIGHT_BG_COLOR, (PacaneleScreen.PREVIOUS_RESULTS_LEFT_MARGIN + i * (PacaneleScreen.BOX_SIZE + PacaneleScreen.GAP_SIZE), Constants.WINDOW_HEIGHT // 4, PacaneleScreen.BOX_SIZE, PacaneleScreen.BOX_SIZE))
+                pygame.draw.rect(self.__gameDisplay, PacaneleScreen.LIGHT_BG_COLOR, (PacaneleScreen.PREVIOUS_RESULTS_LEFT_MARGIN + i * (PacaneleScreen.BOX_SIZE + PacaneleScreen.GAP_SIZE), PacaneleScreen.PREVIOUS_RESULTS_TOP_MARGIN, PacaneleScreen.BOX_SIZE, PacaneleScreen.BOX_SIZE))
     
-    def __displayContent(self, moneyLeft, currentBet):        
+    def __displayText(self, moneyLeft, currentBet):        
         totalMoneyText = Text("Left: %.2f lei" % moneyLeft, PacaneleScreen.MONEY_TEXT_FONT, PacaneleScreen.MONEY_TEXT_FONT_SIZE, PacaneleScreen.MONEY_TEXT_COLOR)
-        # we don't just display the text (and use labels) because they will center the text
+        # we don't just display the text, we use labels because they will center the text
         Label(Constants.WINDOW_HEIGHT / 2 - PacaneleScreen.MONEY_TEXT_ROW_HEIGHT, Constants.WINDOW_WIDTH / 2 - len(totalMoneyText.content) * PacaneleScreen.MONEY_TEXT_FONT_SIZE / 2, -1, PacaneleScreen.MONEY_TEXT_ROW_HEIGHT, PacaneleScreen.BG_COLOR, totalMoneyText).display(self.__gameDisplay)
         currentBetText = Text("Current bet: %.2f lei" % currentBet, PacaneleScreen.MONEY_TEXT_FONT, PacaneleScreen.MONEY_TEXT_FONT_SIZE, PacaneleScreen.MONEY_TEXT_COLOR)
         Label(Constants.WINDOW_HEIGHT / 2, Constants.WINDOW_WIDTH / 2 - len(currentBetText.content) * PacaneleScreen.MONEY_TEXT_FONT_SIZE / 2, -1, PacaneleScreen.MONEY_TEXT_ROW_HEIGHT, PacaneleScreen.BG_COLOR, currentBetText).display(self.__gameDisplay)
@@ -101,19 +108,7 @@ class PacaneleScreen(Screen):
         Text("%.0f lei" % PacaneleScreen.FREEDOM_PRICE, PacaneleScreen.MONEY_TEXT_FONT, PacaneleScreen.MONEY_TEXT_FONT_SIZE, PacaneleScreen.MONEY_TEXT_COLOR).display(self.__gameDisplay, PacaneleScreen.DRINK_IMAGE_TOP_MARGIN + PacaneleScreen.DRINK_IMAGE_SIZE + PacaneleScreen.MONEY_TEXT_ROW_HEIGHT, PacaneleScreen.DRINK_IMAGE_LEFT_MARGIN + PacaneleScreen.DRINK_IMAGE_SIZE // 2 - 30)
         Text("Timisoreana", PacaneleScreen.MONEY_TEXT_FONT, PacaneleScreen.MONEY_TEXT_FONT_SIZE, PacaneleScreen.MONEY_TEXT_COLOR).display(self.__gameDisplay, PacaneleScreen.DRINK_IMAGE_TOP_MARGIN + PacaneleScreen.DRINK_IMAGE_SIZE + PacaneleScreen.GAP_SIZE, Constants.WINDOW_WIDTH - PacaneleScreen.DRINK_IMAGE_LEFT_MARGIN - PacaneleScreen.DRINK_IMAGE_SIZE)
         Text("%.1f lei" % PacaneleScreen.TIMISOREANA_PRICE, PacaneleScreen.MONEY_TEXT_FONT, PacaneleScreen.MONEY_TEXT_FONT_SIZE, PacaneleScreen.MONEY_TEXT_COLOR).display(self.__gameDisplay, PacaneleScreen.DRINK_IMAGE_TOP_MARGIN + PacaneleScreen.DRINK_IMAGE_SIZE + PacaneleScreen.MONEY_TEXT_ROW_HEIGHT, Constants.WINDOW_WIDTH - PacaneleScreen.DRINK_IMAGE_LEFT_MARGIN - PacaneleScreen.DRINK_IMAGE_SIZE)
-        
-        # normally these could just be blitted once when we enter the pacanele screen - however, because of the text we need to reblit
-        # the background => these are covered => it's necessary that we do this
-        self.__gameDisplay.blit(self.__aceOfHearts, (PacaneleScreen.PREVIOUS_RESULTS_LEFT_MARGIN, 3 * Constants.WINDOW_HEIGHT // 4))
-        self.__gameDisplay.blit(self.__aceOfSpades, (PacaneleScreen.PREVIOUS_RESULTS_LEFT_MARGIN + 3 * (PacaneleScreen.BOX_SIZE + PacaneleScreen.GAP_SIZE), 3 * Constants.WINDOW_HEIGHT // 4))
-        self.__gameDisplay.blit(self.__saveIcon, (PacaneleScreen.PREVIOUS_RESULTS_LEFT_MARGIN + 6 * (PacaneleScreen.BOX_SIZE + PacaneleScreen.GAP_SIZE), 3 * Constants.WINDOW_HEIGHT // 4))
-        self.__gameDisplay.blit(self.__1RonBill, (PacaneleScreen.PREVIOUS_RESULTS_LEFT_MARGIN, 3 * Constants.WINDOW_HEIGHT // 4 - PacaneleScreen.GAP_SIZE - PacaneleScreen.BILL_HEIGHT))
-        self.__gameDisplay.blit(self.__5RonBill, (PacaneleScreen.PREVIOUS_RESULTS_LEFT_MARGIN + PacaneleScreen.GAP_SIZE + PacaneleScreen.BILL_WIDTH, 3 * Constants.WINDOW_HEIGHT // 4 - PacaneleScreen.GAP_SIZE - PacaneleScreen.BILL_HEIGHT))
-        self.__gameDisplay.blit(self.__10RonBill, (PacaneleScreen.PREVIOUS_RESULTS_LEFT_MARGIN + 2 * (PacaneleScreen.GAP_SIZE + PacaneleScreen.BILL_WIDTH), 3 * Constants.WINDOW_HEIGHT // 4 - PacaneleScreen.GAP_SIZE - PacaneleScreen.BILL_HEIGHT))
-        self.__gameDisplay.blit(self.__50RonBill, (PacaneleScreen.PREVIOUS_RESULTS_LEFT_MARGIN + 3 * (PacaneleScreen.GAP_SIZE + PacaneleScreen.BILL_WIDTH), 3 * Constants.WINDOW_HEIGHT // 4 - PacaneleScreen.GAP_SIZE - PacaneleScreen.BILL_HEIGHT))
-        self.__gameDisplay.blit(self.__freedom, (PacaneleScreen.DRINK_IMAGE_LEFT_MARGIN, PacaneleScreen.DRINK_IMAGE_TOP_MARGIN))
-        self.__gameDisplay.blit(self.__timisoreana, (Constants.WINDOW_WIDTH - PacaneleScreen.DRINK_IMAGE_LEFT_MARGIN - PacaneleScreen.DRINK_IMAGE_SIZE, PacaneleScreen.DRINK_IMAGE_TOP_MARGIN))
-    
+
     def __checkResult(self, choice):
         actualResult = random.randint(0, 1)
         self.__lastColors.insert(0, actualResult)
@@ -133,29 +128,31 @@ class PacaneleScreen(Screen):
         pygame.display.update()
         pygame.time.wait(PacaneleScreen.RESULT_DISPLAY_TIME)
     
+    def __updateSection(self, moneyLeft, currentBet):
+        section = pygame.Rect(PacaneleScreen.PREVIOUS_RESULTS_LEFT_MARGIN, PacaneleScreen.PREVIOUS_RESULTS_TOP_MARGIN, Constants.WINDOW_WIDTH - 2 * PacaneleScreen.PREVIOUS_RESULTS_LEFT_MARGIN, PacaneleScreen.BILL_TOP_MARGIN - PacaneleScreen.PREVIOUS_RESULTS_TOP_MARGIN)
+        pygame.draw.rect(self.__gameDisplay, PacaneleScreen.BG_COLOR, section) # reset the background image on this section
+        self.__displayLastColors()
+        self.__displayText(moneyLeft, currentBet)
+        pygame.display.update(section)
+    
     def __redOrBlack(self, moneyLeft):
         mouseX = mouseY = 0
         choice = -1
         currentBet = 0
         
-        redBox = pygame.Rect(PacaneleScreen.PREVIOUS_RESULTS_LEFT_MARGIN, 3 * Constants.WINDOW_HEIGHT // 4, PacaneleScreen.BOX_SIZE, PacaneleScreen.BOX_SIZE)
-        blackBox = pygame.Rect(PacaneleScreen.PREVIOUS_RESULTS_LEFT_MARGIN + 3 * (PacaneleScreen.BOX_SIZE + PacaneleScreen.GAP_SIZE), 3 * Constants.WINDOW_HEIGHT // 4, PacaneleScreen.BOX_SIZE, PacaneleScreen.BOX_SIZE)
-        saveBox = pygame.Rect(PacaneleScreen.PREVIOUS_RESULTS_LEFT_MARGIN + 6 * (PacaneleScreen.BOX_SIZE + PacaneleScreen.GAP_SIZE), 3 * Constants.WINDOW_HEIGHT // 4, PacaneleScreen.BOX_SIZE, PacaneleScreen.BOX_SIZE)
+        redBox = pygame.Rect(PacaneleScreen.BUTTON_LEFT_MARGIN, PacaneleScreen.BUTTON_TOP_MARGIN, PacaneleScreen.BOX_SIZE, PacaneleScreen.BOX_SIZE)
+        blackBox = pygame.Rect(PacaneleScreen.BUTTON_LEFT_MARGIN + 3 * (PacaneleScreen.BOX_SIZE + PacaneleScreen.GAP_SIZE), PacaneleScreen.BUTTON_TOP_MARGIN, PacaneleScreen.BOX_SIZE, PacaneleScreen.BOX_SIZE)
+        saveBox = pygame.Rect(PacaneleScreen.BUTTON_LEFT_MARGIN + 6 * (PacaneleScreen.BOX_SIZE + PacaneleScreen.GAP_SIZE), PacaneleScreen.BUTTON_TOP_MARGIN, PacaneleScreen.BOX_SIZE, PacaneleScreen.BOX_SIZE)
         
-        box1Ron = pygame.Rect(PacaneleScreen.PREVIOUS_RESULTS_LEFT_MARGIN, 3 * Constants.WINDOW_HEIGHT // 4 - PacaneleScreen.GAP_SIZE - PacaneleScreen.BILL_HEIGHT, PacaneleScreen.BILL_WIDTH, PacaneleScreen.BILL_HEIGHT)
-        box5Ron = pygame.Rect(PacaneleScreen.PREVIOUS_RESULTS_LEFT_MARGIN + PacaneleScreen.GAP_SIZE + PacaneleScreen.BILL_WIDTH, 3 * Constants.WINDOW_HEIGHT // 4 - PacaneleScreen.GAP_SIZE - PacaneleScreen.BILL_HEIGHT, PacaneleScreen.BILL_WIDTH, PacaneleScreen.BILL_HEIGHT)
-        box10Ron = pygame.Rect(PacaneleScreen.PREVIOUS_RESULTS_LEFT_MARGIN + 2 * (PacaneleScreen.GAP_SIZE + PacaneleScreen.BILL_WIDTH), 3 * Constants.WINDOW_HEIGHT // 4 - PacaneleScreen.GAP_SIZE - PacaneleScreen.BILL_HEIGHT, PacaneleScreen.BILL_WIDTH, PacaneleScreen.BILL_HEIGHT)
-        box50Ron = pygame.Rect(PacaneleScreen.PREVIOUS_RESULTS_LEFT_MARGIN + 3 * (PacaneleScreen.GAP_SIZE + PacaneleScreen.BILL_WIDTH), 3 * Constants.WINDOW_HEIGHT // 4 - PacaneleScreen.GAP_SIZE - PacaneleScreen.BILL_HEIGHT, PacaneleScreen.BILL_WIDTH, PacaneleScreen.BILL_HEIGHT)
+        box1Ron = pygame.Rect(PacaneleScreen.BILL_LEFT_MARGIN, PacaneleScreen.BILL_TOP_MARGIN, PacaneleScreen.BILL_WIDTH, PacaneleScreen.BILL_HEIGHT)
+        box5Ron = pygame.Rect(PacaneleScreen.BILL_LEFT_MARGIN + PacaneleScreen.GAP_SIZE + PacaneleScreen.BILL_WIDTH, PacaneleScreen.BILL_TOP_MARGIN, PacaneleScreen.BILL_WIDTH, PacaneleScreen.BILL_HEIGHT)
+        box10Ron = pygame.Rect(PacaneleScreen.BILL_LEFT_MARGIN + 2 * (PacaneleScreen.GAP_SIZE + PacaneleScreen.BILL_WIDTH), PacaneleScreen.BILL_TOP_MARGIN, PacaneleScreen.BILL_WIDTH, PacaneleScreen.BILL_HEIGHT)
+        box50Ron = pygame.Rect(PacaneleScreen.BILL_LEFT_MARGIN + 3 * (PacaneleScreen.GAP_SIZE + PacaneleScreen.BILL_WIDTH), PacaneleScreen.BILL_TOP_MARGIN, PacaneleScreen.BILL_WIDTH, PacaneleScreen.BILL_HEIGHT)
         billList = [(box1Ron, 1), (box5Ron, 5), (box10Ron, 10), (box50Ron, 50)]
         
         freedomBox = pygame.Rect(PacaneleScreen.DRINK_IMAGE_LEFT_MARGIN, PacaneleScreen.DRINK_IMAGE_TOP_MARGIN, PacaneleScreen.DRINK_IMAGE_SIZE, PacaneleScreen.DRINK_IMAGE_SIZE)
         timisoreanaBox = pygame.Rect(Constants.WINDOW_WIDTH - PacaneleScreen.DRINK_IMAGE_LEFT_MARGIN - PacaneleScreen.DRINK_IMAGE_SIZE, PacaneleScreen.DRINK_IMAGE_TOP_MARGIN, PacaneleScreen.DRINK_IMAGE_SIZE, PacaneleScreen.DRINK_IMAGE_SIZE)
         drinkList = [(freedomBox, PacaneleScreen.FREEDOM_PRICE), (timisoreanaBox, PacaneleScreen.TIMISOREANA_PRICE)]
-        
-        self.setBackgroundImage()
-        self.__displayLastColors()
-        self.__displayContent(moneyLeft, currentBet)
-        pygame.display.update()
         
         while True:
             mouseClicked = False
@@ -163,6 +160,7 @@ class PacaneleScreen(Screen):
             
             for event in pygame.event.get():
                 if event.type == QUIT or (event.type == KEYUP and event.key == K_ESCAPE):
+                    moneyLeft += currentBet
                     return moneyLeft
                 elif event.type == MOUSEMOTION:
                     mouseX, mouseY = event.pos
@@ -209,14 +207,24 @@ class PacaneleScreen(Screen):
                         currentBet = 0.0
                         self.__resultScreen(False)
                     
-                self.setBackgroundImage()
-                self.__displayLastColors()
-                self.__displayContent(moneyLeft, currentBet)
-                pygame.display.update()
+                self.__updateSection(moneyLeft, currentBet)
     
     def displayContent(self, money):
         self.setBackgroundMusic()
         pygame.mouse.set_visible(True)
+        
+        self.setBackgroundImage()
+        self.__updateSection(money, 0) # we can use 0 here because the initial bet is always 0
+        self.__gameDisplay.blit(self.__aceOfHearts, (PacaneleScreen.PREVIOUS_RESULTS_LEFT_MARGIN, 3 * Constants.WINDOW_HEIGHT // 4))
+        self.__gameDisplay.blit(self.__aceOfSpades, (PacaneleScreen.PREVIOUS_RESULTS_LEFT_MARGIN + 3 * (PacaneleScreen.BOX_SIZE + PacaneleScreen.GAP_SIZE), 3 * Constants.WINDOW_HEIGHT // 4))
+        self.__gameDisplay.blit(self.__saveIcon, (PacaneleScreen.PREVIOUS_RESULTS_LEFT_MARGIN + 6 * (PacaneleScreen.BOX_SIZE + PacaneleScreen.GAP_SIZE), 3 * Constants.WINDOW_HEIGHT // 4))
+        self.__gameDisplay.blit(self.__1RonBill, (PacaneleScreen.PREVIOUS_RESULTS_LEFT_MARGIN, 3 * Constants.WINDOW_HEIGHT // 4 - PacaneleScreen.GAP_SIZE - PacaneleScreen.BILL_HEIGHT))
+        self.__gameDisplay.blit(self.__5RonBill, (PacaneleScreen.PREVIOUS_RESULTS_LEFT_MARGIN + PacaneleScreen.GAP_SIZE + PacaneleScreen.BILL_WIDTH, 3 * Constants.WINDOW_HEIGHT // 4 - PacaneleScreen.GAP_SIZE - PacaneleScreen.BILL_HEIGHT))
+        self.__gameDisplay.blit(self.__10RonBill, (PacaneleScreen.PREVIOUS_RESULTS_LEFT_MARGIN + 2 * (PacaneleScreen.GAP_SIZE + PacaneleScreen.BILL_WIDTH), 3 * Constants.WINDOW_HEIGHT // 4 - PacaneleScreen.GAP_SIZE - PacaneleScreen.BILL_HEIGHT))
+        self.__gameDisplay.blit(self.__50RonBill, (PacaneleScreen.PREVIOUS_RESULTS_LEFT_MARGIN + 3 * (PacaneleScreen.GAP_SIZE + PacaneleScreen.BILL_WIDTH), 3 * Constants.WINDOW_HEIGHT // 4 - PacaneleScreen.GAP_SIZE - PacaneleScreen.BILL_HEIGHT))
+        self.__gameDisplay.blit(self.__freedom, (PacaneleScreen.DRINK_IMAGE_LEFT_MARGIN, PacaneleScreen.DRINK_IMAGE_TOP_MARGIN))
+        self.__gameDisplay.blit(self.__timisoreana, (Constants.WINDOW_WIDTH - PacaneleScreen.DRINK_IMAGE_LEFT_MARGIN - PacaneleScreen.DRINK_IMAGE_SIZE, PacaneleScreen.DRINK_IMAGE_TOP_MARGIN))
+        pygame.display.update()
 
         functionResult = self.__redOrBlack(money)
         
