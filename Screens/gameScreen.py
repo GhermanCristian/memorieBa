@@ -19,7 +19,7 @@ class GameScreen(Screen):
     BOX_COLOR = Constants.WHITE
     GAP_SIZE = 10
     
-    GAME_DIFFICULTY = 1.0
+    GAME_DIFFICULTY = 1.0 #base value
     
     BASE_BOX_REVEAL_SPEED = 360 // Constants.FPS
     BOX_REVEAL_SPEED = BASE_BOX_REVEAL_SPEED
@@ -30,7 +30,7 @@ class GameScreen(Screen):
     INCREASE_MONEY_AMOUNT = BASE_INCREASE_MONEY_AMOUNT
     LEFT_MARGIN = int((Constants.WINDOW_WIDTH - (Board.BOARD_WIDTH * (BOX_SIZE + GAP_SIZE) - GAP_SIZE)) / 2)
     TOP_MARGIN = int((Constants.WINDOW_HEIGHT - (Board.BOARD_HEIGHT * (BOX_SIZE + GAP_SIZE) - GAP_SIZE)) / 2)
-    BASE_IMAGE_DISPLAY_TIME = 1000
+    BASE_IMAGE_DISPLAY_TIME = 750
     IMAGE_DISPLAY_TIME = BASE_IMAGE_DISPLAY_TIME
     
     TEXT_FONT = "lucidasans"
@@ -161,6 +161,15 @@ class GameScreen(Screen):
             
         return False
     
+    def __reshuffleHiddenTiles(self):
+        # no reshuffling in easy mode
+        if (GameScreen.GAME_DIFFICULTY == Constants.EASY_DIFFICULTY_MULTIPLIER):
+            return
+        
+        if self.__totalMoves % (int)(36 / GameScreen.GAME_DIFFICULTY) == 0:
+            print ("reshuffle at tot_mov = %d" % self.__totalMoves)
+            self.__board.reshuffleHiddenTiles()
+    
     def __showMouseCursor(self):
         self.__gameDisplay.blit(self.__mouseCursorImage, (self.__mouseX, self.__mouseY))
     
@@ -277,6 +286,8 @@ class GameScreen(Screen):
                             
                             nrMoves += 1
                             self.__totalMoves += 1
+                            
+                            self.__reshuffleHiddenTiles()
                             
                             if self.__imagesMatch(image1, image2):
                                 nrRevealed += 2

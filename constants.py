@@ -26,6 +26,12 @@ class Constants():
     LOW_VOLUME = 0.1
     VOLUME_INCREMENT = 0.01
     
+    ### DIFFICULTY ###
+    NUMBER_OF_DIFFICULTIES = 3
+    EASY_DIFFICULTY_MULTIPLIER = 1.0
+    MEDIUM_DIFFICULTY_MULTIPLIER = 1.5
+    HARD_DIFFICULTY_MULTIPLIER = 2.0
+    
     def __init__(self):
         pass
 

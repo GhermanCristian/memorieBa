@@ -61,7 +61,7 @@ class MainMenuScreen(Screen):
         playerName = ""
         totalTime = 0
         totalMoves = 0
-        difficulty = NameScreen.EASY_DIFFICULTY_MULTIPLIER #default value
+        difficulty = Constants.EASY_DIFFICULTY_MULTIPLIER #default value
         
         while True:
             self.__mouseClicked = False

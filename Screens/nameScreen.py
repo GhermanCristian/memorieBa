@@ -17,11 +17,6 @@ class NameScreen(Screen):
     BG_COLOR = Constants.NAVY_BLUE
     LIGHT_BG_COLOR = Constants.GRAY
     
-    NUMBER_OF_DIFFICULTIES = 3
-    EASY_DIFFICULTY_MULTIPLIER = 1.0
-    MEDIUM_DIFFICULTY_MULTIPLIER = 1.5
-    HARD_DIFFICULTY_MULTIPLIER = 2.0
-    
     DIFFICULTY_BUTTON_TOP_COORD = Constants.WINDOW_HEIGHT - 300
     DIFFICULTY_BUTTON_SIZE = 150
     DIFFICULTY_BUTTON_GAP_SIZE = 200
@@ -108,13 +103,13 @@ class NameScreen(Screen):
                     
             if mouseClicked == True:
                 if easyButton.collides(mouseX, mouseY):
-                    return NameScreen.EASY_DIFFICULTY_MULTIPLIER
+                    return Constants.EASY_DIFFICULTY_MULTIPLIER
                 
                 if mediumButton.collides(mouseX, mouseY):
-                    return NameScreen.MEDIUM_DIFFICULTY_MULTIPLIER
+                    return Constants.MEDIUM_DIFFICULTY_MULTIPLIER
                 
                 if hardButton.collides(mouseX, mouseY):
-                    return NameScreen.HARD_DIFFICULTY_MULTIPLIER
+                    return Constants.HARD_DIFFICULTY_MULTIPLIER
                 
     def displayContent(self):
         userName = self.__getPlayerName()
