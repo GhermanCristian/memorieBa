@@ -105,11 +105,13 @@ class MainMenuScreen(Screen):
                     else:
                         (totalTime, totalMoves) = programResult
                         self.__leaderboardScreen.updateLeaderboards(totalTime, totalMoves, playerName, difficulty)
-                        if self.__leaderboardScreen.displayContent() == Screen.QUIT_PROGRAM:
+                        programResult = self.__leaderboardScreen.displayContent()
+                        if programResult == Screen.QUIT_PROGRAM:
                             continue
                     
                 elif leaderboardButton.collides(self.__mouseX, self.__mouseY):
-                    if self.__leaderboardScreen.displayContent() == Screen.QUIT_PROGRAM:
+                    programResult = self.__leaderboardScreen.displayContent()
+                    if programResult == Screen.QUIT_PROGRAM:
                         continue
                 
 
