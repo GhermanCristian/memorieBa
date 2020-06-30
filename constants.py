@@ -11,6 +11,7 @@ class Constants():
     NAVY_BLUE = ( 60,  60, 100)
     AQUAMARINE_BLUE = (26, 44, 87)
     WHITE    = (255, 255, 255)
+    BLACK    = (  0,   0,   0)
     BLUE     = (  0,   0, 255)
     ORANGE   = (255, 128,   0)
     LIGHT_ORANGE = (255, 191, 15)

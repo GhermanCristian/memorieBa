@@ -294,7 +294,8 @@ class GameScreen(Screen):
                                 nrRevealed += 2
                                 self.__money += GameScreen.INCREASE_MONEY_AMOUNT
                                 self.__statsRepository.foundImage(image1.title)
-                                self.__statsRepository.foundImage(image2.title) # we put both pictures in here because we might have a special pair
+                                self.__statsRepository.foundImage(image2.title) 
+                                # we put both pictures in here because we might have a special pair
                                 # otherwise, "finding" the same image twice will not affect the achievement
                                 
                                 if nrRevealed == self.__board.height * self.__board.width:  

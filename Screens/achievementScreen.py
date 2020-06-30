@@ -29,6 +29,7 @@ class AchievementScreen(Screen):
     
     LIGHT_BG_COLOR = Constants.GRAY
     PROGRESS_BAR_WIDTH = 500
+    PROGRESS_BAR_TEXT_COLOR = Constants.BLACK
     
     def __init__(self, gameDisplay, musicPlayer, statsRepository):
         self.__gameDisplay = gameDisplay
@@ -60,7 +61,7 @@ class AchievementScreen(Screen):
         pygame.draw.rect(self.__gameDisplay, AchievementScreen.LIGHT_BG_COLOR, pygame.Rect(AchievementScreen.ACHIEVEMENT_TEXT_LEFT_COORD, AchievementScreen.ACHIEVEMENT_TEXT_TOP_COORD + (indexOnPage * 3 + 2) * AchievementScreen.TEXT_ROW_HEIGHT, AchievementScreen.PROGRESS_BAR_WIDTH, AchievementScreen.TEXT_ROW_HEIGHT))
         if achievement.completed != 0:
             pygame.draw.rect(self.__gameDisplay, AchievementScreen.TEXT_COLOR, pygame.Rect(AchievementScreen.ACHIEVEMENT_TEXT_LEFT_COORD, AchievementScreen.ACHIEVEMENT_TEXT_TOP_COORD + (indexOnPage * 3 + 2) * AchievementScreen.TEXT_ROW_HEIGHT, AchievementScreen.PROGRESS_BAR_WIDTH * achievement.completed // achievement.total, AchievementScreen.TEXT_ROW_HEIGHT))
-        Text("%d / %d" % (achievement.completed, achievement.total), AchievementScreen.TEXT_FONT, AchievementScreen.TEXT_FONT_SIZE, AchievementScreen.TEXT_COLOR).display(self.__gameDisplay, AchievementScreen.ACHIEVEMENT_TEXT_TOP_COORD + (indexOnPage * 3 + 2) * AchievementScreen.TEXT_ROW_HEIGHT, AchievementScreen.ACHIEVEMENT_TEXT_LEFT_COORD)
+        Text("%d / %d" % (achievement.completed, achievement.total), AchievementScreen.TEXT_FONT, AchievementScreen.TEXT_FONT_SIZE, AchievementScreen.PROGRESS_BAR_TEXT_COLOR).display(self.__gameDisplay, AchievementScreen.ACHIEVEMENT_TEXT_TOP_COORD + (indexOnPage * 3 + 2) * AchievementScreen.TEXT_ROW_HEIGHT, AchievementScreen.ACHIEVEMENT_TEXT_LEFT_COORD)
     
     def __displayAchievements(self):
         # this min can be removed when we'll have more than 1 page of achievements        
