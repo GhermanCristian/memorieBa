@@ -11,13 +11,13 @@ class LeaderboardScreen(Screen):
     TEXT_FONT_SIZE = 30
     TEXT_FONT_CHARACTER_WIDTH = 30
     TEXT_COLOR = Constants.PALE_GOLD
-    TEXT_LEFT_MARGIN = 35
+    TEXT_LEFT_MARGIN = 70
     TEXT_ROW_HEIGHT = 50
     
     BG_COLOR = Constants.AQUAMARINE_BLUE
     
     DIFFICULTY_TEXT_TOP_COORD = 80
-    DIFFICULTY_TEXT_MID_WIEGHT_COORD = Constants.WINDOW_WIDTH // 2
+    DIFFICULTY_TEXT_MID_WEIGHT_COORD = Constants.WINDOW_WIDTH // 2
     
     TITLE_TEXT_TOP_COORD = Constants.WINDOW_HEIGHT // 4 - 100
     TITLE_TEXT_SIZE = 50
@@ -60,16 +60,16 @@ class LeaderboardScreen(Screen):
             (self.__fastLeaderHard, self.__smartLeaderHard, "HARD")
         ]
         
-        Text(leaderboardsByDifficulty[leaderboardDifficulty][2], LeaderboardScreen.TEXT_FONT, LeaderboardScreen.TITLE_TEXT_SIZE, LeaderboardScreen.TEXT_COLOR).display(self.__gameDisplay, LeaderboardScreen.DIFFICULTY_TEXT_TOP_COORD, LeaderboardScreen.DIFFICULTY_TEXT_MID_WIEGHT_COORD - len(leaderboardsByDifficulty[leaderboardDifficulty][2]) * LeaderboardScreen.TEXT_FONT_CHARACTER_WIDTH / 2)
+        Text(leaderboardsByDifficulty[leaderboardDifficulty][2], LeaderboardScreen.TEXT_FONT, LeaderboardScreen.TITLE_TEXT_SIZE, LeaderboardScreen.TEXT_COLOR).display(self.__gameDisplay, LeaderboardScreen.DIFFICULTY_TEXT_TOP_COORD, LeaderboardScreen.DIFFICULTY_TEXT_MID_WEIGHT_COORD - len(leaderboardsByDifficulty[leaderboardDifficulty][2]) * LeaderboardScreen.TEXT_FONT_CHARACTER_WIDTH / 2)
         Text("rapidu", LeaderboardScreen.TEXT_FONT, LeaderboardScreen.TEXT_FONT_SIZE, LeaderboardScreen.TEXT_COLOR).display(self.__gameDisplay, LeaderboardScreen.TITLE_TEXT_TOP_COORD, Constants.WINDOW_WIDTH / 4 - 6 * 7)
         Text("desteptu", LeaderboardScreen.TEXT_FONT, LeaderboardScreen.TEXT_FONT_SIZE, LeaderboardScreen.TEXT_COLOR).display(self.__gameDisplay, LeaderboardScreen.TITLE_TEXT_TOP_COORD, 3 * Constants.WINDOW_WIDTH / 4 - 6 * 7)
         
         for i in range(Leaderboard.ENTRIES_COUNT):
-            Text("%02d. %s" % (i + 1, leaderboardsByDifficulty[leaderboardDifficulty][0].scoreList[i][0]), LeaderboardScreen.TEXT_FONT, LeaderboardScreen.TEXT_FONT_SIZE, LeaderboardScreen.TEXT_COLOR).display(self.__gameDisplay, (i + 2) * LeaderboardScreen.TEXT_ROW_HEIGHT + LeaderboardScreen.TITLE_TEXT_TOP_COORD, 2 * LeaderboardScreen.TEXT_LEFT_MARGIN)
-            Text(self.__convertTime(leaderboardsByDifficulty[leaderboardDifficulty][0].scoreList[i][1]), LeaderboardScreen.TEXT_FONT, LeaderboardScreen.TEXT_FONT_SIZE, LeaderboardScreen.TEXT_COLOR).display(self.__gameDisplay, (i + 2) * LeaderboardScreen.TEXT_ROW_HEIGHT + LeaderboardScreen.TITLE_TEXT_TOP_COORD, Constants.WINDOW_WIDTH / 2 - 6 * LeaderboardScreen.TEXT_LEFT_MARGIN)
+            Text("%02d. %s" % (i + 1, leaderboardsByDifficulty[leaderboardDifficulty][0].scoreList[i][0]), LeaderboardScreen.TEXT_FONT, LeaderboardScreen.TEXT_FONT_SIZE, LeaderboardScreen.TEXT_COLOR).display(self.__gameDisplay, (i + 2) * LeaderboardScreen.TEXT_ROW_HEIGHT + LeaderboardScreen.TITLE_TEXT_TOP_COORD, LeaderboardScreen.TEXT_LEFT_MARGIN)
+            Text(self.__convertTime(leaderboardsByDifficulty[leaderboardDifficulty][0].scoreList[i][1]), LeaderboardScreen.TEXT_FONT, LeaderboardScreen.TEXT_FONT_SIZE, LeaderboardScreen.TEXT_COLOR).display(self.__gameDisplay, (i + 2) * LeaderboardScreen.TEXT_ROW_HEIGHT + LeaderboardScreen.TITLE_TEXT_TOP_COORD, Constants.WINDOW_WIDTH / 2 - 3 * LeaderboardScreen.TEXT_LEFT_MARGIN)
 
-            Text("%02d. %s" % (i + 1, leaderboardsByDifficulty[leaderboardDifficulty][1].scoreList[i][0]), LeaderboardScreen.TEXT_FONT, LeaderboardScreen.TEXT_FONT_SIZE, LeaderboardScreen.TEXT_COLOR).display(self.__gameDisplay, (i + 2) * LeaderboardScreen.TEXT_ROW_HEIGHT + LeaderboardScreen.TITLE_TEXT_TOP_COORD, Constants.WINDOW_WIDTH / 2 + 2 * LeaderboardScreen.TEXT_LEFT_MARGIN)
-            Text("%d moves" % (leaderboardsByDifficulty[leaderboardDifficulty][1].scoreList[i][1]), LeaderboardScreen.TEXT_FONT, LeaderboardScreen.TEXT_FONT_SIZE, LeaderboardScreen.TEXT_COLOR).display(self.__gameDisplay, (i + 2) * LeaderboardScreen.TEXT_ROW_HEIGHT + LeaderboardScreen.TITLE_TEXT_TOP_COORD, Constants.WINDOW_WIDTH - 6 * LeaderboardScreen.TEXT_LEFT_MARGIN)
+            Text("%02d. %s" % (i + 1, leaderboardsByDifficulty[leaderboardDifficulty][1].scoreList[i][0]), LeaderboardScreen.TEXT_FONT, LeaderboardScreen.TEXT_FONT_SIZE, LeaderboardScreen.TEXT_COLOR).display(self.__gameDisplay, (i + 2) * LeaderboardScreen.TEXT_ROW_HEIGHT + LeaderboardScreen.TITLE_TEXT_TOP_COORD, Constants.WINDOW_WIDTH / 2 + LeaderboardScreen.TEXT_LEFT_MARGIN)
+            Text("%d moves" % (leaderboardsByDifficulty[leaderboardDifficulty][1].scoreList[i][1]), LeaderboardScreen.TEXT_FONT, LeaderboardScreen.TEXT_FONT_SIZE, LeaderboardScreen.TEXT_COLOR).display(self.__gameDisplay, (i + 2) * LeaderboardScreen.TEXT_ROW_HEIGHT + LeaderboardScreen.TITLE_TEXT_TOP_COORD, Constants.WINDOW_WIDTH - 3 * LeaderboardScreen.TEXT_LEFT_MARGIN)
         
     
     def __updateLeaderboard(self, result, leaderboard, playerName):

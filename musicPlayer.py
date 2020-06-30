@@ -83,7 +83,6 @@ class MusicPlayer():
         nextRadioStationText = Text("R+", MusicPlayer.TEXT_FONT, MusicPlayer.TEXT_FONT_SIZE, MusicPlayer.TEXT_COLOR)
         self.__nextRadioStationButton = Button(MusicPlayer.CHANGE_RADIO_STATION_TOP, MusicPlayer.NEXT_RADIO_STATION_LEFT, MusicPlayer.CHANGE_RADIO_STATION_WIDTH, MusicPlayer.CHANGE_RADIO_STATION_HEIGHT, MusicPlayer.MUSIC_PLAYER_BUTTON_COLOR, nextRadioStationText)
         self.__volumeBarButton = Button(MusicPlayer.VOLUME_BAR_TOP, MusicPlayer.VOLUME_BAR_LEFT, MusicPlayer.VOLUME_BAR_WIDTH, MusicPlayer.VOLUME_BAR_HEIGHT, MusicPlayer.MUSIC_PLAYER_BUTTON_COLOR, None)
-        self.__currentVolumeBarButton = Button(MusicPlayer.VOLUME_BAR_TOP, MusicPlayer.VOLUME_BAR_LEFT, self.__musicVolume * MusicPlayer.VOLUME_BAR_WIDTH, MusicPlayer.VOLUME_BAR_HEIGHT, MusicPlayer.MUSIC_PLAYER_BUTTON_COLOR, None)
     
     def __loadSpecialImage(self, imageTitle):
         currentImage = os.path.join(os.getcwd(), "Images")
@@ -98,7 +97,8 @@ class MusicPlayer():
         self.__pauseSongButton.display(self.__gameDisplay)
         self.__nextSongButton.display(self.__gameDisplay)
         self.__volumeBarButton.display(self.__gameDisplay)
-        Button(MusicPlayer.VOLUME_BAR_TOP, MusicPlayer.VOLUME_BAR_LEFT, self.__musicVolume * MusicPlayer.VOLUME_BAR_WIDTH, MusicPlayer.VOLUME_BAR_HEIGHT, MusicPlayer.TEXT_COLOR, None).display(self.__gameDisplay)
+        if self.__musicVolume != 0:
+            Button(MusicPlayer.VOLUME_BAR_TOP, MusicPlayer.VOLUME_BAR_LEFT, self.__musicVolume * MusicPlayer.VOLUME_BAR_WIDTH, MusicPlayer.VOLUME_BAR_HEIGHT, MusicPlayer.TEXT_COLOR, None).display(self.__gameDisplay)
     
     def nextSong(self):
         self.__radioStationList[self.__currentPlaylistIndex][0].nextSong(self.__musicVolume)

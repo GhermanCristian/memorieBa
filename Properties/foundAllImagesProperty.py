@@ -11,15 +11,16 @@ class FoundAllImagesProperty:
 
     def __initEmpty(self):
         for file in os.listdir(self.__imageFolder):
-            if os.path.isdir(os.path.join(self.__path, file)):
+            if os.path.isdir(os.path.join(self.__imageFolder, file)):
                 continue
             currentImageTitle = file[:-5].upper() + "_" + file[-5] #POZA_1
             self.__imagesDict[currentImageTitle] = False
+            
         self.__savePickle()
 
     def __savePickle(self):
-        file = open(self.__filePath, "wb")
-        pickle.dump(self.scoreList, file)
+        file = open(self.__picklePath, "wb")
+        pickle.dump(self.__imagesDict, file)
         file.close()
 
     def __loadPickle(self):
