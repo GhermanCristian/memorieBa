@@ -113,6 +113,12 @@ class MainMenuScreen(Screen):
                     programResult = self.__leaderboardScreen.displayContent()
                     if programResult == Screen.QUIT_PROGRAM:
                         continue
+                    
+                elif achievementButton.collides(self.__mouseX, self.__mouseY):
+                    print ("achi")
+                    
+                elif statisticsButton.collides(self.__mouseX, self.__mouseY):
+                    print ("stats")
                 
 
 
