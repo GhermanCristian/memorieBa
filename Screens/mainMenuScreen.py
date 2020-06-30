@@ -101,7 +101,7 @@ class MainMenuScreen(Screen):
                     else:
                         (playerName, difficulty) = programResult
                     
-                    gameScreen = GameScreen(self.__gameDisplay, self.__musicPlayer)
+                    gameScreen = GameScreen(self.__gameDisplay, self.__musicPlayer, self.__statsRepository)
                     gameScreen.setGameDifficulty(difficulty)
                     programResult = gameScreen.displayContent()
                     if programResult[0] == Screen.QUIT_PROGRAM:

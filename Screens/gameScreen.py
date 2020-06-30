@@ -57,9 +57,10 @@ class GameScreen(Screen):
     BG_COLOR = Constants.NAVY_BLUE
     LIGHT_BG_COLOR = Constants.GRAY
     
-    def __init__(self, gameDisplay, musicPlayer):
+    def __init__(self, gameDisplay, musicPlayer, statsRepository):
         self.__gameDisplay = gameDisplay
         self.__musicPlayer = musicPlayer
+        self.__statsRepository = statsRepository
         
         self.__board = Board()
         self.__clock = pygame.time.Clock()
@@ -292,6 +293,9 @@ class GameScreen(Screen):
                             if self.__imagesMatch(image1, image2):
                                 nrRevealed += 2
                                 self.__money += GameScreen.INCREASE_MONEY_AMOUNT
+                                self.__statsRepository.foundImage(image1.title)
+                                self.__statsRepository.foundImage(image2.title) # we put both pictures in here because we might have a special pair
+                                # otherwise, "finding" the same image twice will not affect the achievement
                                 
                                 if nrRevealed == self.__board.height * self.__board.width:  
                                 #if nrRevealed == 2: 

@@ -1,13 +1,15 @@
-
 class Achievement:
-    def __init__(self, title, isSecret, description, soundCue, prop):
+    TRIGGER_FOUND_ALL_IMAGES = "foundAllImages"
+    
+    def __init__(self, title, isSecret, description, soundCue, prop, trigger):
         self.__title = title
         self.__isSecret = isSecret
         self.__description = description
         self.__soundCue = soundCue # the path of the sound cue, the one from gameImage
-        self.__property = prop
+        self.__prop = prop # property, but I cannot use that word because it's reserved
+        self.__trigger = trigger # the function that will trigger an update in the property
         
-        self.__completed = prop.getCompleted() #these 2 are 0 by default; when they are loaded from the achievement file, they will be set to sth else
+        self.__completed = prop.getCompleted()
         self.__total = prop.getTotal()
         
     def setCompleted(self, newCompleted):
@@ -22,11 +24,11 @@ class Achievement:
     
     @property
     def completed(self):
-        return self.__completed
+        return self.__prop.getCompleted()
     
     @property
     def total(self):
-        return self.__total    
+        return self.__prop.getTotal()   
         
     @property
     def description(self):
@@ -35,5 +37,9 @@ class Achievement:
         return self.__description
     
     @property
-    def property(self):
-        return self.__property
+    def prop(self):
+        return self.__prop
+    
+    @property
+    def trigger(self):
+        return self.__trigger

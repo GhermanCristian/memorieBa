@@ -43,8 +43,11 @@ class FoundAllImagesProperty:
         return len(self.__imagesDict)
 
     def checkCompletion(self):
+        print ("check completion: %d / %d" % (self.getCompleted(), self.getTotal()))
         return self.getCompleted() == self.getTotal()
 
     def foundImage(self, imageTitle):
         self.__imagesDict[imageTitle] = True
         self.__savePickle()
+        
+

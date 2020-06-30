@@ -2,6 +2,7 @@ import pickle
 from achievement import Achievement
 from Properties.foundAllImagesProperty import FoundAllImagesProperty
 import os
+import achievement
 
 class StatsRepository:
     IMAGE_FOLDER_PATH = "Images"
@@ -31,7 +32,7 @@ class StatsRepository:
     
     def __initEmptyAchievementList(self):
         foundAllImagesProperty = FoundAllImagesProperty(self.__foundAllImagesPath, self.__imageFolderPath)
-        foundAllImagesAchievement = Achievement("Pe toate ma ?", False, "Find all the images", None, foundAllImagesProperty)
+        foundAllImagesAchievement = Achievement("Pe toate ma ?", False, "Find all the images", None, foundAllImagesProperty, Achievement.TRIGGER_FOUND_ALL_IMAGES)
         self.achievementList.append(foundAllImagesAchievement)
         
         self.__saveAchievements()
@@ -44,3 +45,18 @@ class StatsRepository:
             
         except Exception:
             self.__initEmptyAchievementList()
+            
+    def foundImage(self, imageTitle):
+        #this can probably be generalized
+        completedAchievements = []
+        for achievement in self.achievementList:
+            if achievement.trigger == Achievement.TRIGGER_FOUND_ALL_IMAGES:
+                achievement.prop.foundImage(imageTitle)
+                if achievement.prop.checkCompletion():
+                    completedAchievements.append(achievement)
+        self.__saveAchievements()
+        return completedAchievements
+    
+    
+    
+    
