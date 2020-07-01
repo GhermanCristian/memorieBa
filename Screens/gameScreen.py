@@ -57,6 +57,8 @@ class GameScreen(Screen):
     BG_COLOR = Constants.NAVY_BLUE
     LIGHT_BG_COLOR = Constants.GRAY
     
+    COMPLETED_ACHIEVEMENT_DISPLAY_TIME = 500
+    
     def __init__(self, gameDisplay, musicPlayer, statsRepository):
         self.__gameDisplay = gameDisplay
         self.__musicPlayer = musicPlayer
@@ -168,8 +170,33 @@ class GameScreen(Screen):
             return
         
         if self.__totalMoves % (int)(36 / GameScreen.GAME_DIFFICULTY) == 0:
-            print ("reshuffle at tot_mov = %d" % self.__totalMoves)
             self.__board.reshuffleHiddenTiles()
+    
+    def __displayCompletedAchievement(self, achievement):
+        section = pygame.Rect(GameScreen.LEFT_MARGIN, Constants.WINDOW_HEIGHT - GameScreen.TEXT_ROW_HEIGHT - GameScreen.TEXT_TOP_MARGIN, Constants.WINDOW_WIDTH - 2 * GameScreen.LEFT_MARGIN, GameScreen.TEXT_ROW_HEIGHT + GameScreen.TEXT_TOP_MARGIN)
+        pygame.draw.rect(self.__gameDisplay, GameScreen.BG_COLOR, section)
+        Text("Achievement unlocked: %s" % achievement.title, GameScreen.TEXT_FONT, GameScreen.TEXT_FONT_SIZE, GameScreen.TEXT_COLOR).display(self.__gameDisplay, Constants.WINDOW_HEIGHT - GameScreen.TEXT_ROW_HEIGHT - GameScreen.TEXT_TOP_MARGIN , GameScreen.LEFT_MARGIN)
+        pygame.display.update(section)
+        pygame.time.delay(GameScreen.COMPLETED_ACHIEVEMENT_DISPLAY_TIME)
+        pygame.draw.rect(self.__gameDisplay, GameScreen.BG_COLOR, section) # clear the text
+    
+    def __processAchievement(self, achievementCheckFunction, *arguments):
+        numberOfArguments = {self.__statsRepository.foundImage : 1}
+        
+        try:
+            currentNumberOfArguments = numberOfArguments[achievementCheckFunction]
+            
+            completedAchievements = []
+            if currentNumberOfArguments == 1: # I don't think this will ever be 0
+                completedAchievements = achievementCheckFunction(arguments[0])
+            elif currentNumberOfArguments == 2:
+                completedAchievements = achievementCheckFunction(arguments[0], arguments[1])
+
+            for achievement in completedAchievements:
+                self.__displayCompletedAchievement(achievement)
+                
+        except Exception:
+            pass
     
     def __showMouseCursor(self):
         self.__gameDisplay.blit(self.__mouseCursorImage, (self.__mouseX, self.__mouseY))
@@ -293,8 +320,8 @@ class GameScreen(Screen):
                             if self.__imagesMatch(image1, image2):
                                 nrRevealed += 2
                                 self.__money += GameScreen.INCREASE_MONEY_AMOUNT
-                                self.__statsRepository.foundImage(image1.title)
-                                self.__statsRepository.foundImage(image2.title) 
+                                self.__processAchievement(self.__statsRepository.foundImage, image1.title)
+                                self.__processAchievement(self.__statsRepository.foundImage, image2.title)
                                 # we put both pictures in here because we might have a special pair
                                 # otherwise, "finding" the same image twice will not affect the achievement
                                 

@@ -23,6 +23,10 @@ class Achievement:
         return self.__title
     
     @property
+    def isSecret(self):
+        return self.__isSecret
+    
+    @property
     def completed(self):
         return self.__prop.getCompleted()
     
