@@ -4,6 +4,7 @@ import pygame
 from pygame.constants import QUIT, KEYUP, K_ESCAPE, K_RIGHT, MOUSEMOTION, MOUSEBUTTONUP
 from text import Text
 from button import Button
+from math import ceil
 
 class AchievementScreen(Screen):
     TEXT_FONT = "candara"
@@ -42,7 +43,7 @@ class AchievementScreen(Screen):
         self.__achievementList = self.__statsRepository.achievementList
         
         self.__page = 0
-        self.__totalPages = len(self.__statsRepository.achievementList) // AchievementScreen.ELEMENTS_PER_PAGE + 1
+        self.__totalPages = (len(self.__achievementList) - 1) // AchievementScreen.ELEMENTS_PER_PAGE + 1
         
     def setBackgroundImage(self):
         self.__gameDisplay.fill(AchievementScreen.BG_COLOR)
@@ -71,7 +72,7 @@ class AchievementScreen(Screen):
             pygame.draw.rect(self.__gameDisplay, AchievementScreen.PROGRESS_BAR_COMPLETED_COLOR, pygame.Rect(AchievementScreen.ACHIEVEMENT_TEXT_LEFT_COORD, AchievementScreen.ACHIEVEMENT_TEXT_TOP_COORD + (indexOnPage * 3 + 2) * AchievementScreen.TEXT_ROW_HEIGHT + indexOnPage * AchievementScreen.GAP_SIZE, AchievementScreen.PROGRESS_BAR_WIDTH, AchievementScreen.TEXT_ROW_HEIGHT))
             Text("bravo tata, mare pizdar", AchievementScreen.TEXT_FONT, AchievementScreen.TEXT_FONT_SIZE, AchievementScreen.TEXT_COLOR).display(self.__gameDisplay, AchievementScreen.ACHIEVEMENT_TEXT_TOP_COORD + (indexOnPage * 3 + 2) * AchievementScreen.TEXT_ROW_HEIGHT + indexOnPage * AchievementScreen.GAP_SIZE, AchievementScreen.ACHIEVEMENT_TEXT_LEFT_COORD + AchievementScreen.PROGRESS_BAR_WIDTH + AchievementScreen.GAP_SIZE)
         
-        if achievement.isSecret == False:
+        if achievement.isSecret == False or (achievement.prop.checkCompletion() == True and achievement.isSecret == True):
             Text("%d / %d" % (achievement.completed, achievement.total), AchievementScreen.TEXT_FONT, AchievementScreen.TEXT_FONT_SIZE, AchievementScreen.PROGRESS_BAR_TEXT_COLOR).display(self.__gameDisplay, AchievementScreen.ACHIEVEMENT_TEXT_TOP_COORD + (indexOnPage * 3 + 2) * AchievementScreen.TEXT_ROW_HEIGHT + indexOnPage * AchievementScreen.GAP_SIZE, AchievementScreen.ACHIEVEMENT_TEXT_LEFT_COORD)
         else:
             Text("???", AchievementScreen.TEXT_FONT, AchievementScreen.TEXT_FONT_SIZE, AchievementScreen.PROGRESS_BAR_TEXT_COLOR).display(self.__gameDisplay, AchievementScreen.ACHIEVEMENT_TEXT_TOP_COORD + (indexOnPage * 3 + 2) * AchievementScreen.TEXT_ROW_HEIGHT + indexOnPage * AchievementScreen.GAP_SIZE, AchievementScreen.ACHIEVEMENT_TEXT_LEFT_COORD)

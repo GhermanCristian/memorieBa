@@ -57,7 +57,7 @@ class GameScreen(Screen):
     BG_COLOR = Constants.NAVY_BLUE
     LIGHT_BG_COLOR = Constants.GRAY
     
-    COMPLETED_ACHIEVEMENT_DISPLAY_TIME = 500
+    COMPLETED_ACHIEVEMENT_DISPLAY_TIME = BASE_IMAGE_DISPLAY_TIME
     
     def __init__(self, gameDisplay, musicPlayer, statsRepository):
         self.__gameDisplay = gameDisplay
