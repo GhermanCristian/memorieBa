@@ -1,21 +1,22 @@
 import pickle
 from achievement import Achievement
 from Properties.foundAllImagesProperty import FoundAllImagesProperty
+from Properties.foundAllSoundCuesProperty import FoundAllSoundCuesProperty
 import os
 import achievement
 
 class StatsRepository:
     IMAGE_FOLDER_PATH = "Images"
+    SOUND_CUE_FOLDER_NAME = "Music"
     
     ACHIEVEMENT_FILE_PATH = "achievements.pickle"
-    FOUND_ALL_IMAGES_PATH = "foundAllImages.pickle"
     
     def __init__(self):
         self.achievementList = []
         
-        self.__imageFolderPath = os.path.join(os.getcwd(), "Images")
+        self.__imageFolderPath = os.path.join(os.getcwd(), StatsRepository.IMAGE_FOLDER_PATH)
+        self.__soundCueFolderPath = os.path.join(os.getcwd(), StatsRepository.SOUND_CUE_FOLDER_NAME)
         self.__achievementPath = self.__determineFilePath(StatsRepository.ACHIEVEMENT_FILE_PATH)
-        self.__foundAllImagesPath = self.__determineFilePath(StatsRepository.FOUND_ALL_IMAGES_PATH)
         
         self.__loadAchievements()
     
@@ -31,9 +32,13 @@ class StatsRepository:
         file.close()
     
     def __initEmptyAchievementList(self):
-        foundAllImagesProperty = FoundAllImagesProperty(self.__foundAllImagesPath, self.__imageFolderPath)
+        foundAllImagesProperty = FoundAllImagesProperty(self.__imageFolderPath)
         foundAllImagesAchievement = Achievement("Pe toate ma ?", False, "Find all the images", None, foundAllImagesProperty, Achievement.TRIGGER_FOUND_ALL_IMAGES)
         self.achievementList.append(foundAllImagesAchievement)
+        
+        foundAllSoundCuesProperty = FoundAllSoundCuesProperty(self.__soundCueFolderPath)
+        foundAllSoundCuesAchievement = Achievement("Ce-o zis ala ba ?", False, "Find all the sound cues", None, foundAllSoundCuesProperty, Achievement.TRIGGER_FOUND_ALL_SOUND_CUES)
+        self.achievementList.append(foundAllSoundCuesAchievement)
         
         self.__saveAchievements()
     
@@ -48,10 +53,20 @@ class StatsRepository:
             
     def foundImage(self, imageTitle):
         #this can probably be generalized
-        completedAchievements = []
+        completedAchievements = [] # finding one image can complete more than 1 achievement at a time => use a list to store all of them
         for achievement in self.achievementList:
             if achievement.trigger == Achievement.TRIGGER_FOUND_ALL_IMAGES:
                 achievement.prop.foundImage(imageTitle)
+                if achievement.prop.checkCompletion():
+                    completedAchievements.append(achievement)
+        self.__saveAchievements()
+        return completedAchievements
+    
+    def foundSoundCue(self, soundCueTitle):
+        completedAchievements = []
+        for achievement in self.achievementList:
+            if achievement.trigger == Achievement.TRIGGER_FOUND_ALL_SOUND_CUES:
+                achievement.prop.foundSoundCue(soundCueTitle)
                 if achievement.prop.checkCompletion():
                     completedAchievements.append(achievement)
         self.__saveAchievements()

@@ -181,13 +181,18 @@ class GameScreen(Screen):
         pygame.draw.rect(self.__gameDisplay, GameScreen.BG_COLOR, section) # clear the text
     
     def __processAchievement(self, achievementCheckFunction, *arguments):
-        numberOfArguments = {self.__statsRepository.foundImage : 1}
+        numberOfArguments = {
+            self.__statsRepository.foundImage : 1,
+            self.__statsRepository.foundSoundCue : 1
+        }
         
         try:
             currentNumberOfArguments = numberOfArguments[achievementCheckFunction]
             
             completedAchievements = []
-            if currentNumberOfArguments == 1: # I don't think this will ever be 0
+            # I don't think this will ever be 0, so won't be checking for it
+            # also I hope there's a shorter method of doing this, sth more general without needing an if for each no of args
+            if currentNumberOfArguments == 1: 
                 completedAchievements = achievementCheckFunction(arguments[0])
             elif currentNumberOfArguments == 2:
                 completedAchievements = achievementCheckFunction(arguments[0], arguments[1])
@@ -324,6 +329,11 @@ class GameScreen(Screen):
                                 self.__processAchievement(self.__statsRepository.foundImage, image2.title)
                                 # we put both pictures in here because we might have a special pair
                                 # otherwise, "finding" the same image twice will not affect the achievement
+                                
+                                # we check this before the level-ending condition so that we don't lose any sound cues that might appear right at the end
+                                # (they won't be played, but will be taken into consideration for the achievements)
+                                if image1.soundCue != None:
+                                    self.__processAchievement(self.__statsRepository.foundSoundCue, image1.soundCue)
                                 
                                 if nrRevealed == self.__board.height * self.__board.width:  
                                 #if nrRevealed == 2: 

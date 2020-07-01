@@ -1,16 +1,16 @@
 import os
 
 class FoundAllImagesProperty:
-    def __init__(self, picklePath, imageFolder):
-        self.__picklePath = picklePath
+    def __init__(self, imageFolder):
         self.__imageFolder = imageFolder
         self.__imagesDict = {}
-        self.__initEmpty()
+        self.__initEmptyProperty()
 
-    def __initEmpty(self):
+    def __initEmptyProperty(self):
         for file in os.listdir(self.__imageFolder):
             if os.path.isdir(os.path.join(self.__imageFolder, file)):
                 continue
+            
             currentImageTitle = file[:-5].upper() + "_" + file[-5] #POZA_1
             self.__imagesDict[currentImageTitle] = False
 
