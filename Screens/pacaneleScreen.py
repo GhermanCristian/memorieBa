@@ -51,15 +51,18 @@ class PacaneleScreen(Screen):
     MONEY_TEXT_FONT_SIZE = 20
     MONEY_TEXT_COLOR = Constants.LIGHT_ORANGE
     MONEY_TEXT_ROW_HEIGHT = 50
+    MONEY_TEXT_TOP_MARGIN = 20
     
     BG_COLOR = Constants.NAVY_RED
     LIGHT_BG_COLOR = Constants.GRAY
     
     RESULT_DISPLAY_TIME = 1000
+    COMPLETED_ACHIEVEMENT_DISPLAY_TIME = 750
     
-    def __init__(self, gameDisplay, musicPlayer):
+    def __init__(self, gameDisplay, musicPlayer, statsRepository):
         self.__gameDisplay = gameDisplay
         self.__musicPlayer = musicPlayer
+        self.__statsRepository = statsRepository
         
         self.__font = pygame.font.SysFont(PacaneleScreen.MONEY_TEXT_FONT, PacaneleScreen.TEXT_FONT_SIZE, True, False)
         self.__aceOfSpades = self.__loadSpecialImage(PacaneleScreen.ACE_OF_SPADES_IMAGE)
@@ -104,8 +107,8 @@ class PacaneleScreen(Screen):
         currentBetText = Text("Current bet: %.2f lei" % currentBet, PacaneleScreen.MONEY_TEXT_FONT, PacaneleScreen.MONEY_TEXT_FONT_SIZE, PacaneleScreen.MONEY_TEXT_COLOR)
         Label(Constants.WINDOW_HEIGHT / 2, Constants.WINDOW_WIDTH / 2 - len(currentBetText.content) * PacaneleScreen.MONEY_TEXT_FONT_SIZE / 2, -1, PacaneleScreen.MONEY_TEXT_ROW_HEIGHT, PacaneleScreen.BG_COLOR, currentBetText).display(self.__gameDisplay)
         
-        Text("Cico", PacaneleScreen.MONEY_TEXT_FONT, PacaneleScreen.MONEY_TEXT_FONT_SIZE, PacaneleScreen.MONEY_TEXT_COLOR).display(self.__gameDisplay, PacaneleScreen.DRINK_IMAGE_TOP_MARGIN + PacaneleScreen.DRINK_IMAGE_SIZE + PacaneleScreen.GAP_SIZE, PacaneleScreen.DRINK_IMAGE_LEFT_MARGIN + PacaneleScreen.DRINK_IMAGE_SIZE // 2 - 30)
-        Text("%.0f lei" % PacaneleScreen.FREEDOM_PRICE, PacaneleScreen.MONEY_TEXT_FONT, PacaneleScreen.MONEY_TEXT_FONT_SIZE, PacaneleScreen.MONEY_TEXT_COLOR).display(self.__gameDisplay, PacaneleScreen.DRINK_IMAGE_TOP_MARGIN + PacaneleScreen.DRINK_IMAGE_SIZE + PacaneleScreen.MONEY_TEXT_ROW_HEIGHT, PacaneleScreen.DRINK_IMAGE_LEFT_MARGIN + PacaneleScreen.DRINK_IMAGE_SIZE // 2 - 30)
+        Text("Freedom", PacaneleScreen.MONEY_TEXT_FONT, PacaneleScreen.MONEY_TEXT_FONT_SIZE, PacaneleScreen.MONEY_TEXT_COLOR).display(self.__gameDisplay, PacaneleScreen.DRINK_IMAGE_TOP_MARGIN + PacaneleScreen.DRINK_IMAGE_SIZE + PacaneleScreen.GAP_SIZE, PacaneleScreen.DRINK_IMAGE_LEFT_MARGIN + PacaneleScreen.DRINK_IMAGE_SIZE // 2 - 50)
+        Text("%.0f lei" % PacaneleScreen.FREEDOM_PRICE, PacaneleScreen.MONEY_TEXT_FONT, PacaneleScreen.MONEY_TEXT_FONT_SIZE, PacaneleScreen.MONEY_TEXT_COLOR).display(self.__gameDisplay, PacaneleScreen.DRINK_IMAGE_TOP_MARGIN + PacaneleScreen.DRINK_IMAGE_SIZE + PacaneleScreen.MONEY_TEXT_ROW_HEIGHT, PacaneleScreen.DRINK_IMAGE_LEFT_MARGIN + PacaneleScreen.DRINK_IMAGE_SIZE // 2 - 50)
         Text("Timisoreana", PacaneleScreen.MONEY_TEXT_FONT, PacaneleScreen.MONEY_TEXT_FONT_SIZE, PacaneleScreen.MONEY_TEXT_COLOR).display(self.__gameDisplay, PacaneleScreen.DRINK_IMAGE_TOP_MARGIN + PacaneleScreen.DRINK_IMAGE_SIZE + PacaneleScreen.GAP_SIZE, Constants.WINDOW_WIDTH - PacaneleScreen.DRINK_IMAGE_LEFT_MARGIN - PacaneleScreen.DRINK_IMAGE_SIZE)
         Text("%.1f lei" % PacaneleScreen.TIMISOREANA_PRICE, PacaneleScreen.MONEY_TEXT_FONT, PacaneleScreen.MONEY_TEXT_FONT_SIZE, PacaneleScreen.MONEY_TEXT_COLOR).display(self.__gameDisplay, PacaneleScreen.DRINK_IMAGE_TOP_MARGIN + PacaneleScreen.DRINK_IMAGE_SIZE + PacaneleScreen.MONEY_TEXT_ROW_HEIGHT, Constants.WINDOW_WIDTH - PacaneleScreen.DRINK_IMAGE_LEFT_MARGIN - PacaneleScreen.DRINK_IMAGE_SIZE)
 
@@ -128,12 +131,44 @@ class PacaneleScreen(Screen):
         pygame.display.update()
         pygame.time.wait(PacaneleScreen.RESULT_DISPLAY_TIME)
     
-    def __updateSection(self, moneyLeft, currentBet):
+    def __updateResultTextSection(self, moneyLeft, currentBet):
         section = pygame.Rect(PacaneleScreen.PREVIOUS_RESULTS_LEFT_MARGIN, PacaneleScreen.PREVIOUS_RESULTS_TOP_MARGIN, Constants.WINDOW_WIDTH - 2 * PacaneleScreen.PREVIOUS_RESULTS_LEFT_MARGIN, PacaneleScreen.BILL_TOP_MARGIN - PacaneleScreen.PREVIOUS_RESULTS_TOP_MARGIN)
         pygame.draw.rect(self.__gameDisplay, PacaneleScreen.BG_COLOR, section) # reset the background image on this section
         self.__displayLastColors()
         self.__displayText(moneyLeft, currentBet)
         pygame.display.update(section)
+    
+    def __displayCompletedAchievement(self, achievement):
+        section = pygame.Rect(PacaneleScreen.PREVIOUS_RESULTS_LEFT_MARGIN, Constants.WINDOW_HEIGHT - PacaneleScreen.MONEY_TEXT_ROW_HEIGHT - PacaneleScreen.MONEY_TEXT_TOP_MARGIN, Constants.WINDOW_WIDTH - 2 * PacaneleScreen.PREVIOUS_RESULTS_LEFT_MARGIN, PacaneleScreen.MONEY_TEXT_ROW_HEIGHT + PacaneleScreen.MONEY_TEXT_TOP_MARGIN)
+        pygame.draw.rect(self.__gameDisplay, PacaneleScreen.BG_COLOR, section)
+        Text("Achievement unlocked: %s" % achievement.title, PacaneleScreen.MONEY_TEXT_FONT, PacaneleScreen.MONEY_TEXT_FONT_SIZE, PacaneleScreen.MONEY_TEXT_COLOR).display(self.__gameDisplay, Constants.WINDOW_HEIGHT - PacaneleScreen.MONEY_TEXT_ROW_HEIGHT - PacaneleScreen.MONEY_TEXT_TOP_MARGIN , PacaneleScreen.PREVIOUS_RESULTS_LEFT_MARGIN)
+        pygame.display.update(section)
+        pygame.time.delay(PacaneleScreen.COMPLETED_ACHIEVEMENT_DISPLAY_TIME)
+        pygame.draw.rect(self.__gameDisplay, PacaneleScreen.BG_COLOR, section) # clear the text
+        pygame.display.update(section)
+    
+    def __processAchievement(self, achievementCheckFunction, *arguments):
+        numberOfArguments = {
+            self.__statsRepository.boughtDrink : 1,
+        }
+        
+        try:
+            currentNumberOfArguments = numberOfArguments[achievementCheckFunction]
+            
+            completedAchievements = []
+            # I hope there's a shorter method of doing this, sth more general without needing an if for each no of args
+            if currentNumberOfArguments == 0: 
+                completedAchievements = achievementCheckFunction()
+            elif currentNumberOfArguments == 1: 
+                completedAchievements = achievementCheckFunction(arguments[0])
+            elif currentNumberOfArguments == 2:
+                completedAchievements = achievementCheckFunction(arguments[0], arguments[1])
+
+            for achievement in completedAchievements:
+                self.__displayCompletedAchievement(achievement)
+                
+        except Exception:
+            pass
     
     def __redOrBlack(self, moneyLeft):
         mouseX = mouseY = 0
@@ -152,7 +187,7 @@ class PacaneleScreen(Screen):
         
         freedomBox = pygame.Rect(PacaneleScreen.DRINK_IMAGE_LEFT_MARGIN, PacaneleScreen.DRINK_IMAGE_TOP_MARGIN, PacaneleScreen.DRINK_IMAGE_SIZE, PacaneleScreen.DRINK_IMAGE_SIZE)
         timisoreanaBox = pygame.Rect(Constants.WINDOW_WIDTH - PacaneleScreen.DRINK_IMAGE_LEFT_MARGIN - PacaneleScreen.DRINK_IMAGE_SIZE, PacaneleScreen.DRINK_IMAGE_TOP_MARGIN, PacaneleScreen.DRINK_IMAGE_SIZE, PacaneleScreen.DRINK_IMAGE_SIZE)
-        drinkList = [(freedomBox, PacaneleScreen.FREEDOM_PRICE), (timisoreanaBox, PacaneleScreen.TIMISOREANA_PRICE)]
+        drinkList = [(freedomBox, PacaneleScreen.FREEDOM_PRICE, "freedom"), (timisoreanaBox, PacaneleScreen.TIMISOREANA_PRICE, "timisoreana")]
         
         while True:
             mouseClicked = False
@@ -177,10 +212,11 @@ class PacaneleScreen(Screen):
                         alreadyClicked = True
                         break
                     
-                for drink in drinkList: #drink[0] = the rect object; drink[1] = the price of the drink
+                for drink in drinkList: #drink[0] = the rect object; drink[1] = the price of the drink; drink[2] = drink type
                     if drink[0].collidepoint(mouseX, mouseY) and drink[1] <= moneyLeft:
                         moneyLeft -= drink[1]
                         alreadyClicked = True
+                        self.__processAchievement(self.__statsRepository.boughtDrink, drink[2])
                         break
                 
                 if alreadyClicked == False:
@@ -207,14 +243,14 @@ class PacaneleScreen(Screen):
                         currentBet = 0.0
                         self.__resultScreen(False)
                     
-                self.__updateSection(moneyLeft, currentBet)
+                self.__updateResultTextSection(moneyLeft, currentBet)
     
     def displayContent(self, money):
         self.setBackgroundMusic()
         pygame.mouse.set_visible(True)
         
         self.setBackgroundImage()
-        self.__updateSection(money, 0) # we can use 0 here because the initial bet is always 0
+        self.__updateResultTextSection(money, 0) # we can use 0 here because the initial bet is always 0
         self.__gameDisplay.blit(self.__aceOfHearts, (PacaneleScreen.PREVIOUS_RESULTS_LEFT_MARGIN, 3 * Constants.WINDOW_HEIGHT // 4))
         self.__gameDisplay.blit(self.__aceOfSpades, (PacaneleScreen.PREVIOUS_RESULTS_LEFT_MARGIN + 3 * (PacaneleScreen.BOX_SIZE + PacaneleScreen.GAP_SIZE), 3 * Constants.WINDOW_HEIGHT // 4))
         self.__gameDisplay.blit(self.__saveIcon, (PacaneleScreen.PREVIOUS_RESULTS_LEFT_MARGIN + 6 * (PacaneleScreen.BOX_SIZE + PacaneleScreen.GAP_SIZE), 3 * Constants.WINDOW_HEIGHT // 4))

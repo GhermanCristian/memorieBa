@@ -66,7 +66,7 @@ class GameScreen(Screen):
         
         self.__board = Board()
         self.__clock = pygame.time.Clock()
-        self.__pacaneleScreen = PacaneleScreen(self.__gameDisplay, self.__musicPlayer)
+        self.__pacaneleScreen = PacaneleScreen(self.__gameDisplay, self.__musicPlayer, self.__statsRepository)
         
         self.__mouseX = 0
         self.__mouseY = 0
@@ -190,9 +190,10 @@ class GameScreen(Screen):
             currentNumberOfArguments = numberOfArguments[achievementCheckFunction]
             
             completedAchievements = []
-            # I don't think this will ever be 0, so won't be checking for it
-            # also I hope there's a shorter method of doing this, sth more general without needing an if for each no of args
-            if currentNumberOfArguments == 1: 
+            # I hope there's a shorter method of doing this, sth more general without needing an if for each no of args
+            if currentNumberOfArguments == 0: 
+                completedAchievements = achievementCheckFunction()
+            elif currentNumberOfArguments == 1: 
                 completedAchievements = achievementCheckFunction(arguments[0])
             elif currentNumberOfArguments == 2:
                 completedAchievements = achievementCheckFunction(arguments[0], arguments[1])

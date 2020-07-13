@@ -1,6 +1,7 @@
 class Achievement:
-    TRIGGER_FOUND_IMAGE = "foundAllImages"
-    TRIGGER_FOUND_SOUND_CUE = "foundAllSoundCues"
+    TRIGGER_FOUND_IMAGE = "foundImage"
+    TRIGGER_FOUND_SOUND_CUE = "foundSoundCue"
+    TRIGGER_BOUGHT_DRINK = "boughtDrink"
     
     # To add a new achievement to the game
     # 0. Delete the achievement file in Stats (a new one will be created next time the program is run)

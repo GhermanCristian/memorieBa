@@ -1,11 +1,13 @@
 import pickle
+import os
+import achievement
 from achievement import Achievement
 from Properties.foundAllImagesProperty import FoundAllImagesProperty
 from Properties.foundAllSoundCuesProperty import FoundAllSoundCuesProperty
 from Properties.foundCVProperty import FoundCVProperty
-import os
-import achievement
 from Properties.foundElodiaProperty import FoundElodiaProperty
+from Properties.boughtFreedomProperty import BoughtFreedomProperty
+from Properties.boughtTimisoreanaProperty import BoughtTimisoreanaProperty
 
 class StatsRepository:
     IMAGE_FOLDER_PATH = "Images"
@@ -50,6 +52,14 @@ class StatsRepository:
         foundCVAchievement = Achievement("Somn usor", True, "Find CV", None, foundCVProperty, Achievement.TRIGGER_FOUND_IMAGE)
         self.achievementList.append(foundCVAchievement)
         
+        boughtFreedomProperty = BoughtFreedomProperty()
+        boughtFreedomAchievement = Achievement("Bei azi, mori maine", False, "Drink Freedom", None, boughtFreedomProperty, Achievement.TRIGGER_BOUGHT_DRINK)
+        self.achievementList.append(boughtFreedomAchievement)
+        
+        boughtTimisoreanaProperty = BoughtTimisoreanaProperty()
+        boughtTimisoreanaAchievement = Achievement("Alcoolic", False, "Drink Timisoreana", None, boughtTimisoreanaProperty, Achievement.TRIGGER_BOUGHT_DRINK)
+        self.achievementList.append(boughtTimisoreanaAchievement)
+        
         self.__saveAchievements()
     
     def __loadAchievements(self):
@@ -92,6 +102,19 @@ class StatsRepository:
         self.__saveAchievements()
         return completedAchievements
     
-    
+    def boughtDrink(self, drinkType):
+        completedAchievements = []
+        for achievement in self.achievementList:
+            alreadyCompleted = achievement.prop.checkCompletion()
+            if alreadyCompleted == True:
+                continue
+            
+            if achievement.trigger == Achievement.TRIGGER_BOUGHT_DRINK:
+                achievement.prop.boughtDrink(drinkType)
+                if achievement.prop.checkCompletion():
+                    completedAchievements.append(achievement)
+                    
+        self.__saveAchievements()
+        return completedAchievements
     
     
