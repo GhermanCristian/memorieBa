@@ -183,7 +183,8 @@ class GameScreen(Screen):
     def __processAchievement(self, achievementCheckFunction, *arguments):
         numberOfArguments = {
             self.__statsRepository.foundImage : 1,
-            self.__statsRepository.foundSoundCue : 1
+            self.__statsRepository.foundSoundCue : 1,
+            self.__statsRepository.endLevel : 0
         }
         
         try:
@@ -338,6 +339,8 @@ class GameScreen(Screen):
                                 
                                 if nrRevealed == self.__board.height * self.__board.width:  
                                 #if nrRevealed == 2: 
+                                    if nrMoves == self.__board.height * self.__board.width // 2: # perfect level achievement
+                                        self.__processAchievement(self.__statsRepository.endLevel)
                                     return
 
                                 if image1.soundCue != None:

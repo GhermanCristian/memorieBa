@@ -8,6 +8,9 @@ from Properties.foundCVProperty import FoundCVProperty
 from Properties.foundElodiaProperty import FoundElodiaProperty
 from Properties.boughtFreedomProperty import BoughtFreedomProperty
 from Properties.boughtTimisoreanaProperty import BoughtTimisoreanaProperty
+from Properties.betVeteranProperty import BetVeteranProperty
+from Properties.largeWinProperty import LargeWinProperty
+from Properties.perfectLevelProperty import PerfectLevelProperty
 
 class StatsRepository:
     IMAGE_FOLDER_PATH = "Images"
@@ -60,6 +63,22 @@ class StatsRepository:
         boughtTimisoreanaAchievement = Achievement("Alcoolic", False, "Drink Timisoreana", None, boughtTimisoreanaProperty, Achievement.TRIGGER_BOUGHT_DRINK)
         self.achievementList.append(boughtTimisoreanaAchievement)
         
+        betVeteranProperty = BetVeteranProperty()
+        betVeteranAchievement = Achievement("Betting veteran", False, "Bet 100 times", None, betVeteranProperty, Achievement.TRIGGER_MADE_BET)
+        self.achievementList.append(betVeteranAchievement)
+        
+        largeWinProperty = LargeWinProperty()
+        largeWinAchievement = Achievement("High risk, high reward", False, "Win big", None, largeWinProperty, Achievement.TRIGGER_MADE_BET)
+        self.achievementList.append(largeWinAchievement)
+        
+        largeLossProperty = LargeWinProperty()
+        largeLossAchievement = Achievement("High risk, low reward", False, "Lose big", None, largeLossProperty, Achievement.TRIGGER_MADE_BET)
+        self.achievementList.append(largeLossAchievement)
+        
+        perfectLevelProperty = PerfectLevelProperty()
+        perfectLevelAchievement = Achievement("You did it. You crazy son of a bitch, you did it", False, "Perfect level", None, perfectLevelProperty, Achievement.TRIGGER_END_LEVEL)
+        self.achievementList.append(perfectLevelAchievement)
+        
         self.__saveAchievements()
     
     def __loadAchievements(self):
@@ -111,6 +130,36 @@ class StatsRepository:
             
             if achievement.trigger == Achievement.TRIGGER_BOUGHT_DRINK:
                 achievement.prop.boughtDrink(drinkType)
+                if achievement.prop.checkCompletion():
+                    completedAchievements.append(achievement)
+                    
+        self.__saveAchievements()
+        return completedAchievements
+    
+    def madeBet(self, winnings):
+        completedAchievements = []
+        for achievement in self.achievementList:
+            alreadyCompleted = achievement.prop.checkCompletion()
+            if alreadyCompleted == True:
+                continue
+            
+            if achievement.trigger == Achievement.TRIGGER_MADE_BET:
+                achievement.prop.madeBet(winnings)
+                if achievement.prop.checkCompletion():
+                    completedAchievements.append(achievement)
+                    
+        self.__saveAchievements()
+        return completedAchievements
+    
+    def endLevel(self):
+        completedAchievements = []
+        for achievement in self.achievementList:
+            alreadyCompleted = achievement.prop.checkCompletion()
+            if alreadyCompleted == True:
+                continue
+            
+            if achievement.trigger == Achievement.TRIGGER_END_LEVEL:
+                achievement.prop.endLevel()
                 if achievement.prop.checkCompletion():
                     completedAchievements.append(achievement)
                     

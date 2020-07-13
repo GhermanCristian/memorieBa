@@ -88,6 +88,8 @@ class AchievementScreen(Screen):
         nextButtonText = Text(">", AchievementScreen.TEXT_FONT, AchievementScreen.DIRECTION_BUTTON_TEXT_SIZE, AchievementScreen.TEXT_COLOR);
         nextButton = Button(AchievementScreen.DIRECTION_BUTTON_TOP_COORD, AchievementScreen.NEXT_BUTTON_LEFT_COORD, AchievementScreen.DIRECTION_BUTTON_SIZE, AchievementScreen.DIRECTION_BUTTON_SIZE, AchievementScreen.DIRECTION_BUTTON_COLOR, nextButtonText);
         
+        self.__page = 0
+        
         self.setBackgroundImage()
         self.__displayAchievements()
         previousButton.display(self.__gameDisplay)

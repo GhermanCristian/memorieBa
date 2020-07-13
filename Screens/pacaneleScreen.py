@@ -150,6 +150,7 @@ class PacaneleScreen(Screen):
     def __processAchievement(self, achievementCheckFunction, *arguments):
         numberOfArguments = {
             self.__statsRepository.boughtDrink : 1,
+            self.__statsRepository.madeBet : 1
         }
         
         try:
@@ -235,11 +236,13 @@ class PacaneleScreen(Screen):
                     else:
                         continue
                     
-                    if self.__checkResult(choice):
+                    if self.__checkResult(choice): # correct guess
                         currentBet *= 2.0
+                        self.__processAchievement(self.__statsRepository.madeBet, currentBet)
                         self.__resultScreen(True)
                         
                     else:
+                        self.__processAchievement(self.__statsRepository.madeBet, currentBet)
                         currentBet = 0.0
                         self.__resultScreen(False)
                     
