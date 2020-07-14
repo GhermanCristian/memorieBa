@@ -22,9 +22,9 @@ class FoundAmericandrimGuysProperty:
     def foundImage(self, imageTitle):
         if FoundAmericandrimGuysProperty.NADIA_IMAGE_TITLE == imageTitle:
             self.__foundNadia = True
-        elif FoundAmericandrimGuysProperty.TIRIAC_IMAGE_TITLE_IMAGE_TITLE == imageTitle:
+        elif FoundAmericandrimGuysProperty.TIRIAC_IMAGE_TITLE == imageTitle:
             self.__foundTiriac = True
-        elif FoundAmericandrimGuysProperty.CEAUSESCU_IMAGE_TITLE_IMAGE_TITLE == imageTitle:
+        elif FoundAmericandrimGuysProperty.CEAUSESCU_IMAGE_TITLE == imageTitle:
             self.__foundCeausescu = True
         elif FoundAmericandrimGuysProperty.HAGI_IMAGE_TITLE == imageTitle:
             self.__foundHagi = True

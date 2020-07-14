@@ -4,7 +4,7 @@ class GameImage():
     def __init__(self, title, fullImagePath, soundCue = None):
         self.__title = title # POZA_1
         self.__fullImagePath = fullImagePath #c ://files//poza_1.jpg
-        self.__soundCue = soundCue # Music//SOUND_1.ogg
+        self.__soundCue = soundCue # Music//Sounds//SOUND_1.ogg
         
     @property
     def title(self):

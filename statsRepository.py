@@ -15,7 +15,7 @@ from Properties.foundLaFamiliaProperty import FoundLaFamiliaProperty
 
 class StatsRepository:
     IMAGE_FOLDER_PATH = "Images"
-    SOUND_CUE_FOLDER_NAME = "Music"
+    SOUND_CUE_FOLDER_NAME = os.path.join("Music", "Sounds")
     
     ACHIEVEMENT_FILE_PATH = "achievements.pickle"
     
@@ -40,23 +40,19 @@ class StatsRepository:
         file.close()
     
     def __initEmptyAchievementList(self):        
-        auxAchievementList = [
-            Achievement("Pe toate ma ?", False, "Find all the images", None, FoundAllImagesProperty(self.__imageFolderPath), Achievement.TRIGGER_FOUND_IMAGE),
-            Achievement("Ce-o zis ala ba ?", False, "Find all the sound cues", None, FoundAllSoundCuesProperty(self.__soundCueFolderPath), Achievement.TRIGGER_FOUND_SOUND_CUE),
-            Achievement("Cioaca in libertate", True, "Find Elodia", None, FoundElodiaProperty(), Achievement.TRIGGER_FOUND_IMAGE),
-            Achievement("Somn usor", True, "Find CV", None, FoundCVProperty(), Achievement.TRIGGER_FOUND_IMAGE),
-            Achievement("Bei azi, mori maine", False, "Drink Freedom", None, BoughtFreedomProperty(), Achievement.TRIGGER_BOUGHT_DRINK),
-            Achievement("Alcoholic", False, "Drink Timisoreana", None, BoughtTimisoreanaProperty(), Achievement.TRIGGER_BOUGHT_DRINK),
-            Achievement("Betting veteran", False, "Bet 100 times", None, BetVeteranProperty(), Achievement.TRIGGER_MADE_BET),
-            Achievement("High risk, high reward", False, "Win big", None, LargeWinProperty(), Achievement.TRIGGER_MADE_BET),
-            Achievement("High risk, low reward", False, "Lose big", None, LargeLossProperty(), Achievement.TRIGGER_MADE_BET),
-            Achievement("You did it. You crazy son of a bitch, you did it", False, "Perfect level", None, PerfectLevelProperty(), Achievement.TRIGGER_END_LEVEL),
-            Achievement("Cam atat stiu restu", True, "Americandrim", None, FoundAmericandrimGuysProperty(), Achievement.TRIGGER_FOUND_IMAGE),
-            Achievement("Tot in familie", True, "Reunite La Familia", None, FoundLaFamiliaProperty(), Achievement.TRIGGER_FOUND_IMAGE),
-        ]
-        
         self.achievementList.clear()
-        self.achievementList.extend(auxAchievementList)
+        self.achievementList.append(Achievement("Pe toate ma ?", False, "Find all the images", None, FoundAllImagesProperty(self.__imageFolderPath), Achievement.TRIGGER_FOUND_IMAGE))
+        self.achievementList.append(Achievement("Ce-o zis ala ba ?", False, "Find all the sound cues", None, FoundAllSoundCuesProperty(self.__soundCueFolderPath), Achievement.TRIGGER_FOUND_SOUND_CUE))
+        self.achievementList.append(Achievement("Cioaca in libertate", True, "Find Elodia", None, FoundElodiaProperty(), Achievement.TRIGGER_FOUND_IMAGE))
+        self.achievementList.append(Achievement("Somn usor", True, "Find CV", None, FoundCVProperty(), Achievement.TRIGGER_FOUND_IMAGE))
+        self.achievementList.append(Achievement("Bei azi, mori maine", False, "Drink Freedom", None, BoughtFreedomProperty(), Achievement.TRIGGER_BOUGHT_DRINK))
+        self.achievementList.append(Achievement("Alcoholic", False, "Drink Timisoreana", None, BoughtTimisoreanaProperty(), Achievement.TRIGGER_BOUGHT_DRINK))
+        self.achievementList.append(Achievement("Betting veteran", False, "Bet 100 times", None, BetVeteranProperty(), Achievement.TRIGGER_MADE_BET))
+        self.achievementList.append(Achievement("High risk, high reward", False, "Win big", None, LargeWinProperty(), Achievement.TRIGGER_MADE_BET))
+        self.achievementList.append(Achievement("High risk, low reward", False, "Lose big", None, LargeLossProperty(), Achievement.TRIGGER_MADE_BET))
+        self.achievementList.append(Achievement("You did it. You crazy son of a bitch, you did it", False, "Perfect level", None, PerfectLevelProperty(), Achievement.TRIGGER_END_LEVEL))
+        self.achievementList.append(Achievement("Cam atat stiu restu", True, "Americandrim", None, FoundAmericandrimGuysProperty(), Achievement.TRIGGER_FOUND_IMAGE))
+        self.achievementList.append(Achievement("Tot in familie", True, "Reunite La Familia", None, FoundLaFamiliaProperty(), Achievement.TRIGGER_FOUND_IMAGE))
         
         self.__saveAchievements()
     

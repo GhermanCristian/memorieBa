@@ -13,6 +13,12 @@ class ImageList:
         
     def __loadImages(self):
         previousImage = None
+        
+        soundCueList = []
+        soundCuesFolder = os.path.join(os.getcwd(), "Music")
+        soundCuesFolder = os.path.join(soundCuesFolder, "Sounds")
+        for soundCue in os.listdir(soundCuesFolder):
+            soundCueList.append(soundCue)
                 
         for file in os.listdir(self.__path):
             if os.path.isdir(os.path.join(self.__path, file)):
@@ -22,10 +28,9 @@ class ImageList:
             currentImageFullPath = os.path.join(self.__path, file)
             currentImageSoundCue = None
             
-            soundCuesFolder = os.path.join(os.getcwd(), "Music")
-            for soundCue in os.listdir(soundCuesFolder):
+            for soundCue in soundCueList:
                 if currentImageTitle == soundCue[:-4]:
-                    currentImageSoundCue = os.path.join("Music", soundCue)
+                    currentImageSoundCue = os.path.join(soundCuesFolder, soundCue)
                     break
             
             currentImage = GameImage(currentImageTitle, currentImageFullPath, currentImageSoundCue)

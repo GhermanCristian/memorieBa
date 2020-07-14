@@ -198,12 +198,12 @@ class GameScreen(Screen):
                 completedAchievements = achievementCheckFunction(arguments[0])
             elif currentNumberOfArguments == 2:
                 completedAchievements = achievementCheckFunction(arguments[0], arguments[1])
-
+            
             for achievement in completedAchievements:
                 self.__displayCompletedAchievement(achievement)
                 
-        except Exception:
-            pass
+        except Exception as e:
+            print ("exception: " + str(e))
     
     def __showMouseCursor(self):
         self.__gameDisplay.blit(self.__mouseCursorImage, (self.__mouseX, self.__mouseY))

@@ -1,6 +1,4 @@
-import pygame
-import os
-from constants import Constants
+import pygame, os
 
 class SoundCue():
     SOUND_CUE_END_EVENT = pygame.USEREVENT + 1
@@ -15,12 +13,12 @@ class SoundCue():
         while pygame.mixer.Channel(channel).get_busy():
             channel += 1
         
+        currentVolume = pygame.mixer.music.get_volume()
+        pygame.mixer.music.set_volume(currentVolume / 3)
+        
         ch = pygame.mixer.Channel(channel)
         ch.play(cue)
         ch.set_endevent(SoundCue.SOUND_CUE_END_EVENT)
         
-        currentVolume = pygame.mixer.music.get_volume()
-        
         # we use this min in case the current volume is 0 (or lower then LOW_VOLUME)
-        pygame.mixer.music.set_volume(min(Constants.LOW_VOLUME, currentVolume))
         cue.set_volume(currentVolume)
