@@ -1,6 +1,4 @@
-import pickle
-import os
-import achievement
+import pickle, os, achievement
 from achievement import Achievement
 from Properties.foundAllImagesProperty import FoundAllImagesProperty
 from Properties.foundAllSoundCuesProperty import FoundAllSoundCuesProperty
@@ -11,6 +9,9 @@ from Properties.boughtTimisoreanaProperty import BoughtTimisoreanaProperty
 from Properties.betVeteranProperty import BetVeteranProperty
 from Properties.largeWinProperty import LargeWinProperty
 from Properties.perfectLevelProperty import PerfectLevelProperty
+from Properties.foundAmericandrimGuysProperty import FoundAmericandrimGuysProperty
+from Properties.largeLossProperty import LargeLossProperty
+from Properties.foundLaFamiliaProperty import FoundLaFamiliaProperty
 
 class StatsRepository:
     IMAGE_FOLDER_PATH = "Images"
@@ -38,46 +39,24 @@ class StatsRepository:
         pickle.dump(self.achievementList, file)
         file.close()
     
-    def __initEmptyAchievementList(self):
-        foundAllImagesProperty = FoundAllImagesProperty(self.__imageFolderPath)
-        foundAllImagesAchievement = Achievement("Pe toate ma ?", False, "Find all the images", None, foundAllImagesProperty, Achievement.TRIGGER_FOUND_IMAGE)
-        self.achievementList.append(foundAllImagesAchievement)
+    def __initEmptyAchievementList(self):        
+        auxAchievementList = [
+            Achievement("Pe toate ma ?", False, "Find all the images", None, FoundAllImagesProperty(self.__imageFolderPath), Achievement.TRIGGER_FOUND_IMAGE),
+            Achievement("Ce-o zis ala ba ?", False, "Find all the sound cues", None, FoundAllSoundCuesProperty(self.__soundCueFolderPath), Achievement.TRIGGER_FOUND_SOUND_CUE),
+            Achievement("Cioaca in libertate", True, "Find Elodia", None, FoundElodiaProperty(), Achievement.TRIGGER_FOUND_IMAGE),
+            Achievement("Somn usor", True, "Find CV", None, FoundCVProperty(), Achievement.TRIGGER_FOUND_IMAGE),
+            Achievement("Bei azi, mori maine", False, "Drink Freedom", None, BoughtFreedomProperty(), Achievement.TRIGGER_BOUGHT_DRINK),
+            Achievement("Alcoholic", False, "Drink Timisoreana", None, BoughtTimisoreanaProperty(), Achievement.TRIGGER_BOUGHT_DRINK),
+            Achievement("Betting veteran", False, "Bet 100 times", None, BetVeteranProperty(), Achievement.TRIGGER_MADE_BET),
+            Achievement("High risk, high reward", False, "Win big", None, LargeWinProperty(), Achievement.TRIGGER_MADE_BET),
+            Achievement("High risk, low reward", False, "Lose big", None, LargeLossProperty(), Achievement.TRIGGER_MADE_BET),
+            Achievement("You did it. You crazy son of a bitch, you did it", False, "Perfect level", None, PerfectLevelProperty(), Achievement.TRIGGER_END_LEVEL),
+            Achievement("Cam atat stiu restu", True, "Americandrim", None, FoundAmericandrimGuysProperty(), Achievement.TRIGGER_FOUND_IMAGE),
+            Achievement("Tot in familie", True, "Reunite La Familia", None, FoundLaFamiliaProperty(), Achievement.TRIGGER_FOUND_IMAGE),
+        ]
         
-        foundAllSoundCuesProperty = FoundAllSoundCuesProperty(self.__soundCueFolderPath)
-        foundAllSoundCuesAchievement = Achievement("Ce-o zis ala ba ?", False, "Find all the sound cues", None, foundAllSoundCuesProperty, Achievement.TRIGGER_FOUND_SOUND_CUE)
-        self.achievementList.append(foundAllSoundCuesAchievement)
-        
-        foundElodiaProperty = FoundElodiaProperty()
-        foundElodiaAchievement = Achievement("Cioaca in libertate", True, "Find Elodia", None, foundElodiaProperty, Achievement.TRIGGER_FOUND_IMAGE)
-        self.achievementList.append(foundElodiaAchievement)
-        
-        foundCVProperty = FoundCVProperty()
-        foundCVAchievement = Achievement("Somn usor", True, "Find CV", None, foundCVProperty, Achievement.TRIGGER_FOUND_IMAGE)
-        self.achievementList.append(foundCVAchievement)
-        
-        boughtFreedomProperty = BoughtFreedomProperty()
-        boughtFreedomAchievement = Achievement("Bei azi, mori maine", False, "Drink Freedom", None, boughtFreedomProperty, Achievement.TRIGGER_BOUGHT_DRINK)
-        self.achievementList.append(boughtFreedomAchievement)
-        
-        boughtTimisoreanaProperty = BoughtTimisoreanaProperty()
-        boughtTimisoreanaAchievement = Achievement("Alcoolic", False, "Drink Timisoreana", None, boughtTimisoreanaProperty, Achievement.TRIGGER_BOUGHT_DRINK)
-        self.achievementList.append(boughtTimisoreanaAchievement)
-        
-        betVeteranProperty = BetVeteranProperty()
-        betVeteranAchievement = Achievement("Betting veteran", False, "Bet 100 times", None, betVeteranProperty, Achievement.TRIGGER_MADE_BET)
-        self.achievementList.append(betVeteranAchievement)
-        
-        largeWinProperty = LargeWinProperty()
-        largeWinAchievement = Achievement("High risk, high reward", False, "Win big", None, largeWinProperty, Achievement.TRIGGER_MADE_BET)
-        self.achievementList.append(largeWinAchievement)
-        
-        largeLossProperty = LargeWinProperty()
-        largeLossAchievement = Achievement("High risk, low reward", False, "Lose big", None, largeLossProperty, Achievement.TRIGGER_MADE_BET)
-        self.achievementList.append(largeLossAchievement)
-        
-        perfectLevelProperty = PerfectLevelProperty()
-        perfectLevelAchievement = Achievement("You did it. You crazy son of a bitch, you did it", False, "Perfect level", None, perfectLevelProperty, Achievement.TRIGGER_END_LEVEL)
-        self.achievementList.append(perfectLevelAchievement)
+        self.achievementList.clear()
+        self.achievementList.extend(auxAchievementList)
         
         self.__saveAchievements()
     

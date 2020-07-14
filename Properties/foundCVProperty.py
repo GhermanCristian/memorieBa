@@ -1,4 +1,3 @@
-
 class FoundCVProperty:
     CV_IMAGE_TITLE = "CV_1"
     
