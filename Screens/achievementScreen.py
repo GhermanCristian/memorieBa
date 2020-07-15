@@ -4,6 +4,7 @@ import pygame
 from pygame.constants import QUIT, KEYUP, K_ESCAPE, K_RIGHT, MOUSEMOTION, MOUSEBUTTONUP
 from text import Text
 from button import Button
+from label import Label
 
 class AchievementScreen(Screen):
     TEXT_FONT = "candara"
@@ -32,6 +33,7 @@ class AchievementScreen(Screen):
     PROGRESS_BAR_TEXT_COLOR = Constants.BLACK
     PROGRESS_BAR_NOT_COMPLETED_COLOR = Constants.PALE_GOLD
     PROGRESS_BAR_COMPLETED_COLOR = Constants.NORMAL_GREEN
+    PROGRESS_BAR_LEFT_COORD = Constants.WINDOW_WIDTH // 2 - 2 * ACHIEVEMENT_TEXT_LEFT_COORD
     
     GAP_SIZE = 15
     
@@ -62,21 +64,24 @@ class AchievementScreen(Screen):
         achievement = self.__achievementList[index]
         pagePosition = index % AchievementScreen.ELEMENTS_PER_PAGE
         
-        Text(achievement.title, AchievementScreen.TEXT_FONT, AchievementScreen.TEXT_FONT_SIZE, AchievementScreen.TEXT_COLOR).display(self.__gameDisplay, AchievementScreen.ACHIEVEMENT_TEXT_TOP_COORD + (pagePosition * 3) * AchievementScreen.TEXT_ROW_HEIGHT + pagePosition * AchievementScreen.GAP_SIZE, AchievementScreen.ACHIEVEMENT_TEXT_LEFT_COORD)
+        Text(achievement.title, AchievementScreen.TEXT_FONT, AchievementScreen.TEXT_FONT_SIZE, AchievementScreen.TEXT_COLOR, True).display(self.__gameDisplay, AchievementScreen.ACHIEVEMENT_TEXT_TOP_COORD + (pagePosition * 3) * AchievementScreen.TEXT_ROW_HEIGHT + pagePosition * AchievementScreen.GAP_SIZE, AchievementScreen.ACHIEVEMENT_TEXT_LEFT_COORD)
         Text(achievement.description, AchievementScreen.TEXT_FONT, AchievementScreen.TEXT_FONT_SIZE, AchievementScreen.TEXT_COLOR).display(self.__gameDisplay, AchievementScreen.ACHIEVEMENT_TEXT_TOP_COORD + (pagePosition * 3 + 1) * AchievementScreen.TEXT_ROW_HEIGHT + pagePosition * AchievementScreen.GAP_SIZE, AchievementScreen.ACHIEVEMENT_TEXT_LEFT_COORD)
         
         if achievement.prop.checkCompletion() == False:
-            pygame.draw.rect(self.__gameDisplay, AchievementScreen.PROGRESS_BAR_BG_COLOR, pygame.Rect(AchievementScreen.ACHIEVEMENT_TEXT_LEFT_COORD, AchievementScreen.ACHIEVEMENT_TEXT_TOP_COORD + (pagePosition * 3 + 2) * AchievementScreen.TEXT_ROW_HEIGHT + pagePosition * AchievementScreen.GAP_SIZE, AchievementScreen.PROGRESS_BAR_WIDTH, AchievementScreen.TEXT_ROW_HEIGHT))
-            if achievement.isSecret == False and achievement.completed > 0: # for the secret achievements the progress is not displayed
-                pygame.draw.rect(self.__gameDisplay, AchievementScreen.PROGRESS_BAR_NOT_COMPLETED_COLOR, pygame.Rect(AchievementScreen.ACHIEVEMENT_TEXT_LEFT_COORD, AchievementScreen.ACHIEVEMENT_TEXT_TOP_COORD + (pagePosition * 3 + 2) * AchievementScreen.TEXT_ROW_HEIGHT + pagePosition * AchievementScreen.GAP_SIZE, AchievementScreen.PROGRESS_BAR_WIDTH * achievement.completed // achievement.total, AchievementScreen.TEXT_ROW_HEIGHT))
+            pygame.draw.rect(self.__gameDisplay, AchievementScreen.PROGRESS_BAR_BG_COLOR, pygame.Rect(AchievementScreen.PROGRESS_BAR_LEFT_COORD, AchievementScreen.ACHIEVEMENT_TEXT_TOP_COORD + (pagePosition * 3 + 1) * AchievementScreen.TEXT_ROW_HEIGHT + pagePosition * AchievementScreen.GAP_SIZE, AchievementScreen.PROGRESS_BAR_WIDTH, AchievementScreen.TEXT_ROW_HEIGHT))
+            if achievement.isSecret == False and achievement.completed > 0: # for the secret achievements, the progress is not displayed
+                pygame.draw.rect(self.__gameDisplay, AchievementScreen.PROGRESS_BAR_NOT_COMPLETED_COLOR, pygame.Rect(AchievementScreen.PROGRESS_BAR_LEFT_COORD, AchievementScreen.ACHIEVEMENT_TEXT_TOP_COORD + (pagePosition * 3 + 1) * AchievementScreen.TEXT_ROW_HEIGHT + pagePosition * AchievementScreen.GAP_SIZE, AchievementScreen.PROGRESS_BAR_WIDTH * achievement.completed // achievement.total, AchievementScreen.TEXT_ROW_HEIGHT))
         else:
-            pygame.draw.rect(self.__gameDisplay, AchievementScreen.PROGRESS_BAR_COMPLETED_COLOR, pygame.Rect(AchievementScreen.ACHIEVEMENT_TEXT_LEFT_COORD, AchievementScreen.ACHIEVEMENT_TEXT_TOP_COORD + (pagePosition * 3 + 2) * AchievementScreen.TEXT_ROW_HEIGHT + pagePosition * AchievementScreen.GAP_SIZE, AchievementScreen.PROGRESS_BAR_WIDTH, AchievementScreen.TEXT_ROW_HEIGHT))
-            Text("bravo tata, mare pizdar", AchievementScreen.TEXT_FONT, AchievementScreen.TEXT_FONT_SIZE, AchievementScreen.TEXT_COLOR).display(self.__gameDisplay, AchievementScreen.ACHIEVEMENT_TEXT_TOP_COORD + (pagePosition * 3 + 2) * AchievementScreen.TEXT_ROW_HEIGHT + pagePosition * AchievementScreen.GAP_SIZE, AchievementScreen.ACHIEVEMENT_TEXT_LEFT_COORD + AchievementScreen.PROGRESS_BAR_WIDTH + AchievementScreen.GAP_SIZE)
+            pygame.draw.rect(self.__gameDisplay, AchievementScreen.PROGRESS_BAR_COMPLETED_COLOR, pygame.Rect(AchievementScreen.PROGRESS_BAR_LEFT_COORD, AchievementScreen.ACHIEVEMENT_TEXT_TOP_COORD + (pagePosition * 3 + 1) * AchievementScreen.TEXT_ROW_HEIGHT + pagePosition * AchievementScreen.GAP_SIZE, AchievementScreen.PROGRESS_BAR_WIDTH, AchievementScreen.TEXT_ROW_HEIGHT))
+            # we add 10 to the top position so that the text is more to the center of the progress bar
+            Text("bravo tata, mare pizdar", AchievementScreen.TEXT_FONT, AchievementScreen.TEXT_FONT_SIZE, AchievementScreen.TEXT_COLOR).display(self.__gameDisplay, AchievementScreen.ACHIEVEMENT_TEXT_TOP_COORD + (pagePosition * 3 + 1) * AchievementScreen.TEXT_ROW_HEIGHT + pagePosition * AchievementScreen.GAP_SIZE + 10, AchievementScreen.PROGRESS_BAR_LEFT_COORD + AchievementScreen.PROGRESS_BAR_WIDTH + AchievementScreen.GAP_SIZE)
         
         if achievement.isSecret == False or (achievement.prop.checkCompletion() == True and achievement.isSecret == True):
-            Text("%d / %d" % (achievement.completed, achievement.total), AchievementScreen.TEXT_FONT, AchievementScreen.TEXT_FONT_SIZE, AchievementScreen.PROGRESS_BAR_TEXT_COLOR).display(self.__gameDisplay, AchievementScreen.ACHIEVEMENT_TEXT_TOP_COORD + (pagePosition * 3 + 2) * AchievementScreen.TEXT_ROW_HEIGHT + pagePosition * AchievementScreen.GAP_SIZE, AchievementScreen.ACHIEVEMENT_TEXT_LEFT_COORD)
+            text = Text("%d / %d" % (achievement.completed, achievement.total), AchievementScreen.TEXT_FONT, AchievementScreen.TEXT_FONT_SIZE, AchievementScreen.PROGRESS_BAR_TEXT_COLOR)
         else:
-            Text("???", AchievementScreen.TEXT_FONT, AchievementScreen.TEXT_FONT_SIZE, AchievementScreen.PROGRESS_BAR_TEXT_COLOR).display(self.__gameDisplay, AchievementScreen.ACHIEVEMENT_TEXT_TOP_COORD + (pagePosition * 3 + 2) * AchievementScreen.TEXT_ROW_HEIGHT + pagePosition * AchievementScreen.GAP_SIZE, AchievementScreen.ACHIEVEMENT_TEXT_LEFT_COORD)
+            text = Text("???", AchievementScreen.TEXT_FONT, AchievementScreen.TEXT_FONT_SIZE, AchievementScreen.PROGRESS_BAR_TEXT_COLOR)
+        # we add/ subtract 1 from the label top left coord/ height/ width so that the frame of the rect doesn't overlap with the progress bar (because the frame is 1 pixel thick)
+        Label(AchievementScreen.ACHIEVEMENT_TEXT_TOP_COORD + (pagePosition * 3 + 1) * AchievementScreen.TEXT_ROW_HEIGHT + pagePosition * AchievementScreen.GAP_SIZE - 1, AchievementScreen.PROGRESS_BAR_LEFT_COORD - 1, AchievementScreen.PROGRESS_BAR_WIDTH + 1, AchievementScreen.TEXT_ROW_HEIGHT + 1, AchievementScreen.BG_COLOR, text).display(self.__gameDisplay, 1)
     
     def __displayAchievements(self):      
         for index in range(self.__page * AchievementScreen.ELEMENTS_PER_PAGE, min((self.__page + 1) * AchievementScreen.ELEMENTS_PER_PAGE, len(self.__achievementList))):

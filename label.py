@@ -22,8 +22,12 @@ class Label():
         else:
             self._text = None
         
-    def display(self, gameDisplay):
-        pygame.draw.rect(gameDisplay, self._backgroundColor, (self._leftCoord, self._topCoord, self._width, self._height))
+    def display(self, gameDisplay, thickness = -1):
+        if thickness == -1:
+            pygame.draw.rect(gameDisplay, self._backgroundColor, (self._leftCoord, self._topCoord, self._width, self._height))
+        else:
+            pygame.draw.rect(gameDisplay, self._backgroundColor, (self._leftCoord, self._topCoord, self._width, self._height), thickness)
+             
         if self._text != None:
             textBlock = self._font.render(self._text, True, self._textColor)
             textRect = textBlock.get_rect()
