@@ -11,13 +11,22 @@ from Properties.largeWinProperty import LargeWinProperty
 from Properties.perfectLevelProperty import PerfectLevelProperty
 from Properties.foundAmericandrimGuysProperty import FoundAmericandrimGuysProperty
 from Properties.largeLossProperty import LargeLossProperty
-from Properties.foundLaFamiliaProperty import FoundLaFamiliaProperty
+from Properties.foundSpecialPairProperty import FoundSpecialPairProperty
 
 class StatsRepository:
     IMAGE_FOLDER_PATH = "Images"
     SOUND_CUE_FOLDER_NAME = os.path.join("Music", "Sounds")
     
     ACHIEVEMENT_FILE_PATH = "achievements.pickle"
+    
+    PUYA_IMAGE_TITLE = "SPECIAL_1_PUYALAFAMILIA_1"
+    SISU_IMAGE_TITLE = "SPECIAL_1_SISULAFAMILIA_1"
+    MARIN_IMAGE_TITLE = "SPECIAL_2_ANDREEAMARIN_1"
+    BANICA_IMAGE_TITLE = "SPECIAL_2_STEFANBANICA_1"
+    COSTI_IMAGE_TITLE = "SPECIAL_3_COSTIIONITA_1"
+    MINUNE_IMAGE_TITLE = "SPECIAL_3_ADIMINUNE_1"
+    JESUSMAN_IMAGE_TITLE = "SPECIAL_4_JESUSMAN_1"
+    SCOTTY_IMAGE_TITLE = "SPECIAL_4_SCOTTY_1"
     
     def __init__(self):
         self.achievementList = []
@@ -52,7 +61,10 @@ class StatsRepository:
         self.achievementList.append(Achievement("High risk, low reward", False, "Lose big", None, LargeLossProperty(), Achievement.TRIGGER_MADE_BET))
         self.achievementList.append(Achievement("You did it. You crazy son of a bitch, you did it", False, "Perfect level", None, PerfectLevelProperty(), Achievement.TRIGGER_END_LEVEL))
         self.achievementList.append(Achievement("Cam atat stiu restu", True, "Americandrim", None, FoundAmericandrimGuysProperty(), Achievement.TRIGGER_FOUND_IMAGE))
-        self.achievementList.append(Achievement("Tot in familie", True, "Reunite La Familia", None, FoundLaFamiliaProperty(), Achievement.TRIGGER_FOUND_IMAGE))
+        self.achievementList.append(Achievement("Tot in familie", True, "Reunite La Familia", None, FoundSpecialPairProperty(StatsRepository.PUYA_IMAGE_TITLE, StatsRepository.SISU_IMAGE_TITLE), Achievement.TRIGGER_FOUND_IMAGE))
+        self.achievementList.append(Achievement("Surprize, surprize", True, "Surprise Andreea Marin-Banica", None, FoundSpecialPairProperty(StatsRepository.MARIN_IMAGE_TITLE, StatsRepository.BANICA_IMAGE_TITLE), Achievement.TRIGGER_FOUND_IMAGE))
+        self.achievementList.append(Achievement("Of, viata mea", True, "Make history", None, FoundSpecialPairProperty(StatsRepository.COSTI_IMAGE_TITLE, StatsRepository.MINUNE_IMAGE_TITLE), Achievement.TRIGGER_FOUND_IMAGE))
+        self.achievementList.append(Achievement("Hey Scotty", True, "Jesus, man!", None, FoundSpecialPairProperty(StatsRepository.JESUSMAN_IMAGE_TITLE, StatsRepository.SCOTTY_IMAGE_TITLE), Achievement.TRIGGER_FOUND_IMAGE))
         
         self.__saveAchievements()
     
