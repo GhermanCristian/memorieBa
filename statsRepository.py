@@ -12,6 +12,7 @@ from Properties.perfectLevelProperty import PerfectLevelProperty
 from Properties.foundAmericandrimGuysProperty import FoundAmericandrimGuysProperty
 from Properties.largeLossProperty import LargeLossProperty
 from Properties.foundSpecialPairProperty import FoundSpecialPairProperty
+from Properties.pictureSongComboProperty import PictureSongComboProperty
 
 class StatsRepository:
     IMAGE_FOLDER_PATH = "Images"
@@ -65,6 +66,7 @@ class StatsRepository:
         self.achievementList.append(Achievement("Surprize, surprize", True, "Surprise Andreea Marin-Banica", None, FoundSpecialPairProperty(StatsRepository.MARIN_IMAGE_TITLE, StatsRepository.BANICA_IMAGE_TITLE), Achievement.TRIGGER_FOUND_IMAGE))
         self.achievementList.append(Achievement("Of, viata mea", True, "Revolutionize the music industry", None, FoundSpecialPairProperty(StatsRepository.COSTI_IMAGE_TITLE, StatsRepository.MINUNE_IMAGE_TITLE), Achievement.TRIGGER_FOUND_IMAGE))
         self.achievementList.append(Achievement("Hey Scotty", True, "Jesus, man!", None, FoundSpecialPairProperty(StatsRepository.JESUSMAN_IMAGE_TITLE, StatsRepository.SCOTTY_IMAGE_TITLE), Achievement.TRIGGER_FOUND_IMAGE))
+        self.achievementList.append(Achievement("Zi-le Guta!", True, "Guta 4 life", None, PictureSongComboProperty("GUTA"), Achievement.TRIGGER_FOUND_COMBO))
         
         self.__saveAchievements()
     
@@ -147,6 +149,21 @@ class StatsRepository:
             
             if achievement.trigger == Achievement.TRIGGER_END_LEVEL:
                 achievement.prop.endLevel()
+                if achievement.prop.checkCompletion():
+                    completedAchievements.append(achievement)
+                    
+        self.__saveAchievements()
+        return completedAchievements
+    
+    def foundCombo(self, pictureTitle, songTitle):
+        completedAchievements = []
+        for achievement in self.achievementList:
+            alreadyCompleted = achievement.prop.checkCompletion()
+            if alreadyCompleted == True:
+                continue
+            
+            if achievement.trigger == Achievement.TRIGGER_FOUND_COMBO:
+                achievement.prop.foundCombo(pictureTitle, songTitle)
                 if achievement.prop.checkCompletion():
                     completedAchievements.append(achievement)
                     

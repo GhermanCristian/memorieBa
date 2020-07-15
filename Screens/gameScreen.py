@@ -57,7 +57,7 @@ class GameScreen(Screen):
     BG_COLOR = Constants.NAVY_BLUE
     LIGHT_BG_COLOR = Constants.GRAY
     
-    COMPLETED_ACHIEVEMENT_DISPLAY_TIME = BASE_IMAGE_DISPLAY_TIME
+    COMPLETED_ACHIEVEMENT_DISPLAY_TIME = BASE_IMAGE_DISPLAY_TIME * 2
     
     def __init__(self, gameDisplay, musicPlayer, statsRepository):
         self.__gameDisplay = gameDisplay
@@ -184,7 +184,8 @@ class GameScreen(Screen):
         numberOfArguments = {
             self.__statsRepository.foundImage : 1,
             self.__statsRepository.foundSoundCue : 1,
-            self.__statsRepository.endLevel : 0
+            self.__statsRepository.endLevel : 0,
+            self.__statsRepository.foundCombo : 2
         }
         
         try:
@@ -331,6 +332,9 @@ class GameScreen(Screen):
                                 self.__processAchievement(self.__statsRepository.foundImage, image2.title)
                                 # we put both pictures in here because we might have a special pair
                                 # otherwise, "finding" the same image twice will not affect the achievement
+                                
+                                self.__processAchievement(self.__statsRepository.foundCombo, image1.title, self.__musicPlayer.getCurrentSong().title)
+                                self.__processAchievement(self.__statsRepository.foundCombo, image2.title, self.__musicPlayer.getCurrentSong().title)
                                 
                                 # we check this before the level-ending condition so that we don't lose any sound cues that might appear right at the end
                                 # (they won't be played, but will be taken into consideration for the achievements)

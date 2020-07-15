@@ -4,6 +4,7 @@ class Achievement:
     TRIGGER_BOUGHT_DRINK = "boughtDrink"
     TRIGGER_MADE_BET = "betting"
     TRIGGER_END_LEVEL = "endLevel"
+    TRIGGER_FOUND_COMBO = "foundCombo"
     
     # To add a new achievement to the game
     # 0. Delete the achievement file in Stats (a new one will be created next time the program is run)

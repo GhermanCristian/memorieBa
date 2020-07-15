@@ -3,6 +3,7 @@ import os
 
 class Song():
     def __init__(self, title):
+        self.__title = title
         self.__path = os.path.join(os.getcwd(), title)
         
     def play(self, volume, loops = 0, startTime = 0):
@@ -13,3 +14,7 @@ class Song():
         pygame.mixer.music.set_volume(volume)
         
         return previousSongTime
+    
+    @property
+    def title(self):
+        return self.__title

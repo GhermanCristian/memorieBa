@@ -1,6 +1,4 @@
-import os
-import random
-import pygame
+import os, random, pygame
 from song import Song
 
 class Playlist():   
@@ -91,5 +89,8 @@ class Playlist():
         self.__delayFlag = True
         self.nextSong(volume, previousSongTime + self.__delay)
         self.__delay += previousSongTime
+        
+    def getCurrentSong(self):
+        return self.__songs[self.__crtSong]
 
 

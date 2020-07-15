@@ -57,7 +57,7 @@ class PacaneleScreen(Screen):
     LIGHT_BG_COLOR = Constants.GRAY
     
     RESULT_DISPLAY_TIME = 1000
-    COMPLETED_ACHIEVEMENT_DISPLAY_TIME = 750
+    COMPLETED_ACHIEVEMENT_DISPLAY_TIME = 750 * 2
     
     def __init__(self, gameDisplay, musicPlayer, statsRepository):
         self.__gameDisplay = gameDisplay

@@ -3,8 +3,7 @@ from button import Button
 from playlist import Playlist
 from soundCue import SoundCue
 from constants import Constants
-import pygame
-import os
+import pygame, os
 
 class MusicPlayer():
     TEXT_FONT = "lucidasans"
@@ -146,6 +145,9 @@ class MusicPlayer():
             temporaryVolume += Constants.VOLUME_INCREMENT
             pygame.mixer.music.set_volume(temporaryVolume)
         pygame.mixer.music.set_volume(self.__musicVolume)
+        
+    def getCurrentSong(self):
+        return self.__radioStationList[self.__currentPlaylistIndex][0].getCurrentSong()
         
     @property
     def musicVolume(self):
