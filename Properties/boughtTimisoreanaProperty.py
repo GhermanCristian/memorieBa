@@ -13,6 +13,6 @@ class BoughtTimisoreanaProperty:
     def checkCompletion(self):
         return self.__drinkCount >= BoughtTimisoreanaProperty.TOTAL_COUNT
     
-    def boughtDrink(self, drinkType):
+    def updateProperty(self, drinkType):
         if drinkType == "timisoreana":
             self.__drinkCount += 1

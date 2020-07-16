@@ -33,6 +33,8 @@ class Constants():
     MEDIUM_DIFFICULTY_MULTIPLIER = 1.5
     HARD_DIFFICULTY_MULTIPLIER = 2.0
     
+    COMPLETED_ACHIEVEMENT_DISPLAY_TIME = 1500 # in ms
+    
     def __init__(self):
         pass
 

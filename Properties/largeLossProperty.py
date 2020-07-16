@@ -13,6 +13,6 @@ class LargeLossProperty:
     def checkCompletion(self):
         return self.__largeLoss
     
-    def madeBet(self, winnings):
+    def updateProperty(self, winnings):
         if winnings >= LargeLossProperty.MINIMUM_QUANTITY:
             self.__largeLoss = True

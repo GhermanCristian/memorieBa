@@ -14,6 +14,6 @@ class FoundElodiaProperty:
     def checkCompletion(self):
         return self.__foundElodia
     
-    def foundImage(self, imageTitle):
+    def updateProperty(self, imageTitle):
         if FoundElodiaProperty.ELODIA_IMAGE_TITLE == imageTitle:
             self.__foundElodia = True

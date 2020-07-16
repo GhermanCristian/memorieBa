@@ -13,6 +13,7 @@ from Properties.foundAmericandrimGuysProperty import FoundAmericandrimGuysProper
 from Properties.largeLossProperty import LargeLossProperty
 from Properties.foundSpecialPairProperty import FoundSpecialPairProperty
 from Properties.pictureSongComboProperty import PictureSongComboProperty
+from Properties.setNameProperty import SetNameProperty
 
 class StatsRepository:
     IMAGE_FOLDER_PATH = "Images"
@@ -67,6 +68,8 @@ class StatsRepository:
         self.achievementList.append(Achievement("Of, viata mea", True, "Revolutionize the music industry", None, FoundSpecialPairProperty(StatsRepository.COSTI_IMAGE_TITLE, StatsRepository.MINUNE_IMAGE_TITLE), Achievement.TRIGGER_FOUND_IMAGE))
         self.achievementList.append(Achievement("Hey Scotty", True, "Jesus, man!", None, FoundSpecialPairProperty(StatsRepository.JESUSMAN_IMAGE_TITLE, StatsRepository.SCOTTY_IMAGE_TITLE), Achievement.TRIGGER_FOUND_IMAGE))
         self.achievementList.append(Achievement("Zi-le Guta!", True, "Guta 4 life", None, PictureSongComboProperty("GUTA"), Achievement.TRIGGER_FOUND_COMBO))
+        self.achievementList.append(Achievement("Suntem", True, "Mr. Chinese", None, SetNameProperty(["chin", "china", "domnul"]), Achievement.TRIGGER_SET_NAME))
+        self.achievementList.append(Achievement("K House", True, "Usile vol. 2", None, SetNameProperty(["specii"]), Achievement.TRIGGER_SET_NAME))
         
         self.__saveAchievements()
     
@@ -79,95 +82,56 @@ class StatsRepository:
         except Exception:
             self.__initEmptyAchievementList()
             
-    def foundImage(self, imageTitle):
-        #this can probably be generalized
+    def __satisfyProperty(self, trigger, *arguments):
+        numberOfArguments = {
+            Achievement.TRIGGER_FOUND_IMAGE : 1,
+            Achievement.TRIGGER_FOUND_SOUND_CUE : 1,
+            Achievement.TRIGGER_BOUGHT_DRINK : 1,
+            Achievement.TRIGGER_MADE_BET : 1,
+            Achievement.TRIGGER_END_LEVEL : 0,
+            Achievement.TRIGGER_FOUND_COMBO : 2,
+            Achievement.TRIGGER_SET_NAME : 1,
+        }
+        
         completedAchievements = [] # finding one image can complete more than 1 achievement at a time => use a list to store all of them
         for achievement in self.achievementList:
             alreadyCompleted = achievement.prop.checkCompletion()
             if alreadyCompleted == True:
                 continue
             
-            if achievement.trigger == Achievement.TRIGGER_FOUND_IMAGE:
-                achievement.prop.foundImage(imageTitle)
+            if achievement.trigger == trigger:
+                if numberOfArguments[trigger] == 0:
+                    achievement.prop.updateProperty()
+                elif numberOfArguments[trigger] == 1:
+                    achievement.prop.updateProperty(arguments[0])
+                elif numberOfArguments[trigger] == 2:
+                    achievement.prop.updateProperty(arguments[0], arguments[1])
+                
                 if achievement.prop.checkCompletion():
                     completedAchievements.append(achievement)
                     
         self.__saveAchievements()
-        return completedAchievements
+        return completedAchievements        
+    
+    def foundImage(self, imageTitle):
+        return self.__satisfyProperty(Achievement.TRIGGER_FOUND_IMAGE, imageTitle)
     
     def foundSoundCue(self, soundCueTitle):
-        completedAchievements = []
-        for achievement in self.achievementList:
-            alreadyCompleted = achievement.prop.checkCompletion()
-            if alreadyCompleted == True:
-                continue
-            
-            if achievement.trigger == Achievement.TRIGGER_FOUND_SOUND_CUE:
-                achievement.prop.foundSoundCue(soundCueTitle)
-                if achievement.prop.checkCompletion():
-                    completedAchievements.append(achievement)
-                    
-        self.__saveAchievements()
-        return completedAchievements
+        return self.__satisfyProperty(Achievement.TRIGGER_FOUND_SOUND_CUE, soundCueTitle)
     
     def boughtDrink(self, drinkType):
-        completedAchievements = []
-        for achievement in self.achievementList:
-            alreadyCompleted = achievement.prop.checkCompletion()
-            if alreadyCompleted == True:
-                continue
-            
-            if achievement.trigger == Achievement.TRIGGER_BOUGHT_DRINK:
-                achievement.prop.boughtDrink(drinkType)
-                if achievement.prop.checkCompletion():
-                    completedAchievements.append(achievement)
-                    
-        self.__saveAchievements()
-        return completedAchievements
+        return self.__satisfyProperty(Achievement.TRIGGER_BOUGHT_DRINK, drinkType)
     
     def madeBet(self, winnings):
-        completedAchievements = []
-        for achievement in self.achievementList:
-            alreadyCompleted = achievement.prop.checkCompletion()
-            if alreadyCompleted == True:
-                continue
-            
-            if achievement.trigger == Achievement.TRIGGER_MADE_BET:
-                achievement.prop.madeBet(winnings)
-                if achievement.prop.checkCompletion():
-                    completedAchievements.append(achievement)
-                    
-        self.__saveAchievements()
-        return completedAchievements
+        return self.__satisfyProperty(Achievement.TRIGGER_MADE_BET, winnings)
     
     def endLevel(self):
-        completedAchievements = []
-        for achievement in self.achievementList:
-            alreadyCompleted = achievement.prop.checkCompletion()
-            if alreadyCompleted == True:
-                continue
-            
-            if achievement.trigger == Achievement.TRIGGER_END_LEVEL:
-                achievement.prop.endLevel()
-                if achievement.prop.checkCompletion():
-                    completedAchievements.append(achievement)
-                    
-        self.__saveAchievements()
-        return completedAchievements
+        return self.__satisfyProperty(Achievement.TRIGGER_END_LEVEL)
     
     def foundCombo(self, pictureTitle, songTitle):
-        completedAchievements = []
-        for achievement in self.achievementList:
-            alreadyCompleted = achievement.prop.checkCompletion()
-            if alreadyCompleted == True:
-                continue
-            
-            if achievement.trigger == Achievement.TRIGGER_FOUND_COMBO:
-                achievement.prop.foundCombo(pictureTitle, songTitle)
-                if achievement.prop.checkCompletion():
-                    completedAchievements.append(achievement)
-                    
-        self.__saveAchievements()
-        return completedAchievements
+        return self.__satisfyProperty(Achievement.TRIGGER_FOUND_COMBO, pictureTitle, songTitle)
+    
+    def setName(self, name):
+        return self.__satisfyProperty(Achievement.TRIGGER_SET_NAME, name)
     
     

@@ -13,6 +13,7 @@ class NameScreen(Screen):
     TEXT_FONT_SIZE = 20
     TEXT_COLOR = Constants.LIGHT_ORANGE
     TEXT_ROW_HEIGHT = 50
+    TEXT_BOTTOM_MARGIN = 20
     
     BG_COLOR = Constants.NAVY_BLUE
     LIGHT_BG_COLOR = Constants.GRAY
@@ -28,9 +29,10 @@ class NameScreen(Screen):
     MEDIUM_BUTTON_BG_COLOR = Constants.DARK_GREEN
     HARD_BUTTON_BG_COLOR = Constants.DARK_GREEN
     
-    def __init__(self, gameDisplay, musicPlayer):
+    def __init__(self, gameDisplay, musicPlayer, statsRepository):
         self.__gameDisplay = gameDisplay
         self.__musicPlayer = musicPlayer
+        self.__statsRepository = statsRepository
         
     def setBackgroundImage(self):
         self.__gameDisplay.fill(NameScreen.BG_COLOR)
@@ -68,7 +70,35 @@ class NameScreen(Screen):
                         self.__displayTextBox(userInput)
                     elif event.key == K_RETURN:
                         return userInput
+    
+    def __displayCompletedAchievement(self, achievement):
+        section = pygame.Rect(NameScreen.EASY_BUTTON_LEFT_COORD, Constants.WINDOW_HEIGHT - NameScreen.TEXT_ROW_HEIGHT - NameScreen.TEXT_BOTTOM_MARGIN, Constants.WINDOW_WIDTH - 2 * NameScreen.EASY_BUTTON_LEFT_COORD, NameScreen.TEXT_ROW_HEIGHT + NameScreen.TEXT_BOTTOM_MARGIN)
+        pygame.draw.rect(self.__gameDisplay, NameScreen.BG_COLOR, section)
+        Text("Achievement unlocked: %s" % achievement.title, NameScreen.TEXT_FONT, NameScreen.TEXT_FONT_SIZE, NameScreen.TEXT_COLOR).display(self.__gameDisplay, Constants.WINDOW_HEIGHT - NameScreen.TEXT_ROW_HEIGHT - NameScreen.TEXT_BOTTOM_MARGIN , NameScreen.EASY_BUTTON_LEFT_COORD)
+        pygame.display.update(section)
+        pygame.time.delay(Constants.COMPLETED_ACHIEVEMENT_DISPLAY_TIME)
+        pygame.draw.rect(self.__gameDisplay, NameScreen.BG_COLOR, section) # clear the text
+        pygame.display.update(section)
+    
+    def __processAchievement(self, achievementCheckFunction, *arguments):
+        numberOfArguments = {
+            self.__statsRepository.setName : 1,
+        }
+        
+        try:
+            currentNumberOfArguments = numberOfArguments[achievementCheckFunction]
             
+            completedAchievements = []
+            # I hope there's a shorter method of doing this, sth more general without needing an if for each no of args
+            if currentNumberOfArguments == 1: 
+                completedAchievements = achievementCheckFunction(arguments[0])
+
+            for achievement in completedAchievements:
+                self.__displayCompletedAchievement(achievement)
+                
+        except Exception:
+            pass        
+        
     def __getDifficulty(self):
         easyButtonText = Text("easy", NameScreen.TEXT_FONT, NameScreen.TEXT_FONT_SIZE, NameScreen.TEXT_COLOR)
         easyButton = Button(NameScreen.DIFFICULTY_BUTTON_TOP_COORD, NameScreen.EASY_BUTTON_LEFT_COORD, NameScreen.DIFFICULTY_BUTTON_SIZE, NameScreen.DIFFICULTY_BUTTON_SIZE, NameScreen.EASY_BUTTON_BG_COLOR, easyButtonText)
@@ -115,6 +145,8 @@ class NameScreen(Screen):
         userName = self.__getPlayerName()
         if (userName == Screen.QUIT_PROGRAM):
             return (Screen.QUIT_PROGRAM, Screen.QUIT_PROGRAM)
+        
+        self.__processAchievement(self.__statsRepository.setName, userName)
         
         difficulty = self.__getDifficulty()
         if (difficulty == Screen.QUIT_PROGRAM):

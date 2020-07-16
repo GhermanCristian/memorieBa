@@ -13,6 +13,6 @@ class BoughtFreedomProperty:
     def checkCompletion(self):
         return self.__drinkCount >= BoughtFreedomProperty.TOTAL_COUNT
     
-    def boughtDrink(self, drinkType):
+    def updateProperty(self, drinkType):
         if drinkType == "freedom":
             self.__drinkCount += 1

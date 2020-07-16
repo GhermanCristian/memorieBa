@@ -19,7 +19,7 @@ class FoundAmericandrimGuysProperty:
     def checkCompletion(self):
         return self.__foundNadia and self.__foundTiriac and self.__foundCeausescu and self.__foundHagi
     
-    def foundImage(self, imageTitle):
+    def updateProperty(self, imageTitle):
         if FoundAmericandrimGuysProperty.NADIA_IMAGE_TITLE == imageTitle:
             self.__foundNadia = True
         elif FoundAmericandrimGuysProperty.TIRIAC_IMAGE_TITLE == imageTitle:

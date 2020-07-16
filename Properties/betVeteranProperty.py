@@ -13,5 +13,5 @@ class BetVeteranProperty:
     def checkCompletion(self):
         return self.__betCount >= BetVeteranProperty.TOTAL_COUNT
     
-    def madeBet(self, winnings):
+    def updateProperty(self, winnings):
         self.__betCount += 1

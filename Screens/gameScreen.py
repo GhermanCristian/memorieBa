@@ -1,5 +1,5 @@
 from Screens.screen import Screen
-import pygame
+import pygame, os
 from pygame.constants import QUIT, KEYUP, K_ESCAPE, MOUSEMOTION, MOUSEBUTTONUP, K_RIGHT, KEYDOWN
 from constants import Constants
 from board import Board, random
@@ -8,7 +8,6 @@ from soundCue import SoundCue
 from text import Text
 from button import Button
 from moneyStorage import MoneyStorage
-import os
 
 class GameScreen(Screen):
     MOUSE_CURSOR_1 = "MOUSE_CURSOR1.jpg"
@@ -56,8 +55,6 @@ class GameScreen(Screen):
     
     BG_COLOR = Constants.NAVY_BLUE
     LIGHT_BG_COLOR = Constants.GRAY
-    
-    COMPLETED_ACHIEVEMENT_DISPLAY_TIME = BASE_IMAGE_DISPLAY_TIME * 2
     
     def __init__(self, gameDisplay, musicPlayer, statsRepository):
         self.__gameDisplay = gameDisplay
@@ -177,7 +174,7 @@ class GameScreen(Screen):
         pygame.draw.rect(self.__gameDisplay, GameScreen.BG_COLOR, section)
         Text("Achievement unlocked: %s" % achievement.title, GameScreen.TEXT_FONT, GameScreen.TEXT_FONT_SIZE, GameScreen.TEXT_COLOR).display(self.__gameDisplay, Constants.WINDOW_HEIGHT - GameScreen.TEXT_ROW_HEIGHT - GameScreen.TEXT_TOP_MARGIN , GameScreen.LEFT_MARGIN)
         pygame.display.update(section)
-        pygame.time.delay(GameScreen.COMPLETED_ACHIEVEMENT_DISPLAY_TIME)
+        pygame.time.delay(Constants.COMPLETED_ACHIEVEMENT_DISPLAY_TIME)
         pygame.draw.rect(self.__gameDisplay, GameScreen.BG_COLOR, section) # clear the text
     
     def __processAchievement(self, achievementCheckFunction, *arguments):
@@ -185,7 +182,7 @@ class GameScreen(Screen):
             self.__statsRepository.foundImage : 1,
             self.__statsRepository.foundSoundCue : 1,
             self.__statsRepository.endLevel : 0,
-            self.__statsRepository.foundCombo : 2
+            self.__statsRepository.foundCombo : 2,
         }
         
         try:
@@ -193,6 +190,7 @@ class GameScreen(Screen):
             
             completedAchievements = []
             # I hope there's a shorter method of doing this, sth more general without needing an if for each no of args
+            # ALso I can't just do function(arguments) in this case!
             if currentNumberOfArguments == 0: 
                 completedAchievements = achievementCheckFunction()
             elif currentNumberOfArguments == 1: 

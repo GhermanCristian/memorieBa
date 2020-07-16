@@ -11,5 +11,5 @@ class PerfectLevelProperty:
     def checkCompletion(self):
         return self.__isPerfect
     
-    def endLevel(self):
+    def updateProperty(self):
         self.__isPerfect = True

@@ -1,12 +1,9 @@
 from Screens.screen import Screen
-import pygame
-import os
-import random
+import pygame, os, random
 from constants import Constants
 from song import Song
 from text import Text
 from label import Label
-from button import Button
 from pygame.constants import QUIT, MOUSEMOTION, K_ESCAPE, KEYUP, MOUSEBUTTONUP
 
 class PacaneleScreen(Screen):
@@ -57,7 +54,6 @@ class PacaneleScreen(Screen):
     LIGHT_BG_COLOR = Constants.GRAY
     
     RESULT_DISPLAY_TIME = 1000
-    COMPLETED_ACHIEVEMENT_DISPLAY_TIME = 750 * 2
     
     def __init__(self, gameDisplay, musicPlayer, statsRepository):
         self.__gameDisplay = gameDisplay
@@ -143,7 +139,7 @@ class PacaneleScreen(Screen):
         pygame.draw.rect(self.__gameDisplay, PacaneleScreen.BG_COLOR, section)
         Text("Achievement unlocked: %s" % achievement.title, PacaneleScreen.MONEY_TEXT_FONT, PacaneleScreen.MONEY_TEXT_FONT_SIZE, PacaneleScreen.MONEY_TEXT_COLOR).display(self.__gameDisplay, Constants.WINDOW_HEIGHT - PacaneleScreen.MONEY_TEXT_ROW_HEIGHT - PacaneleScreen.MONEY_TEXT_TOP_MARGIN , PacaneleScreen.PREVIOUS_RESULTS_LEFT_MARGIN)
         pygame.display.update(section)
-        pygame.time.delay(PacaneleScreen.COMPLETED_ACHIEVEMENT_DISPLAY_TIME)
+        pygame.time.delay(Constants.COMPLETED_ACHIEVEMENT_DISPLAY_TIME)
         pygame.draw.rect(self.__gameDisplay, PacaneleScreen.BG_COLOR, section) # clear the text
         pygame.display.update(section)
     
@@ -158,12 +154,8 @@ class PacaneleScreen(Screen):
             
             completedAchievements = []
             # I hope there's a shorter method of doing this, sth more general without needing an if for each no of args
-            if currentNumberOfArguments == 0: 
-                completedAchievements = achievementCheckFunction()
-            elif currentNumberOfArguments == 1: 
+            if currentNumberOfArguments == 1: 
                 completedAchievements = achievementCheckFunction(arguments[0])
-            elif currentNumberOfArguments == 2:
-                completedAchievements = achievementCheckFunction(arguments[0], arguments[1])
 
             for achievement in completedAchievements:
                 self.__displayCompletedAchievement(achievement)

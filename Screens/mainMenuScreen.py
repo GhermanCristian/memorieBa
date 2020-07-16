@@ -95,7 +95,7 @@ class MainMenuScreen(Screen):
                 self.__musicPlayer.checkInput(self.__mouseX, self.__mouseY)
                 
                 if playGameButton.collides(self.__mouseX, self.__mouseY):
-                    programResult = NameScreen(self.__gameDisplay, self.__musicPlayer).displayContent()
+                    programResult = NameScreen(self.__gameDisplay, self.__musicPlayer, self.__statsRepository).displayContent()
                     if programResult[0] == Screen.QUIT_PROGRAM:
                         continue
                     else:

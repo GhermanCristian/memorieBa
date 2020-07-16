@@ -27,5 +27,5 @@ class FoundAllSoundCuesProperty:
     def checkCompletion(self):
         return self.getCompleted() == self.getTotal()
 
-    def foundSoundCue(self, soundCueTitle):
+    def updateProperty(self, soundCueTitle):
         self.__soundCuesDict[soundCueTitle] = True

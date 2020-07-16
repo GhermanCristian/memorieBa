@@ -12,7 +12,7 @@ class PictureSongComboProperty:
     def checkCompletion(self):
         return self.__found
     
-    def foundCombo(self, pictureTitle, songTitle):
+    def updateProperty(self, pictureTitle, songTitle):
         songTitle = songTitle.upper()
         underscorePosition = pictureTitle.find('_')
         pictureTitle = pictureTitle[:underscorePosition]

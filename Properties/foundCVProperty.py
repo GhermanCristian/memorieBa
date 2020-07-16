@@ -13,6 +13,6 @@ class FoundCVProperty:
     def checkCompletion(self):
         return self.__foundCV
     
-    def foundImage(self, imageTitle):
+    def updateProperty(self, imageTitle):
         if FoundCVProperty.CV_IMAGE_TITLE == imageTitle:
             self.__foundCV = True

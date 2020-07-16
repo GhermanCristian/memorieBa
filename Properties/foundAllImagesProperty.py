@@ -27,7 +27,7 @@ class FoundAllImagesProperty:
     def checkCompletion(self):
         return self.getCompleted() == self.getTotal()
 
-    def foundImage(self, imageTitle):
+    def updateProperty(self, imageTitle):
         self.__imagesDict[imageTitle] = True
         
 

@@ -16,7 +16,7 @@ class FoundSpecialPairProperty:
     def checkCompletion(self):
         return self.__isCompleted
     
-    def foundImage(self, imageTitle):
+    def updateProperty(self, imageTitle):
         if self.__firstImageTitle == imageTitle:
             if self.__foundFirst == True: # if this picture was already found => we got the same special picture twice => reset everything
                 self.__foundFirst = self.__foundSecond = False
