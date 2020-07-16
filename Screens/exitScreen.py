@@ -1,6 +1,5 @@
 from Screens.screen import Screen
-import os
-import pygame
+import os, pygame
 
 class ExitScreen(Screen):
     EXIT_SCREEN1 = "EXIT_SCREEN1.jpg"

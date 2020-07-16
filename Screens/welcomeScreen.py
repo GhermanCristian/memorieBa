@@ -1,8 +1,7 @@
 from Screens.screen import Screen
 from constants import Constants
 from song import Song
-import os
-import pygame
+import os, pygame
 from pygame.constants import K_RETURN, QUIT, KEYUP, K_ESCAPE
 
 class WelcomeScreen(Screen):

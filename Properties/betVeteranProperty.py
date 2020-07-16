@@ -1,5 +1,5 @@
 class BetVeteranProperty:
-    TOTAL_COUNT = 100
+    TOTAL_COUNT = 2
     
     def __init__(self):
         self.__betCount = 0
