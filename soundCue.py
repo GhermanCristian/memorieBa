@@ -14,7 +14,7 @@ class SoundCue():
             channel += 1
         
         currentVolume = pygame.mixer.music.get_volume()
-        pygame.mixer.music.set_volume(currentVolume / 3)
+        pygame.mixer.music.set_volume(currentVolume / 4)
         
         ch = pygame.mixer.Channel(channel)
         ch.play(cue)

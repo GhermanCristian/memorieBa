@@ -24,6 +24,7 @@ class StatsRepository:
     CV_IMAGE_TITLE = "CV_1"
     ELODIA_IMAGE_TITLE = "ELODIA_1"
     BECALI_ASTRONAUT_IMAGE_TITLE = "BECALI_ASTRONAUT_1"
+    TARZAN_IMAGE_TITLE = "TARZAN_1"
     
     PUYA_IMAGE_TITLE = "SPECIAL_1_PUYALAFAMILIA_1"
     SISU_IMAGE_TITLE = "SPECIAL_1_SISULAFAMILIA_1"
@@ -39,6 +40,10 @@ class StatsRepository:
     AZTECA_IMAGE_TITLE = "SPECIAL_6_AZTECA_1"
     COMAN_IMAGE_TITLE = "SPECIAL_7_COMAN_1"
     MBAPPE_IMAGE_TITLE = "SPECIAL_7_MBAPPE_1"
+    FOCA_IMAGE_TITLE = "SPECIAL_8_FOCA_1"
+    MO_IMAGE_TITLE = "SPECIAL_8_MO_1"
+    ASAFACI_IMAGE_TITLE = "SPECIAL_9_ASAFACI_1"
+    IESIACASA_IMAGE_TITLE = "SPECIAL_9_IESIACASA_1"
     
     def __init__(self):
         self.achievementList = []
@@ -76,6 +81,7 @@ class StatsRepository:
         self.achievementList.append(Achievement("Cioaca in libertate", True, "Find Elodia", None, FoundImageProperty(StatsRepository.ELODIA_IMAGE_TITLE), Achievement.TRIGGER_FOUND_IMAGE))
         self.achievementList.append(Achievement("Somn usor", True, "Find CV", None, FoundImageProperty(StatsRepository.CV_IMAGE_TITLE), Achievement.TRIGGER_FOUND_IMAGE))
         self.achievementList.append(Achievement("One small step for a man...", True, "...one giant leap for mankind", None, FoundImageProperty(StatsRepository.BECALI_ASTRONAUT_IMAGE_TITLE), Achievement.TRIGGER_FOUND_IMAGE))
+        self.achievementList.append(Achievement("Buna bata", True, "Buna, Tarzan!", None, FoundImageProperty(StatsRepository.TARZAN_IMAGE_TITLE), Achievement.TRIGGER_FOUND_IMAGE))
         
         self.achievementList.append(Achievement("Cam atat stiu restu", True, "Americandrim", None, FoundAmericandrimGuysProperty(), Achievement.TRIGGER_FOUND_IMAGE))
         self.achievementList.append(Achievement("Aia importanti din Valahia", True, "Traistariu & Costi", None, FoundValahiaGuysProperty(), Achievement.TRIGGER_FOUND_IMAGE))
@@ -87,11 +93,23 @@ class StatsRepository:
         self.achievementList.append(Achievement("Dillon!", True, "You son of a bitch!", None, FoundSpecialPairProperty(StatsRepository.ARNOLD_IMAGE_TITLE, StatsRepository.DILLON_IMAGE_TITLE), Achievement.TRIGGER_FOUND_IMAGE))
         self.achievementList.append(Achievement("Baia Mare", True, "Baia Maree", None, FoundSpecialPairProperty(StatsRepository.IAN_IMAGE_TITLE, StatsRepository.AZTECA_IMAGE_TITLE), Achievement.TRIGGER_FOUND_IMAGE))
         self.achievementList.append(Achievement("200 Million", True, "Florinel Mbappe", None, FoundSpecialPairProperty(StatsRepository.COMAN_IMAGE_TITLE, StatsRepository.MBAPPE_IMAGE_TITLE), Achievement.TRIGGER_FOUND_IMAGE))
+        self.achievementList.append(Achievement("Ce faci F.O.C.A. ?", True, "Da bine MO, uite..", None, FoundSpecialPairProperty(StatsRepository.MO_IMAGE_TITLE, StatsRepository.FOCA_IMAGE_TITLE), Achievement.TRIGGER_FOUND_IMAGE))
+        self.achievementList.append(Achievement("Vezi ca stiu ceva despre tine", True, "Nini ai grija!", None, FoundSpecialPairProperty(StatsRepository.ASAFACI_IMAGE_TITLE, StatsRepository.IESIACASA_IMAGE_TITLE), Achievement.TRIGGER_FOUND_IMAGE))
         
-        self.achievementList.append(Achievement("Zi-le Guta!", True, "Guta 4 life", None, PictureSongComboProperty("GUTA"), Achievement.TRIGGER_FOUND_COMBO))
+        self.achievementList.append(Achievement("Zi-le Guta!", True, "Guta^2", None, PictureSongComboProperty("GUTA"), Achievement.TRIGGER_FOUND_COMBO))
+        self.achievementList.append(Achievement("Fantastick", True, "Como bombastick", None, PictureSongComboProperty("ROMEO"), Achievement.TRIGGER_FOUND_COMBO))
+        self.achievementList.append(Achievement("Forrrrrrza", True, "Forrrrrrza", None, PictureSongComboProperty("COSTI"), Achievement.TRIGGER_FOUND_COMBO))
+        self.achievementList.append(Achievement("Regele Manasturului", True, "Stie tata!", None, PictureSongComboProperty("NELSON"), Achievement.TRIGGER_FOUND_COMBO))
+        self.achievementList.append(Achievement("Freestyle tiganesc", True, "Bahoi^2", None, PictureSongComboProperty("BAHOI"), Achievement.TRIGGER_FOUND_COMBO))
+        self.achievementList.append(Achievement("Chica Bomb", True, "Chica Bomb de la Dan Balan", None, PictureSongComboProperty("BALAN"), Achievement.TRIGGER_FOUND_COMBO))
+        self.achievementList.append(Achievement("Nane 2008 ?", True, "Nane 2019 ?", None, PictureSongComboProperty("NANE"), Achievement.TRIGGER_FOUND_COMBO))
+        self.achievementList.append(Achievement("$1", True, "4 lei", None, PictureSongComboProperty("FIFTY"), Achievement.TRIGGER_FOUND_COMBO))
+        self.achievementList.append(Achievement("Am vazut-o pe strada", True, "De ce n-ai mers la ea ?", None, PictureSongComboProperty("ZMAILI"), Achievement.TRIGGER_FOUND_COMBO))
+        self.achievementList.append(Achievement("Eurovision 2006", True, "Tomberon", None, PictureSongComboProperty("TRAISTARIU"), Achievement.TRIGGER_FOUND_COMBO))
+        self.achievementList.append(Achievement("Let me live my americandrim", True, "Zice bine Puya", None, PictureSongComboProperty("PUYA"), Achievement.TRIGGER_FOUND_COMBO))
         
-        self.achievementList.append(Achievement("Suntem", True, "Mr. Chinese", None, SetNameProperty(["chin", "china", "domnul"]), Achievement.TRIGGER_SET_NAME))
         self.achievementList.append(Achievement("K House", True, "Usile vol. 2", None, SetNameProperty(["specii"]), Achievement.TRIGGER_SET_NAME))
+        self.achievementList.append(Achievement("Suntem", True, "Mr. Chinese", None, SetNameProperty(["chin", "china", "domnul"]), Achievement.TRIGGER_SET_NAME))
         
         self.__saveAchievements()
     

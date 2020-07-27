@@ -324,6 +324,11 @@ class GameScreen(Screen):
                             self.__reshuffleHiddenTiles()
                             
                             if self.__imagesMatch(image1, image2):
+                                if image1.soundCue != None:
+                                    SoundCue(image1.soundCue).play()
+                                elif image2.soundCue != None:
+                                    SoundCue(image2.soundCue).play()
+                                
                                 nrRevealed += 2
                                 self.__money += GameScreen.INCREASE_MONEY_AMOUNT
                                 self.__processAchievement(self.__statsRepository.foundImage, image1.title)
@@ -344,9 +349,6 @@ class GameScreen(Screen):
                                     if nrMoves == self.__board.height * self.__board.width // 2: # perfect level achievement
                                         self.__processAchievement(self.__statsRepository.endLevel)
                                     return
-
-                                if image1.soundCue != None:
-                                    SoundCue(image1.soundCue).play()
                             
                             else:
                                 pygame.time.wait(GameScreen.IMAGE_DISPLAY_TIME)
@@ -373,12 +375,15 @@ class GameScreen(Screen):
                 return (Screen.QUIT_PROGRAM, Screen.QUIT_PROGRAM)
             
             if level == GameScreen.NR_OF_LEVELS:
+                currentVolume = pygame.mixer.music.get_volume()
                 SoundCue(GameScreen.INTELIGENT_SOUND_PATH).play()
             else:
                 SoundCue(GameScreen.SERGHEI_SOUND_PATH).play()
             
             self.__endLevelAnimation()
             pygame.time.wait(2500) #PSA: don't have task manager open when ending a level, apparently wait() behaves weirdly
+            
+        pygame.mixer.music.set_volume(currentVolume) #restore the music volume after exiting the last level
             
         pygame.mouse.set_visible(True)
         MoneyStorage().saveMoney(self.__money)
