@@ -383,4 +383,3 @@ class GameScreen(Screen):
         pygame.mouse.set_visible(True)
         MoneyStorage().saveMoney(self.__money)
         return (self.__totalTime, self.__totalMoves)
-

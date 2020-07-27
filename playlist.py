@@ -2,6 +2,8 @@ import os, random, pygame
 from song import Song
 
 class Playlist():   
+    RADIO_CONTACT_NAME = "" 
+    
     def __init__(self, radioStation, hasAds = True):
         self.__songs = []
         self.__songCount = 0
@@ -15,10 +17,9 @@ class Playlist():
         
         self.__path = os.path.join(os.getcwd(), "Music")
         self.__hasAds = hasAds
-        if radioStation == "":
-            self.__loadPlaylist("")
-        else:
-            self.__loadPlaylist(radioStation)
+        self.__isRadioContact = (radioStation == Playlist.RADIO_CONTACT_NAME)
+            
+        self.__loadPlaylist(radioStation)
             
         self.__songCount = len(self.__songs)
         random.shuffle(self.__songs)
@@ -30,16 +31,12 @@ class Playlist():
         for file in os.listdir(path):
             if os.path.isdir(os.path.join(path, file)):
                 self.__loadPlaylist(os.path.join(path, file))
-            
+                
             elif "MP3" in radioStation:
                 self.__songs.append(Song(os.path.join(songFolder, file)))
             
-            elif file[0] == "S" and file[1] == "_":
-                if "RECLAMA" in file:
-                    if self.__hasAds == True:
-                        self.__songs.append(Song(os.path.join(songFolder, file)))
-                else:
-                    self.__songs.append(Song(os.path.join(songFolder, file)))
+            elif (file[0] == "S" and file[1] == "_") and (("RECLAMA" not in file) or ("RECLAMA" in file and self.__hasAds == True and (self.__isRadioContact or ("CONTACT" not in file)))):
+                self.__songs.append(Song(os.path.join(songFolder, file)))
         
     def nextSong(self, volume, startTime = 0):
         if (self.__songCount == 0):
