@@ -202,6 +202,7 @@ class PacaneleScreen(Screen):
                     if bill[0].collidepoint(mouseX, mouseY) and bill[1] <= moneyLeft:
                         currentBet += bill[1]
                         moneyLeft -= bill[1]
+                        self.__statsRepository.spentMoney(bill[1])
                         alreadyClicked = True
                         break
                     
@@ -210,11 +211,14 @@ class PacaneleScreen(Screen):
                         moneyLeft -= drink[1]
                         alreadyClicked = True
                         self.__processAchievement(self.__statsRepository.boughtDrink, drink[2])
+                        self.__statsRepository.boughtDrinkStat(1)
+                        self.__statsRepository.spentMoney(drink[1])
                         break
                 
                 if alreadyClicked == False:
                     if saveBox.collidepoint(mouseX, mouseY):
                         moneyLeft += currentBet
+                        self.__statsRepository.earnedMoney(currentBet)
                         return moneyLeft
                     
                     # no use in clicking the red/ black buttons if there is nothing to bet

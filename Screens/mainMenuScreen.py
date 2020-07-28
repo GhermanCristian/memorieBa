@@ -10,6 +10,7 @@ from pygame.constants import QUIT, KEYUP, K_ESCAPE, MOUSEMOTION, MOUSEBUTTONUP, 
 from musicPlayer import MusicPlayer
 from Screens.achievementScreen import AchievementScreen
 from statsRepository import StatsRepository
+from Screens.statsScreen import StatsScreen
 
 class MainMenuScreen(Screen):
     BG_COLOR = Constants.NAVY_BLUE
@@ -40,6 +41,7 @@ class MainMenuScreen(Screen):
         
         self.__leaderboardScreen = LeaderboardScreen(self.__gameDisplay, self.__musicPlayer)
         self.__achievementScreen = AchievementScreen(self.__gameDisplay, self.__musicPlayer, self.__statsRepository)
+        self.__statsScreen = StatsScreen(self.__gameDisplay, self.__musicPlayer, self.__statsRepository)
         
     def setBackgroundImage(self):
         self.__gameDisplay.fill(MainMenuScreen.BG_COLOR)
@@ -124,7 +126,9 @@ class MainMenuScreen(Screen):
                         continue
                     
                 elif statisticsButton.collides(self.__mouseX, self.__mouseY):
-                    print ("stats")
+                    programResult = self.__statsScreen.displayContent()
+                    if programResult == Screen.QUIT_PROGRAM:
+                        continue
                 
 
 

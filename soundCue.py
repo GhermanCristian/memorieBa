@@ -1,4 +1,5 @@
 import pygame, os
+from constants import Constants
 
 class SoundCue():
     SOUND_CUE_END_EVENT = pygame.USEREVENT + 1
@@ -20,5 +21,9 @@ class SoundCue():
         ch.play(cue)
         ch.set_endevent(SoundCue.SOUND_CUE_END_EVENT)
         
-        # we use this min in case the current volume is 0 (or lower then LOW_VOLUME)
+        if currentVolume * 2 >= Constants.MAX_SOUND_CUE_VOLUME:
+            currentVolume = Constants.MAX_SOUND_CUE_VOLUME
+        else:
+            currentVolume = currentVolume * 2
+        
         cue.set_volume(currentVolume)

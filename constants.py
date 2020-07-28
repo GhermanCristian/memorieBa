@@ -1,4 +1,4 @@
-class Constants():
+class Constants:
     APP_TITLE = "Memorie, ba"
     FPS = 60
     
@@ -26,6 +26,7 @@ class Constants():
     NORMAL_VOLUME = 0.0 # 0.22
     LOW_VOLUME = 0.1
     VOLUME_INCREMENT = 0.01
+    MAX_SOUND_CUE_VOLUME = 0.5
     
     ### DIFFICULTY ###
     NUMBER_OF_DIFFICULTIES = 3
@@ -34,6 +35,22 @@ class Constants():
     HARD_DIFFICULTY_MULTIPLIER = 2.0
     
     COMPLETED_ACHIEVEMENT_DISPLAY_TIME = 1500 # in ms
+    
+    ### STAT + ACHIEVEMENT TRIGGERS ###
+    TRIGGER_REVEALED_IMAGE = "revealedImage"
+    TRIGGER_FOUND_IMAGE = "foundImage"
+    TRIGGER_FOUND_WRONG_IMAGE = "foundWrongImage"
+    TRIGGER_FOUND_SOUND_CUE = "foundSoundCue"
+    TRIGGER_BOUGHT_DRINK = "boughtDrink"
+    TRIGGER_MADE_BET = "betting"
+    TRIGGER_END_LEVEL = "endLevel"
+    TRIGGER_EXIT_LEVEL = "exitLevel"
+    TRIGGER_START_GAME = "startGame"
+    TRIGGER_FINISH_GAME = "endGame"
+    TRIGGER_FOUND_COMBO = "foundCombo"
+    TRIGGER_SET_NAME = "setName"
+    TRIGGER_EARNED_MONEY = "earnedMoney"
+    TRIGGER_SPENT_MONEY = "spentMoney"
     
     def __init__(self):
         pass

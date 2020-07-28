@@ -70,7 +70,6 @@ class LeaderboardScreen(Screen):
 
             Text("%02d. %s" % (i + 1, leaderboardsByDifficulty[leaderboardDifficulty][1].scoreList[i][0]), LeaderboardScreen.TEXT_FONT, LeaderboardScreen.TEXT_FONT_SIZE, LeaderboardScreen.TEXT_COLOR).display(self.__gameDisplay, (i + 2) * LeaderboardScreen.TEXT_ROW_HEIGHT + LeaderboardScreen.TITLE_TEXT_TOP_COORD, Constants.WINDOW_WIDTH / 2 + LeaderboardScreen.TEXT_LEFT_MARGIN)
             Text("%d moves" % (leaderboardsByDifficulty[leaderboardDifficulty][1].scoreList[i][1]), LeaderboardScreen.TEXT_FONT, LeaderboardScreen.TEXT_FONT_SIZE, LeaderboardScreen.TEXT_COLOR).display(self.__gameDisplay, (i + 2) * LeaderboardScreen.TEXT_ROW_HEIGHT + LeaderboardScreen.TITLE_TEXT_TOP_COORD, Constants.WINDOW_WIDTH - 3 * LeaderboardScreen.TEXT_LEFT_MARGIN)
-        
     
     def __updateLeaderboard(self, result, leaderboard, playerName):
         newEntry = leaderboard.checkResult(result)

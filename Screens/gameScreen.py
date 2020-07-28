@@ -328,9 +328,13 @@ class GameScreen(Screen):
                                     SoundCue(image1.soundCue).play()
                                 elif image2.soundCue != None:
                                     SoundCue(image2.soundCue).play()
+                                    
+                                self.__statsRepository.foundCorrectImage(1)
+                                self.__statsRepository.revealedImage(1)
                                 
                                 nrRevealed += 2
                                 self.__money += GameScreen.INCREASE_MONEY_AMOUNT
+                                self.__statsRepository.earnedMoney(GameScreen.INCREASE_MONEY_AMOUNT)
                                 self.__processAchievement(self.__statsRepository.foundImage, image1.title)
                                 self.__processAchievement(self.__statsRepository.foundImage, image2.title)
                                 # we put both pictures in here because we might have a special pair
@@ -351,6 +355,9 @@ class GameScreen(Screen):
                                     return
                             
                             else:
+                                self.__statsRepository.foundWrongImage(1)
+                                self.__statsRepository.revealedImage(1)
+                                
                                 pygame.time.wait(GameScreen.IMAGE_DISPLAY_TIME)
                                 self.__coverBoxesAnimation([(firstBox[0], firstBox[1]), (xBox, yBox)])
                                 self.__board.coverBox(firstBox[0], firstBox[1])
@@ -367,11 +374,15 @@ class GameScreen(Screen):
     
     def displayContent(self):
         pygame.mouse.set_visible(False)
+        
+        self.__statsRepository.startGame(1)
+        
         for level in range(1, GameScreen.NR_OF_LEVELS + 1):        # level indexing starts at 1
             levelResult = self.__playLevel(level)
             if levelResult == Screen.QUIT_PROGRAM:
                 pygame.mouse.set_visible(True)
                 MoneyStorage().saveMoney(self.__money)
+                self.__statsRepository.exitLevel(self.__totalTime) # the level can be exited either when finishing it or when pressing the ESC key
                 return (Screen.QUIT_PROGRAM, Screen.QUIT_PROGRAM)
             
             if level == GameScreen.NR_OF_LEVELS:
@@ -387,4 +398,6 @@ class GameScreen(Screen):
             
         pygame.mouse.set_visible(True)
         MoneyStorage().saveMoney(self.__money)
+        self.__statsRepository.exitLevel(self.__totalTime)
+        self.__statsRepository.finishGame(1)
         return (self.__totalTime, self.__totalMoves)
