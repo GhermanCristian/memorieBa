@@ -10,7 +10,6 @@ from button import Button
 from moneyStorage import MoneyStorage
 
 class GameScreen(Screen):
-    MOUSE_CURSOR_1 = "MOUSE_CURSOR1.jpg"
     INTELIGENT_SOUND_PATH = "Music//INTELIGENT_1.ogg"
     SERGHEI_SOUND_PATH = "Music//SERGHEI_RAS.ogg"
     
@@ -68,7 +67,6 @@ class GameScreen(Screen):
         self.__mouseX = 0
         self.__mouseY = 0
         self.__mouseClicked = False
-        self.__mouseCursorImage = self.__loadSpecialImage(GameScreen.MOUSE_CURSOR_1)
         
         self.__totalMoves = 0
         self.__totalTime = 0
@@ -203,9 +201,6 @@ class GameScreen(Screen):
                 
         except Exception as e:
             print ("exception: " + str(e))
-    
-    def __showMouseCursor(self):
-        self.__gameDisplay.blit(self.__mouseCursorImage, (self.__mouseX, self.__mouseY))
     
     def __convertTime(self, ms):
         minutes = ms / 60000
@@ -365,7 +360,6 @@ class GameScreen(Screen):
                                 
                             firstBox = None
                             
-            self.__showMouseCursor()
             pygame.display.update()
             self.__clock.tick(Constants.FPS)
             
@@ -373,8 +367,6 @@ class GameScreen(Screen):
             self.__totalTime += self.__clock.get_time()
     
     def displayContent(self):
-        pygame.mouse.set_visible(False)
-        
         self.__statsRepository.startGame(1)
         
         for level in range(1, GameScreen.NR_OF_LEVELS + 1):        # level indexing starts at 1
@@ -395,8 +387,7 @@ class GameScreen(Screen):
             pygame.time.wait(2500) #PSA: don't have task manager open when ending a level, apparently wait() behaves weirdly
             
         pygame.mixer.music.set_volume(currentVolume) #restore the music volume after exiting the last level
-            
-        pygame.mouse.set_visible(True)
+
         MoneyStorage().saveMoney(self.__money)
         self.__statsRepository.exitLevel(self.__totalTime)
         self.__statsRepository.finishGame(1)

@@ -246,7 +246,6 @@ class PacaneleScreen(Screen):
     
     def displayContent(self, money):
         self.setBackgroundMusic()
-        pygame.mouse.set_visible(True)
         
         self.setBackgroundImage()
         self.__updateResultTextSection(money, 0) # we can use 0 here because the initial bet is always 0
@@ -263,9 +262,8 @@ class PacaneleScreen(Screen):
 
         functionResult = self.__redOrBlack(money)
         
-        # exit from pacanele => restore the mouse cursor and the music player
+        # exit from pacanele => restore the music player
         self.__musicPlayer.restorePreviousSong(self.__previousSongTime)
-        pygame.mouse.set_visible(False)
 
         money = functionResult             
         return money
