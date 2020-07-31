@@ -25,5 +25,8 @@ class SoundCue():
             currentVolume = Constants.MAX_SOUND_CUE_VOLUME
         else:
             currentVolume = currentVolume * 2
+            
+        if currentVolume <= Constants.MIN_SOUND_CUE_VOLUME:
+            currentVolume = Constants.MIN_SOUND_CUE_VOLUME
         
         cue.set_volume(currentVolume)

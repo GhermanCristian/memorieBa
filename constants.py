@@ -23,8 +23,8 @@ class Constants:
     NORMAL_GREEN = (40, 178, 75)
     
     ### VOLUME ###
-    NORMAL_VOLUME = 0.0 # 0.22
-    LOW_VOLUME = 0.1
+    NORMAL_VOLUME = 0.0 # 0.25
+    MIN_SOUND_CUE_VOLUME = 0.2
     VOLUME_INCREMENT = 0.01
     MAX_SOUND_CUE_VOLUME = 0.5
     
