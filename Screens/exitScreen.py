@@ -4,8 +4,9 @@ import os, pygame
 class ExitScreen(Screen):
     EXIT_SCREEN1 = "EXIT_SCREEN1.jpg"
     EXIT_SCREEN2 = "EXIT_SCREEN2.jpg"
+    EXIT_SCREEN3 = "EXIT_SCREEN3.jpg"
     
-    DISPLAY_TIME = 2000
+    DISPLAY_TIME = 1500
     
     def __init__(self, gameDisplay, backgroundImage):
         self.__backgroundImage = os.path.join(os.getcwd(), "Images")

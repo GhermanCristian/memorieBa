@@ -26,6 +26,7 @@ class GUI:
     def __quitGame(self):
         #ExitScreen(self.__gameDisplay, ExitScreen.EXIT_SCREEN1).displayContent()
         #ExitScreen(self.__gameDisplay, ExitScreen.EXIT_SCREEN2).displayContent()
+        #ExitScreen(self.__gameDisplay, ExitScreen.EXIT_SCREEN3).displayContent()
         pygame.quit()
         quit()
         
