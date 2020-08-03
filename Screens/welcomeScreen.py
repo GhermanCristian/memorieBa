@@ -26,7 +26,7 @@ class WelcomeScreen(Screen):
         
     def __loadSpecialImage(self, imageTitle):
         currentImage = os.path.join(os.getcwd(), "Images")
-        currentImage = os.path.join(currentImage, "Special images")
+        currentImage = os.path.join(currentImage, "Special_images")
         return pygame.image.load(os.path.join(currentImage, imageTitle))
         
     def __outroTransition(self):            

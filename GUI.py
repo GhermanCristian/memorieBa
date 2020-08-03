@@ -20,20 +20,19 @@ class GUI:
     
     def __loadSpecialImage(self, imageTitle):
         currentImage = os.path.join(os.getcwd(), "Images")
-        currentImage = os.path.join(currentImage, "Special images")
+        currentImage = os.path.join(currentImage, "Special_images")
         return pygame.image.load(os.path.join(currentImage, imageTitle))
         
     def __quitGame(self):
-        #ExitScreen(self.__gameDisplay, ExitScreen.EXIT_SCREEN1).displayContent()
-        #ExitScreen(self.__gameDisplay, ExitScreen.EXIT_SCREEN2).displayContent()
-        #ExitScreen(self.__gameDisplay, ExitScreen.EXIT_SCREEN3).displayContent()
+        ExitScreen(self.__gameDisplay, ExitScreen.EXIT_SCREEN1).displayContent()
+        ExitScreen(self.__gameDisplay, ExitScreen.EXIT_SCREEN2).displayContent()
+        ExitScreen(self.__gameDisplay, ExitScreen.EXIT_SCREEN3).displayContent()
         pygame.quit()
-        quit()
         
     def start(self):
-        #programResult = WelcomeScreen(self.__gameDisplay).displayContent()
-        #if programResult == Screen.QUIT_PROGRAM:
-            #self.__quitGame()
+        programResult = WelcomeScreen(self.__gameDisplay).displayContent()
+        if programResult == Screen.QUIT_PROGRAM:
+            self.__quitGame()
         
         programResult = MainMenuScreen(self.__gameDisplay).displayContent()
         if programResult == Screen.QUIT_PROGRAM:

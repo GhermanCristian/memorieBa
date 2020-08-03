@@ -10,7 +10,7 @@ class ExitScreen(Screen):
     
     def __init__(self, gameDisplay, backgroundImage):
         self.__backgroundImage = os.path.join(os.getcwd(), "Images")
-        self.__backgroundImage = os.path.join(self.__backgroundImage, "Special images")
+        self.__backgroundImage = os.path.join(self.__backgroundImage, "Special_images")
         self.__backgroundImage = pygame.image.load(os.path.join(self.__backgroundImage, backgroundImage))
         
         self.__gameDisplay = gameDisplay
