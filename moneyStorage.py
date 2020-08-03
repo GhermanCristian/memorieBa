@@ -7,7 +7,7 @@ class MoneyStorage():
         self.__filePath = os.path.join(self.__filePath, "moneySum.pickle")
     
     def __initEmptyPickle(self):
-        self.saveMoney(0.0);
+        self.saveMoney(100000.0);
     
     def saveMoney(self, moneyQuantity):
         file = open(self.__filePath, "wb")
@@ -15,7 +15,7 @@ class MoneyStorage():
         file.close()
     
     def loadMoney(self):
-        moneyQuantity = 0.0
+        moneyQuantity = 100000.0
         
         try:
             file = open(self.__filePath, "rb")

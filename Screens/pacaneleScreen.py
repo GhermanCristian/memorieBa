@@ -5,6 +5,7 @@ from song import Song
 from text import Text
 from label import Label
 from pygame.constants import QUIT, MOUSEMOTION, K_ESCAPE, KEYUP, MOUSEBUTTONUP
+from soundCue import SoundCue
 
 class PacaneleScreen(Screen):
     ACE_OF_SPADES_IMAGE = "ACE_SPADES.jpg"
@@ -55,6 +56,8 @@ class PacaneleScreen(Screen):
     
     RESULT_DISPLAY_TIME = 1000
     
+    PIERDUT_PACANELE_SOUND_CUE = "PIERDUT_PACANELE.ogg"
+    
     def __init__(self, gameDisplay, musicPlayer, statsRepository):
         self.__gameDisplay = gameDisplay
         self.__musicPlayer = musicPlayer
@@ -75,6 +78,9 @@ class PacaneleScreen(Screen):
         self.__pacaneleFont = pygame.font.SysFont(PacaneleScreen.TEXT_FONT, PacaneleScreen.TEXT_FONT_SIZE, True)
         
         self.__previousSongTime = 0
+        
+        self.__pierdutPacaneleSoundCue = os.path.join(os.getcwd(), "Music")
+        self.__pierdutPacaneleSoundCue = os.path.join(self.__pierdutPacaneleSoundCue, PacaneleScreen.PIERDUT_PACANELE_SOUND_CUE)
         
     def setBackgroundImage(self):
         self.__gameDisplay.fill(PacaneleScreen.BG_COLOR)
@@ -121,7 +127,8 @@ class PacaneleScreen(Screen):
         else:
             textBlock = self.__pacaneleFont.render("LOSS", True, PacaneleScreen.TEXT_FONT_COLOR)
         textRect = textBlock.get_rect()
-        textRect.center = (Constants.WINDOW_WIDTH / 2, Constants.WINDOW_HEIGHT / 2)
+        textRect.center = (Constants.WINDOW_WIDTH / 2, Constants.WINDOW_HEIGHT / 2 - 50)
+        # we subtract 50 pixels from the height so that the text doesn't exceed the limits of the rectangle that updates when stuff changes
         self.__gameDisplay.blit(textBlock, textRect)
         
         pygame.display.update()
@@ -135,6 +142,9 @@ class PacaneleScreen(Screen):
         pygame.display.update(section)
     
     def __displayCompletedAchievement(self, achievement):
+        if achievement.soundCue != None:
+            achievement.soundCue.play()
+        
         section = pygame.Rect(PacaneleScreen.PREVIOUS_RESULTS_LEFT_MARGIN, Constants.WINDOW_HEIGHT - PacaneleScreen.MONEY_TEXT_ROW_HEIGHT - PacaneleScreen.MONEY_TEXT_TOP_MARGIN, Constants.WINDOW_WIDTH - 2 * PacaneleScreen.PREVIOUS_RESULTS_LEFT_MARGIN, PacaneleScreen.MONEY_TEXT_ROW_HEIGHT + PacaneleScreen.MONEY_TEXT_TOP_MARGIN)
         pygame.draw.rect(self.__gameDisplay, PacaneleScreen.BG_COLOR, section)
         Text("Achievement unlocked: %s" % achievement.title, PacaneleScreen.MONEY_TEXT_FONT, PacaneleScreen.MONEY_TEXT_FONT_SIZE, PacaneleScreen.MONEY_TEXT_COLOR).display(self.__gameDisplay, Constants.WINDOW_HEIGHT - PacaneleScreen.MONEY_TEXT_ROW_HEIGHT - PacaneleScreen.MONEY_TEXT_TOP_MARGIN , PacaneleScreen.PREVIOUS_RESULTS_LEFT_MARGIN)
@@ -238,8 +248,10 @@ class PacaneleScreen(Screen):
                         self.__resultScreen(True)
                         
                     else:
-                        self.__processAchievement(self.__statsRepository.madeBet, currentBet)
+                        self.__processAchievement(self.__statsRepository.madeBet, -currentBet)
                         currentBet = 0.0
+                        if moneyLeft < 0.1: # normally it would be == 0.0 but python math is stupid
+                            SoundCue(self.__pierdutPacaneleSoundCue).play()
                         self.__resultScreen(False)
                     
                 self.__updateResultTextSection(moneyLeft, currentBet)

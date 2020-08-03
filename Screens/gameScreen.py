@@ -168,6 +168,9 @@ class GameScreen(Screen):
             self.__board.reshuffleHiddenTiles()
     
     def __displayCompletedAchievement(self, achievement):
+        if achievement.soundCue != None:
+            achievement.soundCue.play()
+        
         section = pygame.Rect(GameScreen.LEFT_MARGIN, Constants.WINDOW_HEIGHT - GameScreen.TEXT_ROW_HEIGHT - GameScreen.TEXT_TOP_MARGIN, Constants.WINDOW_WIDTH - 2 * GameScreen.LEFT_MARGIN, GameScreen.TEXT_ROW_HEIGHT + GameScreen.TEXT_TOP_MARGIN)
         pygame.draw.rect(self.__gameDisplay, GameScreen.BG_COLOR, section)
         Text("Achievement unlocked: %s" % achievement.title, GameScreen.TEXT_FONT, GameScreen.TEXT_FONT_SIZE, GameScreen.TEXT_COLOR).display(self.__gameDisplay, Constants.WINDOW_HEIGHT - GameScreen.TEXT_ROW_HEIGHT - GameScreen.TEXT_TOP_MARGIN , GameScreen.LEFT_MARGIN)
@@ -378,7 +381,6 @@ class GameScreen(Screen):
                 return (Screen.QUIT_PROGRAM, Screen.QUIT_PROGRAM)
             
             if level == GameScreen.NR_OF_LEVELS:
-                currentVolume = pygame.mixer.music.get_volume()
                 SoundCue(GameScreen.INTELIGENT_SOUND_PATH).play()
             else:
                 SoundCue(GameScreen.SERGHEI_SOUND_PATH).play()
@@ -386,7 +388,7 @@ class GameScreen(Screen):
             self.__endLevelAnimation()
             pygame.time.wait(2500) #PSA: don't have task manager open when ending a level, apparently wait() behaves weirdly
             
-        pygame.mixer.music.set_volume(currentVolume) #restore the music volume after exiting the last level
+        pygame.mixer.music.set_volume(Constants.NORMAL_VOLUME) #restore the music volume after exiting the last level
 
         MoneyStorage().saveMoney(self.__money)
         self.__statsRepository.exitLevel(self.__totalTime)

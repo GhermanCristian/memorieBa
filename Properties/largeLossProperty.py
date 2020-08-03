@@ -1,5 +1,5 @@
 class LargeLossProperty:
-    MINIMUM_QUANTITY = 1000
+    MINIMUM_QUANTITY = -1000
     
     def __init__(self):
         self.__largeLoss = False
@@ -13,6 +13,7 @@ class LargeLossProperty:
     def checkCompletion(self):
         return self.__largeLoss
     
-    def updateProperty(self, winnings):
-        if winnings >= LargeLossProperty.MINIMUM_QUANTITY:
+    def updateProperty(self, losses):
+        # losses = -abs(the_amount_lost)
+        if losses <= LargeLossProperty.MINIMUM_QUANTITY:
             self.__largeLoss = True

@@ -40,6 +40,10 @@ class Achievement:
         return self.__description
     
     @property
+    def soundCue(self):
+        return self.__soundCue
+    
+    @property
     def prop(self):
         return self.__prop
     

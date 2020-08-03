@@ -1,10 +1,11 @@
 from Screens.screen import Screen
-import pygame
+import pygame, os
 from constants import Constants
 from pygame.constants import QUIT, KEYUP, K_ESCAPE, K_RIGHT, MOUSEMOTION, MOUSEBUTTONUP
 from leaderboard import Leaderboard
 from text import Text
 from button import Button
+from soundCue import SoundCue
 
 class LeaderboardScreen(Screen):
     TEXT_FONT = "candara"
@@ -29,6 +30,8 @@ class LeaderboardScreen(Screen):
     PREVIOUS_BUTTON_LEFT_COORD = 500
     NEXT_BUTTON_LEFT_COORD = Constants.WINDOW_WIDTH - 500 - DIRECTION_BUTTON_SIZE
     
+    VITEZA_SOUND_CUE = "VITEZA.ogg"
+    
     def __init__(self, gameDisplay, musicPlayer):
         self.__gameDisplay = gameDisplay
         self.__musicPlayer = musicPlayer
@@ -39,6 +42,9 @@ class LeaderboardScreen(Screen):
         self.__smartLeaderMedium = Leaderboard("smart_medium.pickle")
         self.__fastLeaderHard = Leaderboard("fast_hard.pickle")
         self.__smartLeaderHard = Leaderboard("smart_hard.pickle")
+        
+        self.__vitezaSoundCuePath = os.path.join(os.getcwd(), "Music")
+        self.__vitezaSoundCuePath = os.path.join(self.__vitezaSoundCuePath, LeaderboardScreen.VITEZA_SOUND_CUE)
         
     def setBackgroundImage(self):
         self.__gameDisplay.fill(LeaderboardScreen.BG_COLOR)
@@ -74,6 +80,11 @@ class LeaderboardScreen(Screen):
     def __updateLeaderboard(self, result, leaderboard, playerName):
         newEntry = leaderboard.checkResult(result)
         if newEntry == True:
+            if result > 400:
+            # this means that the result is a totalTime, because it is not feasible that the nr. of moves will be larger than 400
+            # and even if it is, it won't get past checkResult, because the last entry in the leaderboard has the same amount of moves
+            # on the other hand, no one can finish the game in less than 0.4 seconds, so we are guaranteed to always get here when setting a new time record
+                SoundCue(self.__vitezaSoundCuePath).play()
             leaderboard.addResult(result, playerName)
     
     def updateLeaderboards(self, totalTime, totalMoves, playerName, difficulty):

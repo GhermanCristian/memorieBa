@@ -72,6 +72,9 @@ class NameScreen(Screen):
                         return userInput
     
     def __displayCompletedAchievement(self, achievement):
+        if achievement.soundCue != None:
+            achievement.soundCue.play()
+        
         section = pygame.Rect(NameScreen.EASY_BUTTON_LEFT_COORD, Constants.WINDOW_HEIGHT - NameScreen.TEXT_ROW_HEIGHT - NameScreen.TEXT_BOTTOM_MARGIN, Constants.WINDOW_WIDTH - 2 * NameScreen.EASY_BUTTON_LEFT_COORD, NameScreen.TEXT_ROW_HEIGHT + NameScreen.TEXT_BOTTOM_MARGIN)
         pygame.draw.rect(self.__gameDisplay, NameScreen.BG_COLOR, section)
         Text("Achievement unlocked: %s" % achievement.title, NameScreen.TEXT_FONT, NameScreen.TEXT_FONT_SIZE, NameScreen.TEXT_COLOR).display(self.__gameDisplay, Constants.WINDOW_HEIGHT - NameScreen.TEXT_ROW_HEIGHT - NameScreen.TEXT_BOTTOM_MARGIN , NameScreen.EASY_BUTTON_LEFT_COORD)

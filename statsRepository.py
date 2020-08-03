@@ -2,6 +2,7 @@ import pickle, os, achievement
 from achievement import Achievement
 from statistic import Statistic
 from constants import Constants
+from soundCue import SoundCue
 from Properties.foundAllImagesProperty import FoundAllImagesProperty
 from Properties.foundAllSoundCuesProperty import FoundAllSoundCuesProperty
 from Properties.foundImageProperty import FoundImageProperty
@@ -49,6 +50,15 @@ class StatsRepository:
     ASAFACI_IMAGE_TITLE = "SPECIAL_9_ASAFACI_1"
     IESIACASA_IMAGE_TITLE = "SPECIAL_9_IESIACASA_1"
     
+    PACANELE_BIG_WIN = "MILION.ogg"
+    MR_CHINESE = "DOMNUL.ogg"
+    TRAFIC_MOLDOVEAN = "TRAFIC.ogg"
+    ESTI_TAMPIT = "TAMPIT.ogg"
+    ERNEST_MINTILE = "MINTILE.ogg"
+    SPALA_TE_JEGOSULE = "SPALA-TE.ogg"
+    DACA_TACI = "TACI.ogg"
+    TONTULE = "PRAZNIC.ogg"
+    
     def __init__(self):
         self.achievementList = []
         self.statsList = []
@@ -65,7 +75,12 @@ class StatsRepository:
         path = os.path.join(os.getcwd(), "Data")
         path = os.path.join(path, "Stats")
         path = os.path.join(path, filename)
-        return path 
+        return path
+    
+    def __determineSoundCuePath(self, soundCue):
+        path = os.path.join(os.getcwd(), "Music")
+        path = os.path.join(path, soundCue)
+        return path
     
     def __saveAchievements(self):
         file = open(self.__achievementPath, "wb")
@@ -76,16 +91,16 @@ class StatsRepository:
         # as a general guideline, I should have the hidden achievements last in the list        
         self.achievementList.clear()
         self.achievementList.append(Achievement("Pe toate ma ?", False, "Find all the images", None, FoundAllImagesProperty(self.__imageFolderPath), Constants.TRIGGER_FOUND_IMAGE))
-        self.achievementList.append(Achievement("Ce-o zis ala ba ?", False, "Find all the sound cues", None, FoundAllSoundCuesProperty(self.__soundCueFolderPath), Constants.TRIGGER_FOUND_SOUND_CUE))
-        self.achievementList.append(Achievement("You did it. You crazy son of a bitch, you did it", False, "Perfect level", None, PerfectLevelProperty(), Constants.TRIGGER_END_LEVEL))
+        self.achievementList.append(Achievement("Ce-o zis ala ba ?", False, "Find (almost) all the sound cues", SoundCue(self.__determineSoundCuePath(StatsRepository.TONTULE)), FoundAllSoundCuesProperty(self.__soundCueFolderPath), Constants.TRIGGER_FOUND_SOUND_CUE))
+        self.achievementList.append(Achievement("You did it. You crazy son of a bitch, you did it", False, "Perfect level", SoundCue(self.__determineSoundCuePath(StatsRepository.ESTI_TAMPIT)), PerfectLevelProperty(), Constants.TRIGGER_END_LEVEL))
         
-        self.achievementList.append(Achievement("Bei azi, mori maine", False, "Drink Freedom", None, BoughtFreedomProperty(), Constants.TRIGGER_BOUGHT_DRINK))
-        self.achievementList.append(Achievement("Alcoholic", False, "Drink Timisoreana", None, BoughtTimisoreanaProperty(), Constants.TRIGGER_BOUGHT_DRINK))
-        self.achievementList.append(Achievement("Betting veteran", False, "Bet 100 times", None, BetVeteranProperty(), Constants.TRIGGER_MADE_BET))
-        self.achievementList.append(Achievement("High risk, high reward", False, "Win big", None, LargeWinProperty(), Constants.TRIGGER_MADE_BET))
+        self.achievementList.append(Achievement("Bei azi, mori maine", False, "Drink Freedom", SoundCue(self.__determineSoundCuePath(StatsRepository.SPALA_TE_JEGOSULE)), BoughtFreedomProperty(), Constants.TRIGGER_BOUGHT_DRINK))
+        self.achievementList.append(Achievement("Alcoholic", False, "Drink Timisoreana", SoundCue(self.__determineSoundCuePath(StatsRepository.TRAFIC_MOLDOVEAN)), BoughtTimisoreanaProperty(), Constants.TRIGGER_BOUGHT_DRINK))
+        self.achievementList.append(Achievement("Betting veteran", False, "Bet 100 times", SoundCue(self.__determineSoundCuePath(StatsRepository.ERNEST_MINTILE)), BetVeteranProperty(), Constants.TRIGGER_MADE_BET))
+        self.achievementList.append(Achievement("High risk, high reward", False, "Win big", SoundCue(self.__determineSoundCuePath(StatsRepository.PACANELE_BIG_WIN)), LargeWinProperty(), Constants.TRIGGER_MADE_BET))
         self.achievementList.append(Achievement("High risk, low reward", False, "Lose big", None, LargeLossProperty(), Constants.TRIGGER_MADE_BET))
         
-        self.achievementList.append(Achievement("Cioaca in libertate", True, "Find Elodia", None, FoundImageProperty(StatsRepository.ELODIA_IMAGE_TITLE), Constants.TRIGGER_FOUND_IMAGE))
+        self.achievementList.append(Achievement("Cioaca in libertate", True, "Find Elodia", SoundCue(self.__determineSoundCuePath(StatsRepository.DACA_TACI)), FoundImageProperty(StatsRepository.ELODIA_IMAGE_TITLE), Constants.TRIGGER_FOUND_IMAGE))
         self.achievementList.append(Achievement("Somn usor", True, "Find CV", None, FoundImageProperty(StatsRepository.CV_IMAGE_TITLE), Constants.TRIGGER_FOUND_IMAGE))
         self.achievementList.append(Achievement("One small step for a man...", True, "...one giant leap for mankind", None, FoundImageProperty(StatsRepository.BECALI_ASTRONAUT_IMAGE_TITLE), Constants.TRIGGER_FOUND_IMAGE))
         self.achievementList.append(Achievement("Buna bata", True, "Buna, Tarzan!", None, FoundImageProperty(StatsRepository.TARZAN_IMAGE_TITLE), Constants.TRIGGER_FOUND_IMAGE))
@@ -117,7 +132,7 @@ class StatsRepository:
         self.achievementList.append(Achievement("Let me live my americandrim", True, "Zice bine Puya", None, PictureSongComboProperty("PUYA"), Constants.TRIGGER_FOUND_COMBO))
         
         self.achievementList.append(Achievement("K House", True, "Usile vol. 2", None, SetNameProperty(["specii"]), Constants.TRIGGER_SET_NAME))
-        self.achievementList.append(Achievement("Suntem", True, "Mr. Chinese", None, SetNameProperty(["chin", "china", "domnul"]), Constants.TRIGGER_SET_NAME))
+        self.achievementList.append(Achievement("Suntem", True, "Mr. Chinese", SoundCue(self.__determineSoundCuePath(StatsRepository.MR_CHINESE)), SetNameProperty(["chin", "china", "domnul"]), Constants.TRIGGER_SET_NAME))
         
         self.__saveAchievements()
     
