@@ -33,11 +33,14 @@ class GUI:
         programResult = WelcomeScreen(self.__gameDisplay).displayContent()
         if programResult == Screen.QUIT_PROGRAM:
             self.__quitGame()
+            return 
+            #I have to add this return because pygame.quit() doesn't actually quit the program, just pygame
+            #that's why there was the issue with the font not being initialised (because at that point pygame was not initialised)
         
-        programResult = MainMenuScreen(self.__gameDisplay).displayContent()
-        if programResult == Screen.QUIT_PROGRAM:
-            self.__quitGame()
-
+        #normally I would have to store the programResult and check for QUIT_PROGRAM, like above;
+        #but this is techically the last screen we interact with, so I would've had quit on both branches of if/else
+        #so I just removed the if/else altogether
+        MainMenuScreen(self.__gameDisplay).displayContent()
         self.__quitGame()
         
         

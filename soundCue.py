@@ -17,16 +17,10 @@ class SoundCue():
         currentVolume = pygame.mixer.music.get_volume()
         pygame.mixer.music.set_volume(currentVolume / 4)
         
+        currentVolume = min(currentVolume * 2, Constants.MAX_SOUND_CUE_VOLUME)
+        currentVolume = max(currentVolume, Constants.MIN_SOUND_CUE_VOLUME)
+        
         ch = pygame.mixer.Channel(channel)
         ch.play(cue)
         ch.set_endevent(SoundCue.SOUND_CUE_END_EVENT)
-        
-        if currentVolume * 2 >= Constants.MAX_SOUND_CUE_VOLUME:
-            currentVolume = Constants.MAX_SOUND_CUE_VOLUME
-        else:
-            currentVolume = currentVolume * 2
-            
-        if currentVolume <= Constants.MIN_SOUND_CUE_VOLUME:
-            currentVolume = Constants.MIN_SOUND_CUE_VOLUME
-        
         cue.set_volume(currentVolume)

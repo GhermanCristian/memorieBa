@@ -32,7 +32,7 @@ class Playlist():
             if os.path.isdir(os.path.join(path, file)):
                 self.__loadPlaylist(os.path.join(path, file))
                 
-            elif "MP3" in radioStation:
+            elif "MP3" in radioStation and (file[-4:] == ".mp3" or file[-4:] == ".MP3") and self.__isRadioContact == False:
                 self.__songs.append(Song(os.path.join(songFolder, file)))
             
             elif (file[0] == "S" and file[1] == "_") and (("RECLAMA" not in file) or ("RECLAMA" in file and self.__hasAds == True and (self.__isRadioContact or ("CONTACT" not in file)))):

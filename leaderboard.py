@@ -15,30 +15,30 @@ class Leaderboard:
     def __initEmptyPickle(self):
         if "fast" in self.__filePath:
             self.scoreList = [
-                ("Emil Boc", 400000), 
-                ("e un tampit", 400010), 
-                ("piperalord2000", 500000), 
-                ("fifti", 600000), 
-                ("connectar", 750000), 
-                ("fasole", 800000), 
-                ("Drake Gardescu", 850000), 
-                ("slabanogu de chimita", 900000), 
-                ("Kazi cu k", 950000), 
-                ("Dragos Tudorache", 1000000)
+                ("Emil Boc", 170000), 
+                ("e un tampit", 170010), 
+                ("piperalord2000", 200000), 
+                ("fifti", 220000), 
+                ("connectar", 240000), 
+                ("fasole", 260000), 
+                ("Drake Gardescu", 280000), 
+                ("slabanogu de chimita", 300000), 
+                ("Kazi cu k", 320000), 
+                ("Dragos Tudorache", 340000)
             ]
             
         elif "smart" in self.__filePath:
             self.scoreList = [
-                ("Emil Boc", 200), 
-                ("e un tampit", 201), 
-                ("piperalord2000", 275), 
-                ("fifti", 300), 
-                ("connectar", 325), 
-                ("fasole", 350), 
-                ("Drake Gardescu", 375), 
-                ("slabanogu de chimita", 400), 
-                ("Kazi cu k", 425), 
-                ("Dragos Tudorache", 450)
+                ("Emil Boc", 140), 
+                ("e un tampit", 141), 
+                ("piperalord2000", 165), 
+                ("fifti", 200), 
+                ("connectar", 225), 
+                ("fasole", 250), 
+                ("Drake Gardescu", 275), 
+                ("slabanogu de chimita", 300), 
+                ("Kazi cu k", 325), 
+                ("Dragos Tudorache", 350)
             ]
             
         self.__savePickle()

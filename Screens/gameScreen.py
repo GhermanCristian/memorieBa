@@ -22,7 +22,7 @@ class GameScreen(Screen):
     BASE_BOX_REVEAL_SPEED = 360 // Constants.FPS
     BOX_REVEAL_SPEED = BASE_BOX_REVEAL_SPEED
     NR_REVEALED_BOXES = 10
-    NR_OF_LEVELS = 3
+    NR_OF_LEVELS = 1
     END_LEVEL_FLASH_COUNT = 10
     BASE_INCREASE_MONEY_AMOUNT = 0.1
     INCREASE_MONEY_AMOUNT = BASE_INCREASE_MONEY_AMOUNT
@@ -371,8 +371,10 @@ class GameScreen(Screen):
     
     def displayContent(self):
         self.__statsRepository.startGame(1)
+        currentVolume = Constants.NORMAL_VOLUME
         
         for level in range(1, GameScreen.NR_OF_LEVELS + 1):        # level indexing starts at 1
+            currentVolume = pygame.mixer.music.get_volume()
             levelResult = self.__playLevel(level)
             if levelResult == Screen.QUIT_PROGRAM:
                 pygame.mouse.set_visible(True)
@@ -388,7 +390,7 @@ class GameScreen(Screen):
             self.__endLevelAnimation()
             pygame.time.wait(2500) #PSA: don't have task manager open when ending a level, apparently wait() behaves weirdly
             
-        pygame.mixer.music.set_volume(Constants.NORMAL_VOLUME) #restore the music volume after exiting the last level
+        pygame.mixer.music.set_volume(currentVolume) #restore the music volume after exiting the last level
 
         MoneyStorage().saveMoney(self.__money)
         self.__statsRepository.exitLevel(self.__totalTime)

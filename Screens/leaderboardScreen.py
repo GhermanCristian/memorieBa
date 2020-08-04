@@ -137,6 +137,8 @@ class LeaderboardScreen(Screen):
                 elif event.type == MOUSEBUTTONUP:
                     mouseX, mouseY = event.pos
                     mouseClicked = True
+                elif event.type == SoundCue.SOUND_CUE_END_EVENT:
+                    self.__musicPlayer.fadeIn()
             
             if mouseClicked == True:
                 if previousButton.collides(mouseX, mouseY):
