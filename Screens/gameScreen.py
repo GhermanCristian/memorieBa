@@ -22,9 +22,9 @@ class GameScreen(Screen):
     BASE_BOX_REVEAL_SPEED = 360 // Constants.FPS
     BOX_REVEAL_SPEED = BASE_BOX_REVEAL_SPEED
     NR_REVEALED_BOXES = 10
-    NR_OF_LEVELS = 1
+    NR_OF_LEVELS = 3
     END_LEVEL_FLASH_COUNT = 10
-    BASE_INCREASE_MONEY_AMOUNT = 0.1
+    BASE_INCREASE_MONEY_AMOUNT = 10
     INCREASE_MONEY_AMOUNT = BASE_INCREASE_MONEY_AMOUNT
     LEFT_MARGIN = int((Constants.WINDOW_WIDTH - (Board.BOARD_WIDTH * (BOX_SIZE + GAP_SIZE) - GAP_SIZE)) / 2)
     TOP_MARGIN = int((Constants.WINDOW_HEIGHT - (Board.BOARD_HEIGHT * (BOX_SIZE + GAP_SIZE) - GAP_SIZE)) / 2)
@@ -215,7 +215,7 @@ class GameScreen(Screen):
     def __displayGameInfo(self, timePassed, nrMoves, level):
         Text(("Current moves = %d" % nrMoves), GameScreen.TEXT_FONT, GameScreen.TEXT_FONT_SIZE, GameScreen.TEXT_COLOR).display(self.__gameDisplay, GameScreen.TEXT_TOP_MARGIN, GameScreen.TEXT_LEFT_MARGIN)
         Text(("Total moves = %d" % self.__totalMoves), GameScreen.TEXT_FONT, GameScreen.TEXT_FONT_SIZE, GameScreen.TEXT_COLOR).display(self.__gameDisplay, GameScreen.TEXT_TOP_MARGIN + GameScreen.TEXT_ROW_HEIGHT, GameScreen.TEXT_LEFT_MARGIN)
-        Text(("%.2f lei" % self.__money), GameScreen.TEXT_FONT, GameScreen.TEXT_FONT_SIZE, GameScreen.TEXT_COLOR).display(self.__gameDisplay, GameScreen.TEXT_TOP_MARGIN + 2 * GameScreen.TEXT_ROW_HEIGHT, GameScreen.TEXT_LEFT_MARGIN)
+        Text(("%.2f lei" % (self.__money / Constants.MONEY_AMOUNT_MODIFIER)), GameScreen.TEXT_FONT, GameScreen.TEXT_FONT_SIZE, GameScreen.TEXT_COLOR).display(self.__gameDisplay, GameScreen.TEXT_TOP_MARGIN + 2 * GameScreen.TEXT_ROW_HEIGHT, GameScreen.TEXT_LEFT_MARGIN)
         Text(("Level = %d / %d" % (level, GameScreen.NR_OF_LEVELS)), GameScreen.TEXT_FONT, GameScreen.TEXT_FONT_SIZE, GameScreen.TEXT_COLOR).display(self.__gameDisplay, GameScreen.TEXT_TOP_MARGIN + 3 * GameScreen.TEXT_ROW_HEIGHT, GameScreen.TEXT_LEFT_MARGIN)
         Text(self.__convertTime(timePassed), GameScreen.TEXT_FONT, GameScreen.TEXT_FONT_SIZE, GameScreen.TEXT_COLOR).display(self.__gameDisplay, Constants.WINDOW_HEIGHT - 2 * GameScreen.TEXT_ROW_HEIGHT - GameScreen.TEXT_TOP_MARGIN, GameScreen.TEXT_LEFT_MARGIN)
         Text(self.__convertTime(self.__totalTime), GameScreen.TEXT_FONT, GameScreen.TEXT_FONT_SIZE, GameScreen.TEXT_COLOR).display(self.__gameDisplay, Constants.WINDOW_HEIGHT - GameScreen.TEXT_ROW_HEIGHT - GameScreen.TEXT_TOP_MARGIN, GameScreen.TEXT_LEFT_MARGIN)
@@ -332,7 +332,7 @@ class GameScreen(Screen):
                                 
                                 nrRevealed += 2
                                 self.__money += GameScreen.INCREASE_MONEY_AMOUNT
-                                self.__statsRepository.earnedMoney(GameScreen.INCREASE_MONEY_AMOUNT)
+                                self.__statsRepository.earnedMoney(GameScreen.INCREASE_MONEY_AMOUNT / Constants.MONEY_AMOUNT_MODIFIER)
                                 self.__processAchievement(self.__statsRepository.foundImage, image1.title)
                                 self.__processAchievement(self.__statsRepository.foundImage, image2.title)
                                 # we put both pictures in here because we might have a special pair
@@ -388,7 +388,7 @@ class GameScreen(Screen):
                 SoundCue(GameScreen.SERGHEI_SOUND_PATH).play()
             
             self.__endLevelAnimation()
-            pygame.time.wait(2500) #PSA: don't have task manager open when ending a level, apparently wait() behaves weirdly
+            pygame.time.wait(2200) #PSA: don't have task manager open when ending a level, apparently wait() behaves weirdly
             
         pygame.mixer.music.set_volume(currentVolume) #restore the music volume after exiting the last level
 

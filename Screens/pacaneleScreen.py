@@ -26,8 +26,8 @@ class PacaneleScreen(Screen):
     DRINK_IMAGE_LEFT_MARGIN = 50
     DRINK_IMAGE_TOP_MARGIN = 50
     DRINK_IMAGE_SIZE = BOX_SIZE
-    FREEDOM_PRICE = 2.0
-    TIMISOREANA_PRICE = 2.5
+    FREEDOM_PRICE = 200
+    TIMISOREANA_PRICE = 250
     
     NR_PREV_COLORS = 7
     PREVIOUS_RESULTS_LEFT_MARGIN = (Constants.WINDOW_WIDTH - NR_PREV_COLORS * BOX_SIZE - (NR_PREV_COLORS - 1) * GAP_SIZE) // 2
@@ -103,16 +103,16 @@ class PacaneleScreen(Screen):
                 pygame.draw.rect(self.__gameDisplay, PacaneleScreen.LIGHT_BG_COLOR, (PacaneleScreen.PREVIOUS_RESULTS_LEFT_MARGIN + i * (PacaneleScreen.BOX_SIZE + PacaneleScreen.GAP_SIZE), PacaneleScreen.PREVIOUS_RESULTS_TOP_MARGIN, PacaneleScreen.BOX_SIZE, PacaneleScreen.BOX_SIZE))
     
     def __displayText(self, moneyLeft, currentBet):        
-        totalMoneyText = Text("Left: %.2f lei" % moneyLeft, PacaneleScreen.MONEY_TEXT_FONT, PacaneleScreen.MONEY_TEXT_FONT_SIZE, PacaneleScreen.MONEY_TEXT_COLOR)
+        totalMoneyText = Text("Left: %.2f lei" % (moneyLeft / Constants.MONEY_AMOUNT_MODIFIER), PacaneleScreen.MONEY_TEXT_FONT, PacaneleScreen.MONEY_TEXT_FONT_SIZE, PacaneleScreen.MONEY_TEXT_COLOR)
         # we don't just display the text, we use labels because they will center the text
         Label(Constants.WINDOW_HEIGHT / 2 - PacaneleScreen.MONEY_TEXT_ROW_HEIGHT, Constants.WINDOW_WIDTH / 2 - len(totalMoneyText.content) * PacaneleScreen.MONEY_TEXT_FONT_SIZE / 2, -1, PacaneleScreen.MONEY_TEXT_ROW_HEIGHT, PacaneleScreen.BG_COLOR, totalMoneyText).display(self.__gameDisplay)
-        currentBetText = Text("Current bet: %.2f lei" % currentBet, PacaneleScreen.MONEY_TEXT_FONT, PacaneleScreen.MONEY_TEXT_FONT_SIZE, PacaneleScreen.MONEY_TEXT_COLOR)
+        currentBetText = Text("Current bet: %.2f lei" % (currentBet / Constants.MONEY_AMOUNT_MODIFIER), PacaneleScreen.MONEY_TEXT_FONT, PacaneleScreen.MONEY_TEXT_FONT_SIZE, PacaneleScreen.MONEY_TEXT_COLOR)
         Label(Constants.WINDOW_HEIGHT / 2, Constants.WINDOW_WIDTH / 2 - len(currentBetText.content) * PacaneleScreen.MONEY_TEXT_FONT_SIZE / 2, -1, PacaneleScreen.MONEY_TEXT_ROW_HEIGHT, PacaneleScreen.BG_COLOR, currentBetText).display(self.__gameDisplay)
         
         Text("Freedom", PacaneleScreen.MONEY_TEXT_FONT, PacaneleScreen.MONEY_TEXT_FONT_SIZE, PacaneleScreen.MONEY_TEXT_COLOR).display(self.__gameDisplay, PacaneleScreen.DRINK_IMAGE_TOP_MARGIN + PacaneleScreen.DRINK_IMAGE_SIZE + PacaneleScreen.GAP_SIZE, PacaneleScreen.DRINK_IMAGE_LEFT_MARGIN + PacaneleScreen.DRINK_IMAGE_SIZE // 2 - 50)
-        Text("%.0f lei" % PacaneleScreen.FREEDOM_PRICE, PacaneleScreen.MONEY_TEXT_FONT, PacaneleScreen.MONEY_TEXT_FONT_SIZE, PacaneleScreen.MONEY_TEXT_COLOR).display(self.__gameDisplay, PacaneleScreen.DRINK_IMAGE_TOP_MARGIN + PacaneleScreen.DRINK_IMAGE_SIZE + PacaneleScreen.MONEY_TEXT_ROW_HEIGHT, PacaneleScreen.DRINK_IMAGE_LEFT_MARGIN + PacaneleScreen.DRINK_IMAGE_SIZE // 2 - 50)
+        Text("%.0f lei" % (PacaneleScreen.FREEDOM_PRICE / Constants.MONEY_AMOUNT_MODIFIER), PacaneleScreen.MONEY_TEXT_FONT, PacaneleScreen.MONEY_TEXT_FONT_SIZE, PacaneleScreen.MONEY_TEXT_COLOR).display(self.__gameDisplay, PacaneleScreen.DRINK_IMAGE_TOP_MARGIN + PacaneleScreen.DRINK_IMAGE_SIZE + PacaneleScreen.MONEY_TEXT_ROW_HEIGHT, PacaneleScreen.DRINK_IMAGE_LEFT_MARGIN + PacaneleScreen.DRINK_IMAGE_SIZE // 2 - 50)
         Text("Timisoreana", PacaneleScreen.MONEY_TEXT_FONT, PacaneleScreen.MONEY_TEXT_FONT_SIZE, PacaneleScreen.MONEY_TEXT_COLOR).display(self.__gameDisplay, PacaneleScreen.DRINK_IMAGE_TOP_MARGIN + PacaneleScreen.DRINK_IMAGE_SIZE + PacaneleScreen.GAP_SIZE, Constants.WINDOW_WIDTH - PacaneleScreen.DRINK_IMAGE_LEFT_MARGIN - PacaneleScreen.DRINK_IMAGE_SIZE)
-        Text("%.1f lei" % PacaneleScreen.TIMISOREANA_PRICE, PacaneleScreen.MONEY_TEXT_FONT, PacaneleScreen.MONEY_TEXT_FONT_SIZE, PacaneleScreen.MONEY_TEXT_COLOR).display(self.__gameDisplay, PacaneleScreen.DRINK_IMAGE_TOP_MARGIN + PacaneleScreen.DRINK_IMAGE_SIZE + PacaneleScreen.MONEY_TEXT_ROW_HEIGHT, Constants.WINDOW_WIDTH - PacaneleScreen.DRINK_IMAGE_LEFT_MARGIN - PacaneleScreen.DRINK_IMAGE_SIZE)
+        Text("%.1f lei" % (PacaneleScreen.TIMISOREANA_PRICE / Constants.MONEY_AMOUNT_MODIFIER), PacaneleScreen.MONEY_TEXT_FONT, PacaneleScreen.MONEY_TEXT_FONT_SIZE, PacaneleScreen.MONEY_TEXT_COLOR).display(self.__gameDisplay, PacaneleScreen.DRINK_IMAGE_TOP_MARGIN + PacaneleScreen.DRINK_IMAGE_SIZE + PacaneleScreen.MONEY_TEXT_ROW_HEIGHT, Constants.WINDOW_WIDTH - PacaneleScreen.DRINK_IMAGE_LEFT_MARGIN - PacaneleScreen.DRINK_IMAGE_SIZE)
 
     def __checkResult(self, choice):
         actualResult = random.randint(0, 1)
@@ -186,7 +186,7 @@ class PacaneleScreen(Screen):
         box5Ron = pygame.Rect(PacaneleScreen.BILL_LEFT_MARGIN + PacaneleScreen.GAP_SIZE + PacaneleScreen.BILL_WIDTH, PacaneleScreen.BILL_TOP_MARGIN, PacaneleScreen.BILL_WIDTH, PacaneleScreen.BILL_HEIGHT)
         box10Ron = pygame.Rect(PacaneleScreen.BILL_LEFT_MARGIN + 2 * (PacaneleScreen.GAP_SIZE + PacaneleScreen.BILL_WIDTH), PacaneleScreen.BILL_TOP_MARGIN, PacaneleScreen.BILL_WIDTH, PacaneleScreen.BILL_HEIGHT)
         box50Ron = pygame.Rect(PacaneleScreen.BILL_LEFT_MARGIN + 3 * (PacaneleScreen.GAP_SIZE + PacaneleScreen.BILL_WIDTH), PacaneleScreen.BILL_TOP_MARGIN, PacaneleScreen.BILL_WIDTH, PacaneleScreen.BILL_HEIGHT)
-        billList = [(box1Ron, 1), (box5Ron, 5), (box10Ron, 10), (box50Ron, 50)]
+        billList = [(box1Ron, 100), (box5Ron, 500), (box10Ron, 1000), (box50Ron, 5000)]
         
         freedomBox = pygame.Rect(PacaneleScreen.DRINK_IMAGE_LEFT_MARGIN, PacaneleScreen.DRINK_IMAGE_TOP_MARGIN, PacaneleScreen.DRINK_IMAGE_SIZE, PacaneleScreen.DRINK_IMAGE_SIZE)
         timisoreanaBox = pygame.Rect(Constants.WINDOW_WIDTH - PacaneleScreen.DRINK_IMAGE_LEFT_MARGIN - PacaneleScreen.DRINK_IMAGE_SIZE, PacaneleScreen.DRINK_IMAGE_TOP_MARGIN, PacaneleScreen.DRINK_IMAGE_SIZE, PacaneleScreen.DRINK_IMAGE_SIZE)
@@ -212,7 +212,7 @@ class PacaneleScreen(Screen):
                     if bill[0].collidepoint(mouseX, mouseY) and bill[1] <= moneyLeft:
                         currentBet += bill[1]
                         moneyLeft -= bill[1]
-                        self.__statsRepository.spentMoney(bill[1])
+                        self.__statsRepository.spentMoney(bill[1] / Constants.MONEY_AMOUNT_MODIFIER)
                         alreadyClicked = True
                         break
                     
@@ -222,13 +222,13 @@ class PacaneleScreen(Screen):
                         alreadyClicked = True
                         self.__processAchievement(self.__statsRepository.boughtDrink, drink[2])
                         self.__statsRepository.boughtDrinkStat(1)
-                        self.__statsRepository.spentMoney(drink[1])
+                        self.__statsRepository.spentMoney(drink[1] / Constants.MONEY_AMOUNT_MODIFIER)
                         break
                 
                 if alreadyClicked == False:
                     if saveBox.collidepoint(mouseX, mouseY):
                         moneyLeft += currentBet
-                        self.__statsRepository.earnedMoney(currentBet)
+                        self.__statsRepository.earnedMoney(currentBet / Constants.MONEY_AMOUNT_MODIFIER)
                         return moneyLeft
                     
                     # no use in clicking the red/ black buttons if there is nothing to bet
@@ -243,14 +243,14 @@ class PacaneleScreen(Screen):
                         continue
                     
                     if self.__checkResult(choice): # correct guess
-                        currentBet *= 2.0
+                        currentBet *= 2
                         self.__processAchievement(self.__statsRepository.madeBet, currentBet)
                         self.__resultScreen(True)
                         
                     else:
                         self.__processAchievement(self.__statsRepository.madeBet, -currentBet)
-                        currentBet = 0.0
-                        if moneyLeft < 0.1: # normally it would be == 0.0 but python math is stupid
+                        currentBet = 0
+                        if moneyLeft == 0:
                             SoundCue(self.__pierdutPacaneleSoundCue).play()
                         self.__resultScreen(False)
                     

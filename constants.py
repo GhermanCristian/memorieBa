@@ -52,6 +52,8 @@ class Constants:
     TRIGGER_EARNED_MONEY = "earnedMoney"
     TRIGGER_SPENT_MONEY = "spentMoney"
     
+    MONEY_AMOUNT_MODIFIER = 100 # we multiply all money sums by this so that we don't have to deal with floating point arithmetic
+    
     def __init__(self):
         pass
 
