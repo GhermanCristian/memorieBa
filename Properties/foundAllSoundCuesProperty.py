@@ -8,9 +8,6 @@ class FoundAllSoundCuesProperty:
 
     def __initEmptyProperty(self):
         for file in os.listdir(self.__soundCueFolder):
-            if os.path.isdir(os.path.join(self.__soundCueFolder, file)):
-                continue
-            
             currentSoundCue = os.path.join(self.__soundCueFolder, file)
             self.__soundCuesDict[currentSoundCue] = False
 

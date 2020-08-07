@@ -5,6 +5,7 @@ from pygame.constants import K_RETURN, QUIT, KEYUP, K_ESCAPE, KEYDOWN, K_BACKSPA
 from text import Text
 from label import Label
 from button import Button
+from soundCue import SoundCue
 
 class NameScreen(Screen):
     MAX_NAME_LENGTH = 24
@@ -68,6 +69,8 @@ class NameScreen(Screen):
                     elif event.key == K_BACKSPACE:
                         userInput = userInput[:-1]
                         self.__displayTextBox(userInput)
+                    elif event.type == SoundCue.SOUND_CUE_END_EVENT:
+                        self.__musicPlayer.fadeIn() 
                     elif event.key == K_RETURN:
                         return userInput
     
@@ -133,6 +136,8 @@ class NameScreen(Screen):
                 elif event.type == MOUSEBUTTONUP:
                     mouseX, mouseY = event.pos
                     mouseClicked = True
+                elif event.type == SoundCue.SOUND_CUE_END_EVENT:
+                    self.__musicPlayer.fadeIn()
                     
             if mouseClicked == True:
                 if easyButton.collides(mouseX, mouseY):

@@ -1,5 +1,5 @@
 class LargeWinProperty:
-    MINIMUM_QUANTITY = 1000
+    MINIMUM_QUANTITY = 100000
     
     def __init__(self):
         self.__largeWin = False

@@ -1,5 +1,4 @@
-import pickle
-import os
+import pickle, os
 
 class Leaderboard:
     ENTRIES_COUNT = 10
@@ -15,30 +14,30 @@ class Leaderboard:
     def __initEmptyPickle(self):
         if "fast" in self.__filePath:
             self.scoreList = [
-                ("Emil Boc", 170000), 
-                ("e un tampit", 170010), 
-                ("piperalord2000", 200000), 
-                ("fifti", 220000), 
-                ("connectar", 240000), 
-                ("fasole", 260000), 
-                ("Drake Gardescu", 280000), 
-                ("slabanogu de chimita", 300000), 
-                ("Kazi cu k", 320000), 
-                ("Dragos Tudorache", 340000)
+                ("Emil Boc", 155000), 
+                ("e un tampit", 155010), 
+                ("piperalord2000", 180000), 
+                ("fifti", 200000), 
+                ("connectar", 220000), 
+                ("fasole", 240000), 
+                ("Drake Gardescu", 260000), 
+                ("slabanogu de chimita", 280000), 
+                ("Kazi cu k", 300000), 
+                ("Dragos Tudorache", 320000)
             ]
             
         elif "smart" in self.__filePath:
             self.scoreList = [
-                ("Emil Boc", 140), 
-                ("e un tampit", 141), 
-                ("piperalord2000", 165), 
-                ("fifti", 200), 
-                ("connectar", 225), 
-                ("fasole", 250), 
-                ("Drake Gardescu", 275), 
-                ("slabanogu de chimita", 300), 
-                ("Kazi cu k", 325), 
-                ("Dragos Tudorache", 350)
+                ("Emil Boc", 130), 
+                ("e un tampit", 131), 
+                ("piperalord2000", 150), 
+                ("fifti", 160), 
+                ("connectar", 170), 
+                ("fasole", 180), 
+                ("Drake Gardescu", 190), 
+                ("slabanogu de chimita", 200), 
+                ("Kazi cu k", 210), 
+                ("Dragos Tudorache", 220)
             ]
             
         self.__savePickle()

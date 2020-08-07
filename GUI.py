@@ -1,5 +1,4 @@
-import pygame
-import os
+import pygame, os
 from constants import Constants
 from Screens.screen import Screen
 from Screens.welcomeScreen import WelcomeScreen

@@ -36,7 +36,7 @@ class StatsScreen(Screen):
         ms %= 60000
         seconds = ms / 1000
         ms %= 1000
-        return ("%02d:%02d:%03d" % (minutes, seconds, ms)) 
+        return ("%d:%02d:%03d" % (minutes, seconds, ms)) 
     
     def __displayStat(self, index):
         statistic = self.__statsRepository.statsList[index]
